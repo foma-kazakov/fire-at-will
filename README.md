@@ -6,7 +6,7 @@ A tower defense game in a single HTML file. Place towers beside the road and sto
 
 Open `fire-at-will.html` in any modern browser. Nothing to install or build. Pick Computer (landscape) or Phone (portrait) at the start.
 
-Online version: https://claude.ai/artifact/9wd3etuB5Yn7EexjCooeJg
+**Play the latest version:** https://claude.ai/artifact/8ZMpPXyeUvv2EYFnQmjZVX
 
 ## Repository
 
