@@ -150,7 +150,7 @@ You start with 2 power slots, which can be raised to 3 with gems.
   - **Regions:** each has its own details (windmill, dunes and oasis, lava cracks, fog, snow, river from a spring to a lake).
   - **Names:** region names are written across each region in one size, kept clear of levels.
   - **Level buttons:** coin-style; boss levels have spiked rims, and a bouncing arrow marks your next level.
-  - **Route:** levels follow one smooth route across the island. Region order goes Fields → Forest → Deserts → Mountains → Jungle → Depths → Kingdom.
+  - **Route:** levels follow one smooth route across the island. The dotted trail between levels is semi-transparent (45% opacity) so the land shows through. Region order goes Fields → Forest → Deserts → Mountains → Jungle → Depths → Kingdom.
 - **User dislikes:** things that "look AI": rivers that end nowhere, floating parts, labels scattered at random. Keep the art coherent and logical.
 - **Money:** discussed. No in-game store, since a single HTML file with no server can't take payments safely. Ideas for later: itch.io (pay what you want), a Ko-fi support button, or web portals like CrazyGames or Poki. Any payout account needs an adult account holder.
 

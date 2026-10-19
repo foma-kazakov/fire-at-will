@@ -2261,6 +2261,7 @@ function buildMap(){
   const trailStart=svg.length;
   let pts=[],li=0;
   REGv.forEach(r=>r.nodes.forEach(n=>pts.push({x:n[0],y:n[1],li:li++})));
+  svg+=`<g opacity=".45">`;                                   // the trail stays see-through so the land shows under it
   for(let i=1;i<pts.length;i++){
     const a=pts[i-1],b=pts[i], len=Math.hypot(b.x-a.x,b.y-a.y);
     void len;
@@ -2271,6 +2272,7 @@ function buildMap(){
     svg+=`<path d="${dd}" fill="none" stroke="#3A2E1C" stroke-opacity=".38" stroke-width="11" stroke-linecap="round"/>`;
     svg+=`<path d="${dd}" fill="none" stroke="${walked?'#FFD24A':'#EFE2BD'}" stroke-opacity="${walked?1:.8}" stroke-width="${walked?7:6}" stroke-linecap="round" stroke-dasharray="0.5 15">${ahead?'<animate attributeName="stroke-dashoffset" values="0;-31" dur="1.2s" repeatCount="indefinite"/>':''}</path>`;
   }
+  svg+=`</g>`;
   svg+=mapClouds(W,H);
   const labels=[], placedLabels=[];
   REGv.forEach((r,ri)=>{
