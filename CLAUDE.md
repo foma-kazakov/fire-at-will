@@ -1,0 +1,16 @@
+# Working on Fire at Will
+
+Game design, content tables and history live in [docs/game-design.md](docs/game-design.md).
+
+Online version: https://claude.ai/artifact/9wd3etuB5Yn7EexjCooeJg (version 82 as of 19 Oct 2026).
+
+## How to work on this project
+
+- **One file.** The whole game is the single file `fire-at-will.html`: HTML, CSS and JavaScript, with no external code except Google Fonts (Bungee, Russo One, Rubik). Always edit that file and hand back the full updated file, or update the published artifact.
+- **Send the link.** Share the artifact link (or the updated file) with every update.
+- **Don't mention conversation limits.**
+- **Protect saved progress.** Testing must never touch saved progress. Progress is stored in the browser under `fireAtWill.progress`, and sandbox maps under `fireAtWill.sandbox`.
+- **Keep Russian complete.** The game must stay fully translated into Russian. Every new piece of text needs a Russian entry in the `I18N.ru` table. Only the game name and level names stay in English.
+- **Check before handing it over.** Test both layouts, computer (landscape) and phone (portrait).
+- **The user designs, Claude builds.** The user often sends level maps as sandbox "level code" (JSON). Claude turns them into real levels and picks the balance (gold, waves), then reports the choices so the user can tweak them.
+- **About the user.** He's Russian, went to school in Dubai, and chats in English. He also has a Mac app wrapper for the game made with Automator; to update it, he replaces the HTML file inside.
