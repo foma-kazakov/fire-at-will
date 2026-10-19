@@ -1,0 +1,75 @@
+name: Desktop apps
+
+# Builds Fire at Will as a Windows, Mac and Linux app from fire-at-will.html
+# and puts the installers on the "desktop" release, replacing the old ones.
+on:
+  push:
+    branches: [main]
+    paths:
+      - fire-at-will.html
+      - desktop/**
+      - .github/workflows/desktop.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: desktop-release
+  cancel-in-progress: true
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            target: --win
+          - os: macos-latest
+            target: --mac
+          - os: ubuntu-latest
+            target: --linux
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: desktop
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: desktop/package-lock.json
+      - run: npm ci
+      - run: npx electron-builder ${{ matrix.target }} --publish never
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: false
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.os }}
+          path: |
+            desktop/dist/Fire-at-Will-*.exe
+            desktop/dist/Fire-at-Will-*.dmg
+            desktop/dist/Fire-at-Will-*.AppImage
+            desktop/dist/Fire-at-Will-*.deb
+          if-no-files-found: error
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: out
+          merge-multiple: true
+      - name: Replace the desktop release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh release delete desktop --cleanup-tag --yes || true
+          gh release create desktop out/* \
+            --target "$GITHUB_SHA" \
+            --title "Fire at Will desktop apps" \
+            --notes "Built from fire-at-will.html at ${GITHUB_SHA::7}. Windows: Fire-at-Will-Setup.exe (installer) or Fire-at-Will-Portable.exe (no install). Mac: Fire-at-Will-Mac.dmg (Intel and Apple Silicon). Linux: Fire-at-Will-Linux.AppImage or Fire-at-Will-Linux.deb."

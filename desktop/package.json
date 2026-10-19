@@ -1,0 +1,96 @@
+{
+  "name": "fire-at-will",
+  "productName": "Fire at Will",
+  "version": "1.0.0",
+  "description": "Fire at Will tower defense game",
+  "author": "foma",
+  "homepage": "https://github.com/foma-kazakov/fire-at-will",
+  "license": "UNLICENSED",
+  "private": true,
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --publish never"
+  },
+  "devDependencies": {
+    "electron": "44.9.0",
+    "electron-builder": "26.15.3"
+  },
+  "build": {
+    "appId": "com.foma.fireatwill",
+    "productName": "Fire at Will",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "package.json",
+      "build/icon.png",
+      {
+        "from": "..",
+        "to": ".",
+        "filter": [
+          "fire-at-will.html"
+        ]
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "Fire-at-Will-Setup.${ext}"
+    },
+    "portable": {
+      "artifactName": "Fire-at-Will-Portable.${ext}"
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "universal"
+          ]
+        }
+      ],
+      "category": "public.app-category.games",
+      "artifactName": "Fire-at-Will-Mac.${ext}"
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "deb",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "category": "Game",
+      "maintainer": "foma",
+      "artifactName": "Fire-at-Will-Linux.${ext}"
+    },
+    "publish": null
+  },
+  "desktopName": "fire-at-will.desktop"
+}
