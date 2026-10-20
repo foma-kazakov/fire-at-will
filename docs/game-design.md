@@ -10,7 +10,7 @@ A tower defense game. You place towers on grass tiles beside the road, and enemi
 - **Main menu:** Play, Settings, Units, Powers, Encyclopedia and Achievements, plus a gem counter. A hidden **Testing** button appears after redeeming the code `TEST`.
 - **Campaign map:** an island with 7 regions of 6 levels each. Only the levels listed below are built so far; unbuilt levels show an X.
 - **Gems:** earned the first time you win a level (+5). Spent on units and slots.
-- **Stars:** 1–3 per win, based on lives left (3 stars at 90% or more, 2 at 50% or more). The best result shows under each level on the map.
+- **No stars:** a level is simply beaten or not (beaten levels show a ✓ on the map). Star ratings were removed on 20 Oct 2026. Beating a level unlocks the next one.
 - **Waves:** you can call the next wave early once 2/3 of the current wave is gone. Each wave pays a gold bonus when it's fully cleared. Otherwise the next wave starts by itself 4 seconds after a clear.
 - **Map obstacles:** trees and webbed ruins block building and can be cleared for gold: trees 100, ruins 75, webs 25. Solid webs can't be removed.
 - **Pause menu:** Resume, Settings, Shop ("coming soon"), and Save & Exit, which saves the run so you can continue it later from the main menu.
@@ -143,14 +143,14 @@ You start with 2 power slots, which can be raised to 3 with gems.
 ## Design notes and history
 - **Visuals:** recently got a big polish.
   - **Battlefield:** muzzle flashes, explosions, floating "+gold" numbers, screen shake, fireflies, cloud shadows and a red flash when an enemy reaches the base.
-  - **Menus:** tower icons on the build buttons, a wave banner, and a win screen with stars and confetti.
+  - **Menus:** tower icons on the build buttons, a wave banner, and a win screen with a trophy and confetti.
 - **Roads:** clean edges, with no grass blobs or blades over them; inside corners are shaded smoothly.
 - **Campaign map:**
   - **Sea:** animated sea with foam, sailboats and a compass.
   - **Regions:** each has its own details (windmill, dunes and oasis, lava cracks, fog, snow, river from a spring to a lake).
   - **Names:** region names are written across each region in one size, kept clear of levels.
   - **Level buttons:** coin-style; boss levels have spiked rims, and a bouncing arrow marks your next level.
-  - **Route:** levels follow one smooth route across the island. The dotted trail between levels is semi-transparent (45% opacity) so the land shows through. Region order goes Fields → Forest → Deserts → Mountains → Jungle → Depths → Kingdom.
+  - **Route:** each region's levels are scattered over its land in a zig-zag (hand-placed in `FLOW_NODES`; the Dark Forest keeps its loop around its bonus levels), joined by twisting trails that swing side to side (`twistPath`). The dotted trail between levels is semi-transparent (45% opacity) so the land shows through. Region order goes Fields → Forest → Deserts → Mountains → Jungle → Depths → Kingdom.
 - **User dislikes:** things that "look AI": rivers that end nowhere, floating parts, labels scattered at random. Keep the art coherent and logical.
 - **Money:** discussed. No in-game store, since a single HTML file with no server can't take payments safely. Ideas for later: itch.io (pay what you want), a Ko-fi support button, or web portals like CrazyGames or Poki. Any payout account needs an adult account holder.
 
