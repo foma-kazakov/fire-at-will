@@ -11,6 +11,7 @@ Older online version, made in a separate claude.ai chat: https://claude.ai/artif
 - **One file.** The whole game is the single file `fire-at-will.html`: HTML, CSS and JavaScript, with no external code except Google Fonts (Bungee, Russo One, Rubik). Always edit that file and hand back the full updated file, or update the published artifact.
 - **Refresh the play link.** After every change to `fire-at-will.html` lands on `main`, republish it to https://claude.ai/artifact/8ZMpPXyeUvv2EYFnQmjZVX: read that artifact first (Artifact tool, `action: "read"`), then publish the repo file with `url` set to that link. Never publish without `url`, which would make a new link.
 - **Desktop apps rebuild themselves.** `desktop/` wraps `fire-at-will.html` with Electron, and `.github/workflows/desktop.yml` rebuilds the Windows, Mac and Linux apps onto the `desktop` release whenever the HTML changes on `main`. Don't copy the game into `desktop/`; the build takes it from the repo root.
+- **DLC.** Level packs are JSON files described in [docs/dlc.md](docs/dlc.md). The desktop app's `preload.js` gives the game its DLC folder; in a browser the game falls back to files dropped on the DLC screen.
 - **Send the link.** Share the play link with every update.
 - **Don't mention conversation limits.**
 - **Protect saved progress.** Testing must never touch saved progress. Progress is stored in the browser under `fireAtWill.progress`, and sandbox maps under `fireAtWill.sandbox`.

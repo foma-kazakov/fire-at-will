@@ -7,13 +7,14 @@ Knowledge base for the game, extracted from the original design conversation (19
 A tower defense game. You place towers on grass tiles beside the road, and enemies walk the road toward your base. Each enemy that reaches the base costs a life.
 
 - **Device choice:** at the start the player picks Computer (horizontal map) or Phone (vertical map). Every level has both layouts.
-- **Main menu:** Play, Settings, Units, Powers, Encyclopedia and Achievements, plus a gem counter. A hidden **Testing** button appears after redeeming the code `TEST`.
+- **Main menu:** Play, Settings, Units, Powers, Encyclopedia, Achievements and DLC, plus a gem counter. A hidden **Testing** button appears after redeeming the code `TEST`.
 - **Campaign map:** an island with 7 regions of 6 levels each. Only the levels listed below are built so far; unbuilt levels show an X.
 - **Gems:** earned the first time you win a level (+5). Spent on units and slots.
 - **No stars:** a level is simply beaten or not (beaten levels show a ✓ on the map). Star ratings were removed on 20 Oct 2026. Beating a level unlocks the next one.
 - **Waves:** you can call the next wave early once 2/3 of the current wave is gone. Each wave pays a gold bonus when it's fully cleared. Otherwise the next wave starts by itself 4 seconds after a clear.
 - **Map obstacles:** trees and webbed ruins block building and can be cleared for gold: trees 100, ruins 75, webs 25. Solid webs can't be removed.
 - **Pause menu:** Resume, Settings, Shop ("coming soon"), and Save & Exit, which saves the run so you can continue it later from the main menu.
+- **DLC:** extra level packs as JSON files, loaded on the DLC screen; the desktop app reads `Documents/Fire at Will/DLC` by itself. Format and details in [dlc.md](dlc.md). Added 21 Oct 2026.
 - **Languages:** English, Russian (full), Spanish, Hindi, Chinese, French, Arabic and Ukrainian (the last six cover menu basics only).
 - **Music:** generated in code. It starts on load, or on the first tap if the browser blocks sound.
 

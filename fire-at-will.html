@@ -165,6 +165,29 @@
   .testCard span{font-size:.82rem;opacity:.8;}
   .testCard:active{transform:translateY(3px);box-shadow:0 2px 0 var(--ink);}
   .inkBack{border-color:var(--ink)!important;color:var(--ink)!important;}
+  /* ---- DLC ---- */
+  #dlcScreen{overflow-y:auto;}
+  #dlcScreen .plate{max-width:calc(100vw - 32px);box-sizing:border-box;padding:28px 32px;}
+  @media (max-width:520px){ #dlcScreen .plate{padding:22px 16px;} }
+  #dlcDrop{border:3px dashed var(--ink);border-radius:12px;padding:18px 12px;margin:12px 0 8px;cursor:pointer;text-align:center;
+    background:rgba(217,201,160,.45);color:var(--ink);transition:background .15s,transform .15s;}
+  #dlcDrop b{font-family:'Bungee','Russo One',sans-serif;font-size:1rem;display:block;}
+  #dlcDrop span{font-size:.82rem;opacity:.75;}
+  #dlcDrop.over,#dlcScreen.over #dlcDrop{background:rgba(227,172,60,.55);transform:scale(1.02);}
+  #dlcFolderBox{font-size:.8rem;color:var(--ink);margin:6px 0;display:flex;flex-wrap:wrap;align-items:center;gap:6px;justify-content:center;}
+  #dlcFolderBox code{background:var(--khaki);border:2px solid var(--ink);border-radius:6px;padding:2px 6px;word-break:break-all;font-size:.75rem;}
+  #dlcStatus{font-size:.85rem;font-weight:600;min-height:1.2em;margin:4px 0;color:#2f6b2c;}
+  #dlcStatus.bad{color:var(--rust);}
+  #dlcList{text-align:left;}
+  .dlcCard{background:var(--khaki);border:3px solid var(--ink);border-radius:12px;padding:12px 14px;margin:10px 0;box-shadow:0 5px 0 var(--ink);color:var(--ink);}
+  .dlcCard h3{font-family:'Bungee','Russo One',sans-serif;font-size:1.05rem;margin:0 0 2px;}
+  .dlcCard .dlcMeta{font-size:.78rem;opacity:.75;}
+  .dlcCard p{font-size:.84rem;margin:6px 0;}
+  .dlcLevels{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+  .dlcLevels .toolBtn{font-size:.82rem;background-color:var(--paper);}
+  .dlcLevels .toolBtn.done{background:#9fce7e;}
+  .dlcRemove{float:right;background:none;border:none;font-size:.78rem;color:var(--rust);cursor:pointer;text-decoration:underline;font-family:'Rubik',sans-serif;padding:0;}
+  .dlcEmpty{text-align:center;font-size:.85rem;opacity:.7;margin:12px 0;}
   #lvSlider,.sbxSlider{width:100%;accent-color:var(--rust);height:28px;}
   #lvNum{font-family:'Bungee','Russo One',sans-serif;font-size:3.2rem;color:var(--rust);text-align:center;line-height:1;
     text-shadow:2px 2px 0 var(--ink);}
@@ -409,6 +432,7 @@
     <button class="menuBtn" onclick="goTo('powersScreen')" data-i18n="powersTitle">Powers</button>
     <button class="menuBtn" onclick="goTo('encyScreen')" data-i18n="encyclopedia">Encyclopedia</button>
     <button class="menuBtn" onclick="goTo('achievementsScreen')" data-i18n="achievements">Achievements</button>
+    <button class="menuBtn" onclick="openDLC()">DLC</button>
     <button class="menuBtn" id="testMenuBtn" style="display:none" onclick="goTo('testScreen')">Testing</button>
     </div>
     <div class="gemPill">
@@ -432,6 +456,18 @@
     <input type="range" id="lvSlider" min="1" max="1" value="1" oninput="updateLevelTester()">
     <button class="menuBtn primary" style="margin-top:16px" onclick="playTestLevel()">Play</button>
     <button class="backBtn inkBack" onclick="goTo('testScreen')" data-i18n="back">Back</button>
+  </div></div>
+
+  <div id="dlcScreen" class="screen"><div class="plate" style="width:520px">
+    <h1 class="title" style="font-size:2rem">DLC</h1>
+    <h2 class="sub" style="color:var(--ink);opacity:.7">Extra levels from DLC files.</h2>
+    <div id="dlcDrop" onclick="document.getElementById('dlcFile').click()"><b>Drop a DLC file here</b><span>or tap to choose one</span></div>
+    <input type="file" id="dlcFile" accept=".json,.fawdlc,application/json" multiple style="display:none" onchange="dlcPickFiles(this)">
+    <div id="dlcFolderBox" style="display:none"><span>DLC folder</span><code id="dlcFolderPath" data-notr></code>
+      <button class="toolBtn" onclick="dlcOpenFolder()">Open DLC folder</button></div>
+    <div id="dlcStatus"></div>
+    <div id="dlcList"></div>
+    <button class="backBtn inkBack" onclick="goTo('menuScreen')" data-i18n="back">Back</button>
   </div></div>
 
   <div id="sandboxScreen" class="screen">
@@ -702,7 +738,7 @@ new MutationObserver(ms=>{ for(const m of ms){
     else if(m.type==='attributes')trAttr(m.target,m.attributeName);
     else m.addedNodes.forEach(trNode); } })
   .observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['placeholder','title','aria-label']});
-Object.assign(I18N.ru,{"Campaign":"Кампания","◀ Back":"◀ Назад","Final wave":"Последняя волна","Lives left: #/#":"Осталось жизней: #/#","Lives left: #/# · 💎 +#":"Осталось жизней: #/# · 💎 +#"});
+Object.assign(I18N.ru,{"Extra levels from DLC files.":"Дополнительные уровни из файлов DLC.","Drop a DLC file here":"Перетащите сюда файл DLC","or tap to choose one":"или нажмите, чтобы выбрать его","DLC folder":"Папка DLC","Open DLC folder":"Открыть папку DLC","No DLC yet. Put a DLC file in the DLC folder, or drop it above.":"DLC пока нет. Положите файл DLC в папку DLC или перетащите его выше.","No DLC yet. Drop a DLC file above.":"DLC пока нет. Перетащите файл DLC выше.","Remove":"Удалить","beaten #/#":"пройдено #/#","from the DLC folder":"из папки DLC","DLC removed.":"DLC удалено.","DLC added":"DLC добавлено","That file is too big for a DLC.":"Этот файл слишком большой для DLC.","This file is not a DLC (it is not JSON).":"Этот файл не DLC (это не JSON).","This file is not a Fire at Will DLC.":"Этот файл не DLC для Fire at Will.","This DLC has no id or name.":"У этого DLC нет id или названия.","This DLC has no levels.":"В этом DLC нет уровней.","Level # has no map (level code).":"У уровня # нет карты (кода уровня).","Level # has a wave with no known enemies.":"В уровне # есть волна без известных врагов.","Level # has no road from a spawn to a base.":"В уровне # нет дороги от точки появления до базы.","Campaign":"Кампания","◀ Back":"◀ Назад","Final wave":"Последняя волна","Lives left: #/#":"Осталось жизней: #/#","Lives left: #/# · 💎 +#":"Осталось жизней: #/# · 💎 +#"});
 // words drawn straight onto the canvas go through the same table
 ['fillText','strokeText','measureText'].forEach(fn=>{ const orig=CanvasRenderingContext2D.prototype[fn];
   CanvasRenderingContext2D.prototype[fn]=function(t,...a){ return orig.call(this,currentLang==='en'?t:trText(String(t)),...a); }; });
@@ -4043,7 +4079,7 @@ function sellSelected(){
 function configureTestSlot(def,region){
   const T=LEVELS[TEST_SLOT];
   T.def=def; T.name=def.name; T.waves=def.waves.length; T.startGold=def.startGold; T.lives=def.lives;
-  T.region=region;
+  T.region=region; T.hpMul=1; T.speedMul=1;
 }
 function builtLevels(){ const out=[]; for(let i=0;i<TEST_SLOT;i++)if(LEVELS[i].def)out.push(i); return out; }
 function openLevelTester(){
@@ -4628,6 +4664,124 @@ function layoutFromCode(code){
   return out;
 }
 
+/* ================= DLC =================
+   A DLC is a JSON file of extra levels (format in docs/dlc.md). Files dropped on the DLC screen are kept in the
+   browser under 'fireAtWill.dlc'; the desktop app also reads every file in its DLC folder by itself.
+   DLC levels never touch campaign progress: only which DLC levels are beaten is stored, in the same 'fireAtWill.dlc'. */
+const DLC_KEY='fireAtWill.dlc';
+const DESK=window.fireAtWillDesktop||null;
+let dlcStore={packs:[],beaten:{}}, dlcFolder=[], dlcPlaying=null;
+try{ const d=JSON.parse(localStorage.getItem(DLC_KEY)||'null'); if(d&&Array.isArray(d.packs))dlcStore={packs:d.packs,beaten:d.beaten||{}}; }catch(e){}
+function dlcSave(){ try{ localStorage.setItem(DLC_KEY,JSON.stringify(dlcStore)); }catch(e){} }
+// read and check one DLC file; throws a message the player can read
+function dlcParse(text){
+  let d; try{ d=JSON.parse(text); }catch(e){ throw 'This file is not a DLC (it is not JSON).'; }
+  if(!d||typeof d!=='object'||!d.fireAtWillDLC)throw 'This file is not a Fire at Will DLC.';
+  if(!d.id||!d.name)throw 'This DLC has no id or name.';
+  if(!Array.isArray(d.levels)||!d.levels.length)throw 'This DLC has no levels.';
+  const pack={id:String(d.id).slice(0,60),name:String(d.name).slice(0,60),author:d.author?String(d.author).slice(0,40):'',
+    version:d.version?String(d.version).slice(0,20):'',description:d.description?String(d.description).slice(0,300):'',levels:[]};
+  d.levels.forEach((lv,i)=>{
+    const code=lv&&(typeof lv.code==='string'?(()=>{ try{return JSON.parse(lv.code);}catch(e){return null;} })():lv.code);
+    if(!code||!code.COLS||!code.ROWS)throw 'Level '+(i+1)+' has no map (level code).';
+    let waves=Array.isArray(lv.waves)&&lv.waves.length?lv.waves.map(w=>(Array.isArray(w)?w:[]).map(g=>Array.isArray(g)?W(g[0],g[1],g[2]):(g&&W(g.type,g.count,g.gap)))
+      .filter(g=>g&&ENEMIES[g.type]&&g.count>0).map(g=>({type:g.type,count:Math.min(200,Math.round(g.count)),gap:Math.max(80,+g.gap||500)}))):null;
+    if(waves&&waves.some(w=>!w.length))throw 'Level '+(i+1)+' has a wave with no known enemies.';
+    const def={name:lv.name?String(lv.name).slice(0,40):('Level '+(i+1)),code,startGold:Math.max(0,Math.round(+lv.startGold||400)),
+      lives:Math.max(1,Math.round(+lv.lives||20)),waves,region:REGIONS.some(r=>r.id===lv.region)?lv.region:'fields',
+      hpMul:Math.min(10,Math.max(0.2,+lv.hpMul||1)),speedMul:Math.min(3,Math.max(0.3,+lv.speedMul||1))};
+    ['sewerWave','lakeWave','bigSpiderWave'].forEach(k=>{ if(lv[k]!=null)def[k]=Math.max(0,Math.round(+lv[k]||0)); });
+    if(lv.spiders&&lv.spiders.wave)def.spiders={wave:Math.round(+lv.spiders.wave),count:Math.round(+lv.spiders.count||9)};
+    let L; try{ L=layoutFromCode(code); }catch(e){ L=null; }
+    if(!L||!L.computer||!L.computer.paths.length)throw 'Level '+(i+1)+' has no road from a spawn to a base.';
+    def.layout=L;
+    if(!def.waves){                       // no waves given: the sandbox's waves, with thieves if there are bushes
+      def.waves=(code.bushes||[]).length?SBX_WAVES.map((w,k)=>(k===3||k===5||k===7)?w.concat([W('thief',2+Math.floor(k/3),760)]):w):SBX_WAVES;
+      if(def.sewerWave==null&&(code.sewers||[]).length)def.sewerWave=3;
+      if(def.lakeWave==null&&L.computer.lakeExits.length)def.lakeWave=4;
+      if(!def.spiders&&L.computer.forestPaths){ def.spiders={wave:5,count:9}; if(def.bigSpiderWave==null)def.bigSpiderWave=8; }
+    }
+    pack.levels.push(def);
+  });
+  return pack;
+}
+// every installed DLC: the desktop folder first, then the ones dropped into this browser
+function dlcAll(){
+  const out=[], ids=new Set();
+  dlcFolder.forEach(f=>{ try{ const p=dlcParse(f.text); if(ids.has(p.id))return; ids.add(p.id); p.file=f.file; out.push(p); }catch(e){ out.push({bad:e,file:f.file}); } });
+  dlcStore.packs.forEach(raw=>{ try{ const p=dlcParse(raw); if(ids.has(p.id))return; ids.add(p.id); p.stored=true; out.push(p); }catch(e){} });
+  return out;
+}
+function dlcMsg(m,bad){ const st=document.getElementById('dlcStatus'); if(!st)return; st.textContent=m; st.classList.toggle('bad',!!bad); }
+async function dlcRefreshFolder(){
+  if(!DESK)return;
+  try{ dlcFolder=await DESK.listDLC(); }catch(e){ dlcFolder=[]; }
+  if(document.getElementById('dlcScreen').classList.contains('active'))renderDLC();
+}
+function openDLC(){ goTo('dlcScreen'); dlcMsg(''); renderDLC(); dlcRefreshFolder(); }
+function renderDLC(){
+  const box=document.getElementById('dlcFolderBox');
+  if(DESK){ box.style.display='flex'; document.getElementById('dlcFolderPath').textContent=DESK.dlcFolder; }
+  const list=document.getElementById('dlcList'); list.innerHTML='';
+  const all=dlcAll();
+  if(!all.length){ const e=document.createElement('div'); e.className='dlcEmpty';
+    e.textContent=DESK?'No DLC yet. Put a DLC file in the DLC folder, or drop it above.':'No DLC yet. Drop a DLC file above.'; list.appendChild(e); }
+  all.forEach(p=>{
+    const c=document.createElement('div'); c.className='dlcCard';
+    if(p.bad){ c.innerHTML='<h3></h3><p></p>'; c.querySelector('h3').textContent=p.file; c.querySelector('h3').setAttribute('data-notr','');
+      c.querySelector('p').textContent=p.bad; list.appendChild(c); return; }
+    if(p.stored){ const rm=document.createElement('button'); rm.className='dlcRemove'; rm.textContent='Remove';
+      rm.onclick=()=>{ dlcStore.packs=dlcStore.packs.filter(raw=>{ try{ return dlcParse(raw).id!==p.id; }catch(e){ return false; } }); dlcSave(); dlcMsg('DLC removed.'); renderDLC(); };
+      c.appendChild(rm); }
+    const h=document.createElement('h3'); h.textContent=p.name; h.setAttribute('data-notr',''); c.appendChild(h);
+    const done=p.levels.filter((_,i)=>dlcStore.beaten[p.id+'/'+i]).length;
+    const meta=document.createElement('div'); meta.className='dlcMeta';
+    const mt=document.createElement('span'); mt.textContent='beaten '+done+'/'+p.levels.length; meta.appendChild(mt);
+    if(p.author){ const au=document.createElement('span'); au.textContent=' · ✎ '+p.author; au.setAttribute('data-notr',''); meta.appendChild(au); }
+    if(p.file){ const fl=document.createElement('span'); fl.textContent=' · from the DLC folder'; meta.appendChild(fl); }
+    c.appendChild(meta);
+    if(p.description){ const d=document.createElement('p'); d.textContent=p.description; d.setAttribute('data-notr',''); c.appendChild(d); }
+    const lv=document.createElement('div'); lv.className='dlcLevels';
+    p.levels.forEach((L,i)=>{ const b=document.createElement('button'); b.className='toolBtn'+(dlcStore.beaten[p.id+'/'+i]?' done':'');
+      b.setAttribute('data-notr',''); b.textContent=(dlcStore.beaten[p.id+'/'+i]?'✓ ':'')+L.name; b.onclick=()=>playDLC(p,i); lv.appendChild(b); });
+    c.appendChild(lv); list.appendChild(c);
+  });
+  trNode(list);
+}
+// a file dropped or picked on the DLC screen: saved into the DLC folder on desktop, into this browser otherwise
+async function dlcAdd(file){
+  if(file.size>5e6){ dlcMsg('That file is too big for a DLC.',true); return; }
+  const text=await file.text();
+  let p; try{ p=dlcParse(text); }catch(e){ dlcMsg(String(e),true); return; }
+  if(DESK){
+    try{ await DESK.saveDLC(file.name,text); dlcMsg('DLC added: '+p.name); await dlcRefreshFolder(); return; }catch(e){}
+  }
+  dlcStore.packs=dlcStore.packs.filter(raw=>{ try{ return dlcParse(raw).id!==p.id; }catch(e){ return false; } });
+  dlcStore.packs.push(text); dlcSave();
+  dlcMsg('DLC added: '+p.name); renderDLC();
+}
+async function dlcPickFiles(inp){ for(const f of [...inp.files])await dlcAdd(f); inp.value=''; }
+function dlcOpenFolder(){ if(DESK)DESK.openFolder(); }
+(()=>{
+  const scr=document.getElementById('dlcScreen');
+  scr.addEventListener('dragover',e=>{ e.preventDefault(); scr.classList.add('over'); });
+  scr.addEventListener('dragleave',e=>{ if(e.target===scr||!scr.contains(e.relatedTarget))scr.classList.remove('over'); });
+  scr.addEventListener('drop',async e=>{ e.preventDefault(); scr.classList.remove('over');
+    for(const f of [...(e.dataTransfer?e.dataTransfer.files:[])])await dlcAdd(f); });
+  // anywhere else, a dropped file must not replace the game page
+  window.addEventListener('dragover',e=>e.preventDefault()); window.addEventListener('drop',e=>e.preventDefault());
+  if(DESK){ DESK.onChange(dlcRefreshFolder); dlcRefreshFolder(); }
+})();
+function playDLC(p,i){
+  const def=p.levels[i];
+  configureTestSlot(def,Object.assign({},REGIONS.find(r=>r.id===def.region)||REGIONS[0],
+    def.code.ground?{ground:def.code.ground}:{},def.code.pathCol?{pathCol:def.code.pathCol}:{}));
+  const T=LEVELS[TEST_SLOT]; T.hpMul=def.hpMul; T.speedMul=def.speedMul;
+  dlcPlaying={id:p.id,i};
+  testMode='dlc'; currentLevel=TEST_SLOT;
+  goTo('gameScreen'); startGame();
+}
+
 function startGame(){
   const D0=LEVELS[currentLevel].def; if(D0&&D0.code&&!D0.layout)D0.layout=layoutFromCode(D0.code);
   const defL=LEVELS[currentLevel].def&&LEVELS[currentLevel].def.layout;
@@ -4747,13 +4901,13 @@ function quitToMenu(){
   enemies=[]; projectiles=[]; waveActive=false; gameOver=true;
   document.getElementById('overlay').style.display='none';
   if(testMode){
-    const back=testMode==='sandbox'?'sandboxScreen':(testMode==='level'?'levelTestScreen':'testScreen');
+    const back=testMode==='sandbox'?'sandboxScreen':testMode==='level'?'levelTestScreen':testMode==='dlc'?'dlcScreen':'testScreen';
     testMode=null; timeStopped=false; pickMode=false; dragEnemy=null; testQueue=[];
     document.getElementById('testPanel').classList.remove('show');
     document.getElementById('gameScreen').classList.remove('tester');
     document.getElementById('startWave').style.display='';
     renderTowerBar(); renderPowerBar();
-    goTo(back); if(back==='sandboxScreen')sbxRender();
+    goTo(back); if(back==='sandboxScreen')sbxRender(); if(back==='dlcScreen')renderDLC();
     return;
   }
   goTo('mapScreen'); buildMap();
@@ -5293,6 +5447,17 @@ function confetti(){
 }
 function endGame(won){
   gameOver=true;
+  if(testMode==='dlc'){                    // DLC levels only remember that they were beaten
+    closePause(); clearSpawners(); armed=null; arrowTarget=null;
+    if(won&&dlcPlaying){ dlcStore.beaten[dlcPlaying.id+'/'+dlcPlaying.i]=true; dlcSave(); }
+    document.querySelector('#overlay .box').className='box '+(won?'win':'lose');
+    document.getElementById('overStars').innerHTML=won?'<span class="trophy">🏆</span>':'<span class="skull">☠</span>';
+    document.getElementById('overSub').textContent=won?('Lives left: '+lives+'/'+(LEVELS[currentLevel].lives||20)):(t('wave')+' '+wave+' / '+totalWaves);
+    document.getElementById('overlay').style.display='flex';
+    document.getElementById('overText').textContent=won?t('victory'):t('gameOver');
+    if(won)confetti(); else document.getElementById('confetti').innerHTML='';
+    return;
+  }
   if(testMode){
     closePause();
     clearSpawners();
