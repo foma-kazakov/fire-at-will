@@ -436,9 +436,68 @@
   .testingApp .toolBtn.on{background:linear-gradient(180deg,#7fd6f7,#3aaee0);}
   .testingApp h2.sub{color:var(--ink)!important;}
   .testingApp #msg{color:#d6e9fa;}
+  /* ---- Testing menu: settings panel on the right, and the three themes (Classic = the blueprint above) ---- */
+  .testRow{display:flex;gap:22px;align-items:center;justify-content:center;max-width:100%;}
+  .testSide{width:300px;box-sizing:border-box;padding:28px 26px!important;}
+  .testSide h2.sub{margin-bottom:12px;}
+  .testSide .sideLbl{display:block;font-weight:800;font-size:.85rem;color:var(--ink);margin:12px 0 6px;text-align:left;}
+  .testSide select{width:100%;padding:8px;border-radius:8px;border:2px solid var(--ink);background:var(--paper);color:var(--ink);font-weight:600;font-family:'Rubik',sans-serif;}
+  .themePick{display:grid;gap:8px;}
+  .themeBtn{display:flex;align-items:center;gap:10px;width:100%;box-sizing:border-box;padding:7px 10px;cursor:pointer;text-align:left;
+    background:var(--khaki);border:3px solid var(--ink);border-radius:10px;box-shadow:0 4px 0 var(--ink);color:var(--ink);
+    font-family:'Bungee','Russo One',sans-serif;font-size:.9rem;}
+  .themeBtn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink);}
+  .themeBtn.on{background:var(--brass);outline:3px solid var(--rust);outline-offset:2px;}
+  .themeBtn i{flex:none;width:44px;height:30px;border-radius:6px;border:2px solid var(--ink);}
+  .themeBtn i.swClassic{background:linear-gradient(rgba(255,255,255,.18) 1px,transparent 1px) 0 0/8px 8px,linear-gradient(90deg,rgba(255,255,255,.18) 1px,transparent 1px) 0 0/8px 8px,#1b5288;}
+  .themeBtn i.swMetal{background:radial-gradient(circle at 6px 6px,#5d6a72 2px,transparent 2.5px),radial-gradient(circle at calc(100% - 6px) 6px,#5d6a72 2px,transparent 2.5px),linear-gradient(180deg,#e6ebee,#9aa8b0 60%,#44555f);}
+  .themeBtn i.swSunset{background:radial-gradient(circle at 50% 120%,#fff3b0 0 30%,#ff9a45 45%,transparent 47%),linear-gradient(180deg,#221a57,#9a3f86 45%,#ff9150 85%);}
+  .testSide .menuBtn{width:100%;margin:16px 0 0;padding:12px;font-size:.95rem;}
+  .stars{display:none;}
+  @media (max-width:760px){
+    #testScreen.active{justify-content:flex-start;overflow-y:auto;}
+    .testRow{flex-direction:column;align-items:center;gap:16px;padding:6px 0 24px;}
+    .testRow .plate{max-height:none;}
+    .testSide{width:340px;max-width:100%;}
+  }
+  /* Metal: the steel-and-rust look of the first Last Stand (its "Ironfront" theme) */
+  .testingApp.thMetal{--khaki:#9aa8b0; --paper:#e6ebee; --rust:#a8452a; --brass:#d7a340; --ink:#141a20;}
+  .testingApp.thMetal body{background-color:#1b232c;
+    background-image:repeating-linear-gradient(115deg,rgba(255,255,255,.03) 0 2px,transparent 2px 7px),linear-gradient(180deg,#1b232c 0%,#44555f 55%,#aab6b9 100%);
+    background-size:auto,100% 100%;}
+  .testingApp.thMetal .plate,.testingApp.thMetal .pauseBox,.testingApp.thMetal .encyBox,.testingApp.thMetal .sbxPanel,.testingApp.thMetal #overlay .box{
+    background-image:radial-gradient(circle at 13px 13px,#7d8b94 3px,#4c585f 3.5px,transparent 4.5px),radial-gradient(circle at calc(100% - 13px) 13px,#7d8b94 3px,#4c585f 3.5px,transparent 4.5px),
+      radial-gradient(circle at 13px calc(100% - 13px),#7d8b94 3px,#4c585f 3.5px,transparent 4.5px),radial-gradient(circle at calc(100% - 13px) calc(100% - 13px),#7d8b94 3px,#4c585f 3.5px,transparent 4.5px),
+      linear-gradient(180deg,#eef2f4,#cdd6dc);
+    background-size:100% 100%;}
+  .testingApp.thMetal .plate{box-shadow:0 10px 0 rgba(0,0,0,.45), inset 0 0 0 3px var(--khaki);}
+  .testingApp.thMetal h1.title{color:var(--ink);text-shadow:0 2px 0 #9fb3c2,0 3px 0 #7d93a4,3px 5px 0 var(--rust);}
+  .testingApp.thMetal .toolBtn.on{background:linear-gradient(180deg,#f0c766,#d7a340);}
+  .testingApp.thMetal #msg{color:#e6ebee;}
+  /* Sunset: the dusk sky of the first Fire at Will Hold 'Em, with the game's own colours */
+  .testingApp.thSunset{--khaki:#d9c9a0; --paper:#efe6cc; --rust:#c1442d; --brass:#e3ac3c; --ink:#22261c;}
+  .testingApp.thSunset body{background-color:#4f2a84;
+    background-image:linear-gradient(180deg,#221a57 0%,#4f2a84 26%,#9a3f86 48%,#e0606c 68%,#ff9150 86%,#ffc46a 100%);background-size:100% 100%;}
+  .testingApp.thSunset .plate,.testingApp.thSunset .pauseBox,.testingApp.thSunset .encyBox,.testingApp.thSunset .sbxPanel,.testingApp.thSunset #overlay .box{background-image:none;}
+  .testingApp.thSunset .plate{box-shadow:0 10px 0 rgba(0,0,0,.35), inset 0 0 0 3px var(--khaki);}
+  .testingApp.thSunset .toolBtn.on{background:linear-gradient(180deg,#f3c75b,#dba52c);}
+  .testingApp.thSunset #msg{color:#fff1e0;}
+  .testingApp.thSunset .sun,.testingApp.thSunset .cloud{display:block!important;}
+  .testingApp.thSunset .sun{top:auto;right:auto;left:50%;bottom:-150px;width:320px;height:320px;margin-left:-160px;
+    background:radial-gradient(circle,#fff3b0 0%,#ffd263 42%,#ff9a45 78%,#ff7a45 100%);
+    box-shadow:0 0 70px 30px rgba(255,170,80,.5),0 0 180px 90px rgba(255,110,90,.3);}
+  .testingApp.thSunset .cloud,.testingApp.thSunset .cloud::before,.testingApp.thSunset .cloud::after{background:#ffbfb4;}
+  .testingApp.thSunset .cloud{opacity:.92;}
+  .testingApp.thSunset #rainCloud,.testingApp.thSunset #rainCloud::before,.testingApp.thSunset #rainCloud::after{background:#b29ac6;}
+  .testingApp.thSunset .stars{display:block;position:absolute;inset:0 0 55% 0;z-index:0;pointer-events:none;opacity:.8;
+    background-image:radial-gradient(1.5px 1.5px at 12% 14%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 30% 6%,#fff 50%,transparent 51%),
+      radial-gradient(1.5px 1.5px at 56% 10%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 72% 22%,#fff 50%,transparent 51%),
+      radial-gradient(1.5px 1.5px at 88% 8%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 4% 30%,#fff 50%,transparent 51%),
+      radial-gradient(1px 1px at 44% 26%,#fff 50%,transparent 51%),radial-gradient(1.5px 1.5px at 64% 4%,#fff 50%,transparent 51%);}
 </style>
 </head>
 <body>
+<div class="stars"></div>
 <div class="sun"></div>
 <div class="cloud cloud1"></div>
 <div class="cloud cloud2" id="rainCloud" onclick="triggerRain()"></div>
@@ -486,7 +545,7 @@
       <span id="gemCount">0</span></div>
   </div></div>
 
-  <div id="testScreen" class="screen"><div class="plate">
+  <div id="testScreen" class="screen"><div class="testRow"><div class="plate">
     <h1 class="title testAppOnly">Fire at Will</h1>
     <h1 class="title" style="font-size:2rem">Testing</h1>
     <h2 class="sub gameOnly" style="color:var(--ink);opacity:.7">Nothing here touches your saved progress.</h2>
@@ -495,9 +554,23 @@
     <div class="testCard" onclick="openSandbox()"><b>Sandbox</b><span>Draw your own map in the game's colours, then play it or copy its code.</span></div>
     <div class="testCard" onclick="openEnemyTester()"><b>Enemy tester</b><span>One road, infinite gold, every tower and power. Send any enemy.</span></div>
     <div class="testCard testAppOnly" onclick="openDLC()"><b>DLC</b><span>Every DLC is built in. Play its levels, or drop in a new DLC file.</span></div>
-    <button class="menuBtn testAppOnly" style="margin:12px auto 0;width:340px;max-width:100%;box-sizing:border-box" onclick="goTo('settingsScreen')" data-i18n="settings">Settings</button>
     <button class="backBtn inkBack gameOnly" onclick="goTo('menuScreen')" data-i18n="back">Back</button>
-  </div></div>
+  </div>
+  <div class="plate testSide testAppOnly">
+    <h2 class="sub" data-i18n="settingsTitle">Settings</h2>
+    <label class="sideLbl" for="tLangSelect">Language</label>
+    <select id="tLangSelect" onchange="tSetLang(this.value)">
+      <option value="en">English</option>
+      <option value="ru">Русский</option>
+    </select>
+    <span class="sideLbl">Theme</span>
+    <div class="themePick">
+      <button class="themeBtn" data-th="classic" onclick="tApplyTheme('classic',true)"><i class="swClassic"></i>Classic</button>
+      <button class="themeBtn" data-th="metal" onclick="tApplyTheme('metal',true)"><i class="swMetal"></i>Metal</button>
+      <button class="themeBtn" data-th="sunset" onclick="tApplyTheme('sunset',true)"><i class="swSunset"></i>Sunset</button>
+    </div>
+    <button class="menuBtn" onclick="goTo('settingsScreen')">Sound and more</button>
+  </div></div></div>
 
   <div id="levelTestScreen" class="screen"><div class="plate" style="width:420px">
     <h2 class="sub" style="color:var(--ink);opacity:.8;margin-bottom:8px">Test a level</h2>
@@ -834,8 +907,21 @@ function applyLang(code){
   document.querySelectorAll('[data-i18n]').forEach(el=>{ el.textContent=t(el.getAttribute('data-i18n')); });
   document.querySelectorAll('[data-i18n-ph]').forEach(el=>{ el.placeholder=t(el.getAttribute('data-i18n-ph')); });
   trNode(document.body);
+  const tls=document.getElementById('tLangSelect'); if(tls)tls.value=code;
 }
 document.getElementById('langSelect').addEventListener('change',e=>{applyLang(e.target.value);saveProgress();});
+/* Testing menu's own settings panel: language and theme. The theme lives in its own key, never in any progress. */
+Object.assign(I18N.ru,{"Theme":"Тема","Classic":"Классика","Metal":"Металл","Sunset":"Закат","Sound and more":"Звук и другое"});
+function tSetLang(code){ document.getElementById('langSelect').value=code; applyLang(code); saveProgress(); }
+const T_THEME_KEY='fireAtWillTesting.theme', T_THEME_COLOR={classic:'#123a63',metal:'#1b232c',sunset:'#4f2a84'};
+function tApplyTheme(k,save){
+  if(!T_THEME_COLOR[k])k='classic';
+  const h=document.documentElement; h.classList.toggle('thMetal',k==='metal'); h.classList.toggle('thSunset',k==='sunset');
+  document.querySelectorAll('.themeBtn').forEach(b=>b.classList.toggle('on',b.dataset.th===k));
+  const m=document.querySelector('meta[name="theme-color"]'); if(m&&TESTING_APP)m.content=T_THEME_COLOR[k];
+  if(save){ try{ localStorage.setItem(T_THEME_KEY,k); }catch(e){} }
+}
+if(TESTING_APP){ let k='classic'; try{ k=localStorage.getItem(T_THEME_KEY)||'classic'; }catch(e){} tApplyTheme(k,false); }
 applyLang('en');
 
 /* ---------- audio ---------- */
@@ -1080,6 +1166,7 @@ let achievements={rain:false,firstShot:false,snipe:false,bombardment:false,polic
 let thiefKills=0;  // resets every level
 let powers={arrowRain:false,fireRain:false,heavyForce:false,backup:false,iceAge:false,poisonLake:false,lightning:false};
 let gems=0;
+let completed={};   // declared before loadProgress() runs, so saved level progress loads
 let savedVol=null, savedLang=null, pendingOrient=null, pendingDevice=false, pendingBoost=0;
 let loadout=['gun','cannon','sniper'];
 let maxSlots=5;   // expandable to 7 with gems
@@ -1170,8 +1257,6 @@ if(savedVol){
   refreshVolumes();
 }
 if(pendingBoost)goldBoost=pendingBoost;
-if(pendingOrient)chosenOrient=pendingOrient;
-if(pendingDevice)deviceChosen=true;
 if(savedLang && LANG[savedLang]){
   document.getElementById('langSelect').value=savedLang;
   applyLang(savedLang);
@@ -1968,7 +2053,6 @@ const TEST_SLOT=LEVELS.length;          // a hidden level the testing modes fill
 LEVELS.push({region:REGIONS[0],regionIndex:0,indexInRegion:0,def:null,name:'Test',waves:1,boss:false,
   hpMul:1,speedMul:1,startGold:0,lives:20,test:true});
 let testMode=null, timeStopped=false, pickMode=false, dragEnemy=null, testQueue=[], testCount=1, testFilter='all';
-let completed={};
 let currentLevel=0;
 let totalWaves=10, theme=null, themeB=null, splitCol=-1, splitEdge=null, deviceChosen=false;
 function levelUnlocked(i){
@@ -2734,6 +2818,8 @@ const LAYOUTS={
   ],
 };
 let chosenOrient='computer';
+if(pendingOrient)chosenOrient=pendingOrient;   // saved choices, applied once these are declared
+if(pendingDevice)deviceChosen=true;
 function chooseOrient(o){ initAudio(); chosenOrient=o; deviceChosen=true; saveProgress(); openMap(); }
 function openMap(){ initAudio(); if(!deviceChosen){ goTo('orientScreen'); return; } goTo('mapScreen'); buildMap(); }
 
