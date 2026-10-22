@@ -6334,12 +6334,17 @@ function drawHouse(h,t){
     if(h.crack>0){ h.crack--; ctx.strokeStyle='rgba(200,170,120,'+(h.crack/40).toFixed(2)+')'; ctx.lineWidth=2;
       ctx.beginPath();ctx.arc(C,C*1.62,C*0.35+(40-h.crack)*0.6,0,Math.PI*2);ctx.stroke(); }
   } else {
-    // still shut: a heavy boarded door that shakes a little as the wave it breaks on draws near
-    const near=h.breakWave-wave<=1&&!gameOver, jit=near?Math.sin((t||0)*0.9+h.row)*0.8:0;
-    ctx.save(); ctx.translate(jit,0);
+    // still shut: a heavy boarded door that cracks the wave before it gives way
+    const near=h.breakWave-wave<=1&&!gameOver;
+    ctx.save();
     ctx.fillStyle='#4f3d2b'; ctx.fillRect(C*0.8,C*1.3,C*0.4,C*0.62); ctx.strokeRect(C*0.8,C*1.3,C*0.4,C*0.62);
     ctx.strokeStyle='rgba(20,14,10,.6)'; ctx.lineWidth=1; for(let xx=C*0.9;xx<C*1.2;xx+=C*0.1){ ctx.beginPath();ctx.moveTo(xx,C*1.32);ctx.lineTo(xx,C*1.9);ctx.stroke(); }
     ctx.strokeStyle='#8a7354'; ctx.lineWidth=3.2; ctx.beginPath();ctx.moveTo(C*0.74,C*1.42);ctx.lineTo(C*1.26,C*1.62);ctx.moveTo(C*0.74,C*1.78);ctx.lineTo(C*1.26,C*1.56);ctx.stroke();
+    if(near){ ctx.strokeStyle='#0c0907'; ctx.lineWidth=1.5; ctx.lineJoin='miter';
+      [[[1.02,1.32],[0.96,1.44],[1.05,1.52],[0.94,1.66],[1.0,1.78]],[[0.96,1.44],[0.86,1.5]],[[1.05,1.52],[1.16,1.58],[1.12,1.7]],[[0.94,1.66],[0.84,1.86]],[[1.0,1.78],[1.1,1.9]]]
+        .forEach(seg=>{ ctx.beginPath(); seg.forEach(([px,py],i)=>i?ctx.lineTo(C*px,C*py):ctx.moveTo(C*px,C*py)); ctx.stroke(); });
+      const gl=0.25+0.15*Math.sin((t||0)*0.08+h.col); ctx.strokeStyle='rgba(176,127,208,'+gl.toFixed(2)+')'; ctx.lineWidth=0.8;
+      ctx.beginPath();ctx.moveTo(C*1.02,C*1.32);ctx.lineTo(C*0.96,C*1.44);ctx.lineTo(C*1.05,C*1.52);ctx.lineTo(C*0.94,C*1.66);ctx.stroke(); }
     ctx.restore();
   }
   ctx.restore();
