@@ -469,6 +469,24 @@
   #noteTitle{width:100%;box-sizing:border-box;padding:8px 10px;border:2px solid var(--ink);border-radius:8px;font:600 1rem 'Rubik',sans-serif;background:#fffdf6;color:var(--ink);}
   #noteText{width:100%;box-sizing:border-box;height:42vh;min-height:160px;margin-top:8px;padding:10px;border:2px solid var(--ink);border-radius:8px;resize:vertical;
     font:.86rem/1.4 ui-monospace,Menlo,Consolas,monospace;background:#fffdf6;color:var(--ink);}
+  .devlogBtn{font-size:.9rem!important;padding:11px!important;margin-top:8px!important;}
+  .devPlate{width:640px;max-width:calc(100vw - 32px);box-sizing:border-box;padding:24px 28px!important;}
+  #devStatus{font-size:.86rem;color:var(--ink);opacity:.75;margin:0 0 8px;text-align:center;}
+  #devOwner input,#devOwner textarea,.devCmtForm input,.devCmtForm textarea{width:100%;box-sizing:border-box;padding:8px 10px;margin-top:6px;border:2px solid var(--ink);border-radius:8px;
+    font:600 .92rem 'Rubik',sans-serif;background:#fffdf6;color:var(--ink);}
+  #devOwner textarea{height:120px;resize:vertical;font-weight:400;}
+  #devLoginBox,#devWriteBox{display:none;background:var(--khaki);border:3px solid var(--ink);border-radius:12px;padding:8px 12px;margin-bottom:12px;}
+  #devPosts{display:grid;gap:14px;max-height:58vh;overflow-y:auto;padding:2px;text-align:left;}
+  .devPost{background:#fffdf6;border:3px solid var(--ink);border-radius:12px;box-shadow:0 4px 0 var(--ink);padding:12px 14px;color:var(--ink);}
+  .devPost h3{font-family:'Bungee','Russo One',sans-serif;font-size:1.05rem;margin:0;color:var(--rust);}
+  .devDate{font-size:.72rem;opacity:.6;}
+  .devText{white-space:pre-wrap;font-size:.9rem;margin:8px 0;overflow-wrap:anywhere;}
+  .devCmts{border-top:2px dashed rgba(0,0,0,.2);margin-top:8px;padding-top:6px;}
+  .devCmt{font-size:.85rem;margin:6px 0;overflow-wrap:anywhere;}
+  .devCmt b{color:var(--rust);}
+  .devCmt button{border:none;background:none;cursor:pointer;color:var(--rust);font-weight:800;}
+  .devCmtForm textarea{height:56px;resize:vertical;font-weight:400;}
+  .devCmtForm .toolBtn{margin-top:6px;}
   #notesWhere{font-size:.75rem;opacity:.65;color:var(--ink);margin-top:6px;}
   @media (max-width:760px){
     #testScreen.active{justify-content:flex-start;overflow-y:auto;}
@@ -590,6 +608,7 @@
       <button class="menuBtn" onclick="goTo('encyScreen')" data-i18n="encyclopedia">Encyclopedia</button>
       <button class="menuBtn" onclick="openNotes()">📝 Notes</button>
     </div>
+    <button class="menuBtn devlogBtn" onclick="openDevlog()">📰 Devlog</button>
   </div></div></div>
 
   <div id="levelTestScreen" class="screen"><div class="plate" style="width:420px">
@@ -670,6 +689,26 @@
       </div>
       <div id="notesWhere"></div>
     </div>
+    <button class="backBtn inkBack" onclick="goTo('testScreen')" data-i18n="back">Back</button>
+  </div></div>
+
+  <div id="devlogScreen" class="screen"><div class="plate devPlate">
+    <h1 class="title" style="font-size:2rem">📰 Devlog</h1>
+    <div id="devStatus"></div>
+    <div id="devOwner">
+      <div id="devLoginBox">
+        <input id="devEmail" type="email" placeholder="Email" autocomplete="username">
+        <input id="devPass" type="password" placeholder="Password" autocomplete="current-password">
+        <div class="notesBtns"><button class="toolBtn" onclick="devLogin()">Log in</button><button class="toolBtn" onclick="devShowLogin(false)">Cancel</button></div>
+      </div>
+      <div id="devWriteBox">
+        <input id="devTitle" placeholder="Entry title" maxlength="120">
+        <textarea id="devBody" placeholder="What's new?" maxlength="20000"></textarea>
+        <div class="notesBtns"><button class="toolBtn" onclick="devPost()">Post entry</button><button class="toolBtn" onclick="devLogout()">Log out</button></div>
+      </div>
+    </div>
+    <div id="devPosts"></div>
+    <div class="notesBtns"><button class="toolBtn" onclick="devLoad()">↻ Refresh</button><button class="toolBtn" id="devLoginLink" onclick="devShowLogin(true)">Owner login</button></div>
     <button class="backBtn inkBack" onclick="goTo('testScreen')" data-i18n="back">Back</button>
   </div></div>
 
@@ -1024,6 +1063,98 @@ function notesSaveFile(){
   a.download='fire-at-will-notes.txt'; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },500);
 }
 window.addEventListener('beforeunload',()=>{ if(notesTimer){ clearTimeout(notesTimer); notesStore(); } });
+/* Devlog (Testing app): foma posts entries, anyone comments with a nickname. Stored in Supabase.
+   The URL and anon key are public by design; row-level security there lets only a signed-in user post. */
+const DEVLOG_URL='', DEVLOG_KEY='';
+const DEV_SESS_KEY='fireAtWillTesting.devlogSession', DEV_NICK_KEY='fireAtWillTesting.devlogNick';
+let devSess=null, devCache=null;
+Object.assign(I18N.ru,{"📰 Devlog":"📰 Девлог","Devlog":"Девлог","Email":"Почта","Password":"Пароль","Log in":"Войти","Cancel":"Отмена","Entry title":"Заголовок записи","What's new?":"Что нового?",
+  "Post entry":"Опубликовать","Log out":"Выйти","↻ Refresh":"↻ Обновить","Owner login":"Вход для автора","Loading...":"Загрузка...","No entries yet.":"Записей пока нет.",
+  "The Devlog isn't connected yet.":"Девлог ещё не подключён.","Can't reach the Devlog. Check the internet and press Refresh.":"Не удаётся связаться с девлогом. Проверьте интернет и нажмите «Обновить».",
+  "Logged in. You can post entries and delete comments.":"Вы вошли. Можно публиковать записи и удалять комментарии.","Wrong email or password.":"Неверная почта или пароль.",
+  "Nickname":"Ник","Write a comment...":"Напишите комментарий...","Comment":"Комментировать","Pick a nickname (2-24 letters) first.":"Сначала придумайте ник (2–24 символа).",
+  "Couldn't send. Try again.":"Не удалось отправить. Попробуйте ещё раз.","Give the entry a title.":"Дайте записи заголовок.","Delete this comment?":"Удалить этот комментарий?","Delete this entry?":"Удалить эту запись?",
+  "Delete entry":"Удалить запись","# comments":"Комментариев: #"});
+function devReady(){ return !!(DEVLOG_URL&&DEVLOG_KEY); }
+function devStatus(t){ document.getElementById('devStatus').textContent=t?trText(t):''; }
+async function devApi(path,opt){
+  opt=opt||{}; const h={apikey:DEVLOG_KEY,'Content-Type':'application/json'};
+  const tok=opt.auth&&devSess?devSess.access_token:DEVLOG_KEY; h.Authorization='Bearer '+tok;
+  if(opt.prefer)h.Prefer=opt.prefer;
+  const r=await fetch(DEVLOG_URL+path,{method:opt.method||'GET',headers:h,body:opt.body?JSON.stringify(opt.body):undefined});
+  if(!r.ok)throw new Error(r.status+' '+(await r.text()).slice(0,200));
+  const txt=await r.text(); return txt?JSON.parse(txt):null;
+}
+function devSaveSess(d){ devSess=d?{access_token:d.access_token,refresh_token:d.refresh_token,exp:Date.now()+((d.expires_in||3600)-60)*1000}:null;
+  try{ if(devSess)localStorage.setItem(DEV_SESS_KEY,JSON.stringify(devSess)); else localStorage.removeItem(DEV_SESS_KEY); }catch(e){} }
+async function devFreshSess(){
+  if(!devSess){ try{ devSess=JSON.parse(localStorage.getItem(DEV_SESS_KEY)||'null'); }catch(e){} }
+  if(devSess&&Date.now()>devSess.exp){
+    try{ devSaveSess(await devApi('/auth/v1/token?grant_type=refresh_token',{method:'POST',body:{refresh_token:devSess.refresh_token}})); }catch(e){ devSaveSess(null); }
+  }
+  return devSess;
+}
+function devShowLogin(on){ document.getElementById('devLoginBox').style.display=on?'block':'none'; }
+function devOwnerUI(){
+  document.getElementById('devWriteBox').style.display=devSess?'block':'none';
+  document.getElementById('devLoginLink').style.display=devSess||!devReady()?'none':'';
+  if(devSess)devShowLogin(false);
+}
+async function openDevlog(){
+  goTo('devlogScreen'); devShowLogin(false);
+  if(!devReady()){ devStatus("The Devlog isn't connected yet."); devOwnerUI(); document.getElementById('devPosts').innerHTML=''; return; }
+  await devFreshSess(); devOwnerUI(); devLoad();
+}
+async function devLogin(){
+  const email=document.getElementById('devEmail').value.trim(), password=document.getElementById('devPass').value;
+  try{ devSaveSess(await devApi('/auth/v1/token?grant_type=password',{method:'POST',body:{email,password}}));
+    document.getElementById('devPass').value=''; devStatus('Logged in. You can post entries and delete comments.'); devOwnerUI(); devRender(); }
+  catch(e){ devStatus('Wrong email or password.'); }
+}
+function devLogout(){ devSaveSess(null); devOwnerUI(); devRender(); devStatus(''); }
+async function devLoad(){
+  if(!devReady())return; devStatus('Loading...');
+  try{
+    const [posts,cmts]=await Promise.all([devApi('/rest/v1/posts?select=*&order=created_at.desc&limit=100'),devApi('/rest/v1/comments?select=*&order=created_at.asc&limit=2000')]);
+    devCache={posts,cmts}; devStatus(posts.length?'':'No entries yet.'); devRender();
+  }catch(e){ devStatus("Can't reach the Devlog. Check the internet and press Refresh."); }
+}
+function devDate(t){ try{ return new Date(t).toLocaleString(currentLang==='ru'?'ru-RU':'en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}); }catch(e){ return ''; } }
+function devEl(tag,cls,text){ const e=document.createElement(tag); if(cls)e.className=cls; if(text!=null){ e.textContent=text; e.setAttribute('data-notr',''); } return e; }
+function devRender(){
+  const box=document.getElementById('devPosts'); box.innerHTML=''; if(!devCache)return;
+  let nick=''; try{ nick=localStorage.getItem(DEV_NICK_KEY)||''; }catch(e){}
+  devCache.posts.forEach(p=>{
+    const c=devEl('div','devPost'); c.appendChild(devEl('h3','',p.title)); c.appendChild(devEl('div','devDate',devDate(p.created_at)));
+    c.appendChild(devEl('div','devText',p.body));
+    if(devSess){ const del=document.createElement('button'); del.className='toolBtn'; del.textContent=trText('Delete entry');
+      del.onclick=async()=>{ if(!confirm(trText('Delete this entry?')))return; try{ await devFreshSess(); await devApi('/rest/v1/posts?id=eq.'+p.id,{method:'DELETE',auth:true}); devLoad(); }catch(e){ devStatus("Couldn't send. Try again."); } };
+      c.appendChild(del); }
+    const cm=devEl('div','devCmts'); const list=devCache.cmts.filter(x=>x.post_id===p.id);
+    cm.appendChild(devEl('div','devDate',trText('# comments').replace('#',list.length)));
+    list.forEach(x=>{ const r=devEl('div','devCmt'); r.appendChild(devEl('b','',x.nick)); r.appendChild(devEl('span','devDate',' · '+devDate(x.created_at)));
+      if(devSess){ const d=document.createElement('button'); d.textContent='✕'; d.title=trText('Delete');
+        d.onclick=async()=>{ if(!confirm(trText('Delete this comment?')))return; try{ await devFreshSess(); await devApi('/rest/v1/comments?id=eq.'+x.id,{method:'DELETE',auth:true}); devLoad(); }catch(e){ devStatus("Couldn't send. Try again."); } };
+        r.appendChild(d); }
+      r.appendChild(devEl('div','devText',x.body)); cm.appendChild(r); });
+    const f=devEl('div','devCmtForm');
+    const ni=document.createElement('input'); ni.placeholder=trText('Nickname'); ni.maxLength=24; ni.value=nick;
+    const ta=document.createElement('textarea'); ta.placeholder=trText('Write a comment...'); ta.maxLength=2000;
+    const sb=document.createElement('button'); sb.className='toolBtn'; sb.textContent=trText('Comment');
+    sb.onclick=async()=>{ const n=ni.value.trim(), b=ta.value.trim(); if(n.length<2){ devStatus('Pick a nickname (2-24 letters) first.'); ni.focus(); return; } if(!b)return;
+      try{ localStorage.setItem(DEV_NICK_KEY,n); }catch(e){}
+      sb.disabled=true; try{ await devApi('/rest/v1/comments',{method:'POST',body:{post_id:p.id,nick:n,body:b}}); devStatus(''); devLoad(); }catch(e){ sb.disabled=false; devStatus("Couldn't send. Try again."); } };
+    f.appendChild(ni); f.appendChild(ta); f.appendChild(sb); cm.appendChild(f); c.appendChild(cm); box.appendChild(c);
+  });
+}
+async function devPost(){
+  const t=document.getElementById('devTitle').value.trim(), b=document.getElementById('devBody').value.trim();
+  if(!t){ devStatus('Give the entry a title.'); return; }
+  try{ await devFreshSess(); if(!devSess){ devOwnerUI(); return; }
+    await devApi('/rest/v1/posts',{method:'POST',auth:true,body:{title:t,body:b}});
+    document.getElementById('devTitle').value=''; document.getElementById('devBody').value=''; devLoad(); }
+  catch(e){ devStatus("Couldn't send. Try again."); }
+}
 applyLang('en');
 
 /* ---------- audio ---------- */
