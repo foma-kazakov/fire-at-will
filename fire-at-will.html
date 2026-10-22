@@ -742,7 +742,7 @@ new MutationObserver(ms=>{ for(const m of ms){
     else if(m.type==='attributes')trAttr(m.target,m.attributeName);
     else m.addedNodes.forEach(trNode); } })
   .observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['placeholder','title','aria-label']});
-Object.assign(I18N.ru,{"The Graveyard":"Кладбище","Pumpkin Farm":"Тыквенная ферма","Ashen Wastes":"Пепельные пустоши","Wretched Woodland":"Гиблая чаща","The Halloween island is coming soon.":"Остров Хэллоуина скоро откроется.","Adds the Halloween island to the campaign map":"Добавляет остров Хэллоуина на карту кампании","Zombie":"Зомби","Skeleton":"Скелет","Skeleton Knight":"Скелет-рыцарь","Zombie Grunt":"Зомби-пехотинец","Abandoned house":"Заброшенный дом","zombie grunts leave the houses every wave":"зомби-пехотинцы выходят из домов каждую волну","Zombie grunts stumble out of the abandoned house!":"Из заброшенного дома ковыляют зомби-пехотинцы!","Restless Dead":"Неупокоенный мертвец","120 health, walks like a grunt.":"120 здоровья, ходит как пехотинец.","A bite infects your soldiers: 2.5 seconds later they rise as zombies.":"Укус заражает ваших солдат: через 2,5 секунды они встают зомби.","Rises from graves and graveyards.":"Встаёт из могил и с кладбищ.","Keep Firework soldiers and Backup out of its reach.":"Держите солдат фейерверка и подкрепление подальше от него.","Kill it at range before it bites.":"Убивайте издалека, пока не укусил.","Splash damage on the road.":"Урон по площади на дороге.","Knife Thrower":"Метатель ножей","125 health and a knife on its belt.":"125 здоровья и нож на поясе.","Stops to throw a knife that stuns a tower for 1.5 seconds.":"Останавливается и метает нож, оглушая башню на 1,5 секунды.","Throws again every 2.5 seconds.":"Бросает снова каждые 2,5 секунды.","Menders and Farms are never targeted.":"Лекари и фермы не становятся целью.","Long-range towers that hit it before it gets close: Sniper.":"Дальнобойные башни, бьющие до сближения: Снайпер.","Kill it while it stands still to throw.":"Убивайте, пока он стоит и метает.","Undead Champion":"Чемпион нежити","250 health in rusted armour.":"250 здоровья в ржавых доспехах.","Hits your units twice as hard.":"Бьёт ваших юнитов вдвое сильнее.","Marches out of graveyards and crypts.":"Выходит с кладбищ и из склепов.","Slow — easy to focus with Snipers and Cannons.":"Медленный — его легко добить Снайперами и Пушками.","Keep your units away and let towers work.":"Держите юнитов подальше, пусть работают башни.","Infected Footsoldier":"Заражённый пехотинец","A grunt the plague got to: 100 health.":"Пехотинец, до которого добралась зараза: 100 здоровья.","Its bite infects your soldiers, just like a zombie.":"Его укус заражает солдат, как у зомби.","Three stumble out of each abandoned house every wave.":"Каждую волну из заброшенного дома выходят трое.","Grunt-level health — any tower handles it.":"Здоровья как у пехотинца — справится любая башня.","Splash near the house door.":"Урон по площади у двери дома.","Keep soldiers away from it.":"Держите солдат подальше.","Grave":"Могила","Graveyard":"Кладбище","Crypt":"Склеп","Halloween":"Хэллоуин","Graves go on grass beside the road.":"Могилы ставятся на траву у дороги.","Something already stands here.":"Здесь уже что-то стоит.","Its gate can only face this road. Use the Eraser to remove it.":"Ворота могут смотреть только на эту дорогу. Убрать кладбище можно ластиком.","Not enough room here — it needs 2×2 tiles.":"Здесь мало места — нужно 2×2 клетки.","It needs 2×2 clear tiles off the road and water.":"Нужно 2×2 свободные клетки не на дороге и не в воде.","A graveyard must have one whole side against the road (2 road tiles).":"Кладбище должно стоять целой стороной к дороге (2 клетки дороги).","Tap the graveyard again to turn its gate.":"Нажмите на кладбище ещё раз, чтобы повернуть ворота.","Not enough room here — it needs 2 tiles side by side.":"Здесь мало места — нужно 2 клетки рядом.","It needs 2 clear tiles side by side, off the road and water.":"Нужно 2 свободные клетки рядом, не на дороге и не в воде.","A graveyard gate no longer opens onto the road.":"Ворота кладбища больше не выходят на дорогу.","zombies leave the graves on the last wave":"зомби встают из могил в последней волне","the dead never stop coming":"мертвецы идут без остановки","skeletons crawl from the bones on wave 3":"скелеты выползают из костей на 3-й волне","Skeletons crawl out of the bones!":"Из костей выползают скелеты!","The graves open!":"Могилы открываются!","Check for updates":"Проверить обновления","Restart to update":"Перезапустить и обновить","A new version is downloaded.":"Новая версия загружена.","You have the latest version.":"У вас последняя версия.","Could not check for updates. Are you online?":"Не удалось проверить обновления. Есть ли интернет?","Checking for updates…":"Проверка обновлений…","A new version of the game is ready.":"Новая версия игры готова.","Restart":"Перезапустить","This DLC needs a newer version of the game.":"Для этого DLC нужна более новая версия игры.","Something stirs in the Wretched Woodland…":"В Гиблой чаще что-то шевелится…"});
+Object.assign(I18N.ru,{"The Graveyard":"Кладбище","Pumpkin Farm":"Тыквенная ферма","Ashen Wastes":"Пепельные пустоши","Wretched Woodland":"Гиблая чаща","The Halloween island is coming soon.":"Остров Хэллоуина скоро откроется.","Adds the Halloween island to the campaign map":"Добавляет остров Хэллоуина на карту кампании","Zombie":"Зомби","Skeleton":"Скелет","Skeleton Knight":"Скелет-рыцарь","Zombie Grunt":"Зомби-пехотинец","Abandoned house":"Заброшенный дом","the abandoned house breaks open on a random wave":"заброшенный дом вскрывается на случайной волне","The door bursts — zombie grunts pour out of the abandoned house!":"Дверь вылетает — из заброшенного дома валят зомби-пехотинцы!","Restless Dead":"Неупокоенный мертвец","120 health, walks like a grunt.":"120 здоровья, ходит как пехотинец.","A bite infects your soldiers: 2.5 seconds later they rise as zombies.":"Укус заражает ваших солдат: через 2,5 секунды они встают зомби.","Rises from graves and graveyards.":"Встаёт из могил и с кладбищ.","Keep Firework soldiers and Backup out of its reach.":"Держите солдат фейерверка и подкрепление подальше от него.","Kill it at range before it bites.":"Убивайте издалека, пока не укусил.","Splash damage on the road.":"Урон по площади на дороге.","Knife Thrower":"Метатель ножей","125 health and a knife on its belt.":"125 здоровья и нож на поясе.","Stops to throw a knife that stuns a tower for 1.5 seconds.":"Останавливается и метает нож, оглушая башню на 1,5 секунды.","Throws again every 2.5 seconds.":"Бросает снова каждые 2,5 секунды.","Menders and Farms are never targeted.":"Лекари и фермы не становятся целью.","Long-range towers that hit it before it gets close: Sniper.":"Дальнобойные башни, бьющие до сближения: Снайпер.","Kill it while it stands still to throw.":"Убивайте, пока он стоит и метает.","Undead Champion":"Чемпион нежити","250 health in rusted armour.":"250 здоровья в ржавых доспехах.","Hits your units twice as hard.":"Бьёт ваших юнитов вдвое сильнее.","Marches out of graveyards and crypts.":"Выходит с кладбищ и из склепов.","Slow — easy to focus with Snipers and Cannons.":"Медленный — его легко добить Снайперами и Пушками.","Keep your units away and let towers work.":"Держите юнитов подальше, пусть работают башни.","Infected Footsoldier":"Заражённый пехотинец","A grunt the plague got to: 100 health.":"Пехотинец, до которого добралась зараза: 100 здоровья.","Its bite infects your soldiers, just like a zombie.":"Его укус заражает солдат, как у зомби.","On a random wave the abandoned house door breaks and 3–7 pour out.":"На случайной волне дверь заброшенного дома ломается и вываливаются 3–7 штук.","Grunt-level health — any tower handles it.":"Здоровья как у пехотинца — справится любая башня.","Splash near the house door.":"Урон по площади у двери дома.","Keep soldiers away from it.":"Держите солдат подальше.","Grave":"Могила","Graveyard":"Кладбище","Crypt":"Склеп","Halloween":"Хэллоуин","Graves go on grass beside the road.":"Могилы ставятся на траву у дороги.","Something already stands here.":"Здесь уже что-то стоит.","Its gate can only face this road. Use the Eraser to remove it.":"Ворота могут смотреть только на эту дорогу. Убрать кладбище можно ластиком.","Not enough room here — it needs 2×2 tiles.":"Здесь мало места — нужно 2×2 клетки.","It needs 2×2 clear tiles off the road and water.":"Нужно 2×2 свободные клетки не на дороге и не в воде.","A graveyard must have one whole side against the road (2 road tiles).":"Кладбище должно стоять целой стороной к дороге (2 клетки дороги).","Tap the graveyard again to turn its gate.":"Нажмите на кладбище ещё раз, чтобы повернуть ворота.","Not enough room here — it needs 2 tiles side by side.":"Здесь мало места — нужно 2 клетки рядом.","It needs 2 clear tiles side by side, off the road and water.":"Нужно 2 свободные клетки рядом, не на дороге и не в воде.","A graveyard gate no longer opens onto the road.":"Ворота кладбища больше не выходят на дорогу.","zombies leave the graves on the last wave":"зомби встают из могил в последней волне","the dead never stop coming":"мертвецы идут без остановки","skeletons crawl from the bones on wave 3":"скелеты выползают из костей на 3-й волне","Skeletons crawl out of the bones!":"Из костей выползают скелеты!","The graves open!":"Могилы открываются!","Check for updates":"Проверить обновления","Restart to update":"Перезапустить и обновить","A new version is downloaded.":"Новая версия загружена.","You have the latest version.":"У вас последняя версия.","Could not check for updates. Are you online?":"Не удалось проверить обновления. Есть ли интернет?","Checking for updates…":"Проверка обновлений…","A new version of the game is ready.":"Новая версия игры готова.","Restart":"Перезапустить","This DLC needs a newer version of the game.":"Для этого DLC нужна более новая версия игры.","Something stirs in the Wretched Woodland…":"В Гиблой чаще что-то шевелится…"});
 Object.assign(I18N.ru,{"Extra levels from DLC files.":"Дополнительные уровни из файлов DLC.","Drop a DLC file here":"Перетащите сюда файл DLC","or tap to choose one":"или нажмите, чтобы выбрать его","DLC folder":"Папка DLC","Open DLC folder":"Открыть папку DLC","No DLC yet. Put a DLC file in the DLC folder, or drop it above.":"DLC пока нет. Положите файл DLC в папку DLC или перетащите его выше.","No DLC yet. Drop a DLC file above.":"DLC пока нет. Перетащите файл DLC выше.","Remove":"Удалить","beaten #/#":"пройдено #/#","from the DLC folder":"из папки DLC","DLC removed.":"DLC удалено.","DLC added":"DLC добавлено","That file is too big for a DLC.":"Этот файл слишком большой для DLC.","This file is not a DLC (it is not JSON).":"Этот файл не DLC (это не JSON).","This file is not a Fire at Will DLC.":"Этот файл не DLC для Fire at Will.","This DLC has no id or name.":"У этого DLC нет id или названия.","This DLC has no levels.":"В этом DLC нет уровней.","Level # has no map (level code).":"У уровня # нет карты (кода уровня).","Level # has a wave with no known enemies.":"В уровне # есть волна без известных врагов.","Level # has no road from a spawn to a base.":"В уровне # нет дороги от точки появления до базы.","Campaign":"Кампания","◀ Back":"◀ Назад","Final wave":"Последняя волна","Lives left: #/#":"Осталось жизней: #/#","Lives left: #/# · 💎 +#":"Осталось жизней: #/# · 💎 +#"});
 // words drawn straight onto the canvas go through the same table
 ['fillText','strokeText','measureText'].forEach(fn=>{ const orig=CanvasRenderingContext2D.prototype[fn];
@@ -1335,7 +1335,7 @@ const ENCY=[
   skills:['250 health in rusted armour.','Hits your units twice as hard.','Marches out of graveyards and crypts.'],
   weak:['Slow — easy to focus with Snipers and Cannons.','Ice Age and Lightning.','Keep your units away and let towers work.']},
  {type:'zombiegrunt',role:'Infected Footsoldier',
-  skills:['A grunt the plague got to: 100 health.','Its bite infects your soldiers, just like a zombie.','Three stumble out of each abandoned house every wave.'],
+  skills:['A grunt the plague got to: 100 health.','Its bite infects your soldiers, just like a zombie.','On a random wave the abandoned house door breaks and 3–7 pour out.'],
   weak:['Grunt-level health — any tower handles it.','Splash near the house door.','Keep soldiers away from it.']},
  {type:'grassmer',role:'Boss — The Fields',
   skills:['2600 health and immune to poison.','Sprouts three weakened grunts from its body every few seconds.','Slow but nearly unstoppable in a straight fight.'],
@@ -3737,12 +3737,15 @@ function updateTheDead(){
     const x=k.dir==='d'?k.col*CELL+CELL/2:(k.col+2)*CELL+4, y=k.dir==='d'?(k.row+2)*CELL+4:k.row*CELL+CELL*0.7;
     spawnDead(Math.random()<0.8?'skeleton':'skeletonknight',x,y,{nestborn:true});
   });
-  // abandoned houses: three zombie grunts stumble out as each wave starts, and they count towards the wave
+  // abandoned houses stay shut until their own random wave; then the door gives way a few seconds in
+  // and 3-7 zombie grunts pour out, counting towards that wave
   if(houses.length&&wave>houseWave){ houseWave=wave; const myWave=wave, wi=waveInfo[myWave];
-    houses.forEach(h=>{ const x=(h.col+1)*CELL, y=(h.row+2)*CELL+4;
-      for(let i=0;i<3;i++){ if(wi)wi.total++;
-        setTimeout(()=>{ if(gameOver)return; const e=spawnDead('zombiegrunt',x,y); e.waveNo=myWave; if(wi)wi.spawned++; },400+i*500); } });
-    setMsg('Zombie grunts stumble out of the abandoned house!'); }
+    houses.forEach(h=>{ if(h.broken||h.breakWave!==myWave)return;
+      const n=3+Math.floor(Math.random()*5), x=(h.col+1)*CELL, y=(h.row+2)*CELL+4, at=1500+Math.random()*4500;
+      if(wi)wi.total+=n;
+      setTimeout(()=>{ if(gameOver)return; h.broken=true; h.crack=40; shake=Math.max(shake,8);
+        fxSmoke(x,y-CELL*0.4,10,'120,104,86',8); setMsg('The door bursts — zombie grunts pour out of the abandoned house!');
+        for(let i=0;i<n;i++)setTimeout(()=>{ if(gameOver)return; const e=spawnDead('zombiegrunt',x,y); e.waveNo=myWave; if(wi)wi.spawned++; },300+i*380); },at); }); }
 }
 
 /* ---------- police cars ---------- */
@@ -4803,7 +4806,7 @@ function sbxRender(){
     if(sbx.graves.length)parts.push('zombies leave the graves on the last wave');
     if(sbx.graveyards.length||sbx.crypts.length)parts.push('the dead never stop coming');
     if(sbx.bones.length)parts.push('skeletons crawl from the bones on wave 3');
-    if(sbx.houses.length)parts.push('zombie grunts leave the houses every wave');
+    if(sbx.houses.length)parts.push('the abandoned house breaks open on a random wave');
     if(sbx.bushes.length)parts.push('thieves hide in '+sbx.bushes.length+' bush'+(sbx.bushes.length>1?'es':''));
     if(sbx.tunnelIns.length!==sbx.tunnelOuts.length)parts.push('a tunnel is missing its partner');
     else if(sbx.tunnelIns.length&&R.groups.some(g=>g.some(wp=>wp.some(p=>p[2]))))parts.push('half the enemies take the tunnel');
@@ -5181,7 +5184,7 @@ function startGame(){
   graves=(L.graves||[]).map(([r,c])=>({row:r,col:c,done:false}));
   graveyards=(L.graveyards||[]).map(([r,c,d])=>({row:r,col:c,dir:d||'d',cd:60+Math.floor(Math.random()*120)}));
   crypts=(L.crypts||[]).map(([r,c,d])=>({row:r,col:c,dir:d||'r',cd:120+Math.floor(Math.random()*180)}));
-  houses=(L.houses||[]).map(([r,c])=>({row:r,col:c})); houseWave=0; knivesFx=[];
+  houses=(L.houses||[]).map(([r,c])=>({row:r,col:c,broken:false,crack:0,breakWave:0})); houseWave=0; knivesFx=[];
   ruins=(L.ruins||[]).map(([r,c])=>({row:r,col:c})); silkBridges=(L.silkBridges||[]).map(([r,c])=>({row:r,col:c}));
   tunnels=(L.tunnels||[]).map(t=>({in:t.in,out:t.out}));
   lakeExitPts=(L.lakeExits||[]).map(ex=>Object.assign(toPt(ex.exit),{routes:ex.routes.map(wp=>wp.map(toPt))}));
@@ -5228,6 +5231,7 @@ function startGame(){
   const lv=LEVELS[currentLevel];
   diffCfg={hpMul:lv.hpMul,speedMul:lv.speedMul,goldMul:1};
   totalWaves=lv.waves; theme=lv.region;
+  houses.forEach(h=>h.breakWave=totalWaves>1?2+Math.floor(Math.random()*(totalWaves-1)):1);
   themeB=null; splitCol=-1; splitEdge=null;
   if(lv.def&&lv.def.split){
     themeB=REGIONS.find(r=>r.id===lv.def.split.right)||null;
@@ -5599,6 +5603,8 @@ function continueRun(){
   if(bonesWave&&wave>=bonesWave)boneHeaps.forEach(k=>k.done=true);
   if(wave>=totalWaves)graves.forEach(g=>g.done=true);
   houseWave=wave;
+  if(Array.isArray(sv.houses))houses.forEach((h,i)=>{ const q=sv.houses[i]; if(q){ h.breakWave=q[0]; h.broken=!!q[1]; } });
+  houses.forEach(h=>{ if(!h.broken&&h.breakWave<=wave)h.broken=true; });
   { const d=LEVELS[currentLevel].def||{};
     if(d.spiders&&wave>=d.spiders.wave)spiderDone=true;
     if(d.bigSpiderWave&&wave>=d.bigSpiderWave)bigSpiderDone=true; }
@@ -5612,7 +5618,7 @@ function saveAndExit(){
   suspended={level:currentLevel,wave,gold,lives,
     towers:towers.map(t=>({row:t.row,col:t.col,type:t.type})),
     trees:trees.map(t=>[t.row,t.col]), ruins:ruins.map(q=>[q.row,q.col]),
-    powerCd:{...powerCd}};
+    powerCd:{...powerCd}, houses:houses.map(h=>[h.breakWave,h.broken?1:0])};
   saveProgress();
   closePause();
   clearSpawners();
@@ -6297,7 +6303,7 @@ function drawUndeadShape(g,type,rad,base,step,throwing){
     g.beginPath();g.arc(0,-rad*1.05,rad*0.52,Math.PI,0);g.lineTo(rad*0.52,-rad*0.9);g.lineTo(-rad*0.52,-rad*0.9);g.closePath();g.fill();g.stroke();
     g.fillStyle='#7a2e2a'; g.beginPath();g.moveTo(-rad*0.1,-rad*1.55);g.quadraticCurveTo(-rad*0.7,-rad*1.9,-rad*0.9,-rad*1.4);g.lineTo(-rad*0.1,-rad*1.45);g.closePath();g.fill(); }
 }
-// an abandoned house, 2x2 tiles: zombie grunts stumble out of its door at the start of every wave
+// an abandoned house, 2x2 tiles: shut until its random wave, then the door bursts and zombie grunts pour out
 function drawHouse(h,t){
   const C=CELL, x=h.col*C, y=h.row*C;
   ctx.save(); ctx.translate(x,y);
@@ -6318,11 +6324,24 @@ function drawHouse(h,t){
   [[C*0.22,C*0.9],[C*1.42,C*0.9]].forEach(([wx,wy])=>{ ctx.fillStyle='#1b1511'; ctx.fillRect(wx,wy,C*0.38,C*0.34); ctx.strokeRect(wx,wy,C*0.38,C*0.34);
     ctx.strokeStyle='#8a7354'; ctx.lineWidth=3; ctx.beginPath();ctx.moveTo(wx-2,wy+3);ctx.lineTo(wx+C*0.4,wy+C*0.3);ctx.moveTo(wx-2,wy+C*0.28);ctx.lineTo(wx+C*0.4,wy+4);ctx.stroke();
     ctx.strokeStyle='#211a14'; ctx.lineWidth=1.6; });
-  // the door hangs open on a dark hall, with a sickly glow
-  ctx.fillStyle='#0f0b09'; ctx.fillRect(C*0.8,C*1.3,C*0.4,C*0.62); ctx.strokeRect(C*0.8,C*1.3,C*0.4,C*0.62);
-  const gl=0.15+0.1*Math.sin((t||0)*0.05+h.col);
-  ctx.fillStyle='rgba(176,127,208,'+gl.toFixed(2)+')'; ctx.fillRect(C*0.84,C*1.5,C*0.32,C*0.4);
-  ctx.fillStyle='#5b4733'; ctx.beginPath();ctx.moveTo(C*1.2,C*1.3);ctx.lineTo(C*1.38,C*1.38);ctx.lineTo(C*1.38,C*1.98);ctx.lineTo(C*1.2,C*1.92);ctx.closePath();ctx.fill();ctx.stroke();
+  if(h.broken){
+    // the door is smashed open on a dark hall, with a sickly glow and splinters on the step
+    ctx.fillStyle='#0f0b09'; ctx.fillRect(C*0.8,C*1.3,C*0.4,C*0.62); ctx.strokeRect(C*0.8,C*1.3,C*0.4,C*0.62);
+    const gl=0.15+0.1*Math.sin((t||0)*0.05+h.col);
+    ctx.fillStyle='rgba(176,127,208,'+gl.toFixed(2)+')'; ctx.fillRect(C*0.84,C*1.5,C*0.32,C*0.4);
+    ctx.fillStyle='#5b4733'; ctx.save(); ctx.translate(C*1.3,C*2.02); ctx.rotate(-0.35); ctx.fillRect(-C*0.22,-4,C*0.44,7); ctx.strokeRect(-C*0.22,-4,C*0.44,7); ctx.restore();
+    ctx.save(); ctx.translate(C*0.72,C*1.98); ctx.rotate(0.6); ctx.fillRect(-C*0.12,-2,C*0.24,4); ctx.restore();
+    if(h.crack>0){ h.crack--; ctx.strokeStyle='rgba(200,170,120,'+(h.crack/40).toFixed(2)+')'; ctx.lineWidth=2;
+      ctx.beginPath();ctx.arc(C,C*1.62,C*0.35+(40-h.crack)*0.6,0,Math.PI*2);ctx.stroke(); }
+  } else {
+    // still shut: a heavy boarded door that shakes a little as the wave it breaks on draws near
+    const near=h.breakWave-wave<=1&&!gameOver, jit=near?Math.sin((t||0)*0.9+h.row)*0.8:0;
+    ctx.save(); ctx.translate(jit,0);
+    ctx.fillStyle='#4f3d2b'; ctx.fillRect(C*0.8,C*1.3,C*0.4,C*0.62); ctx.strokeRect(C*0.8,C*1.3,C*0.4,C*0.62);
+    ctx.strokeStyle='rgba(20,14,10,.6)'; ctx.lineWidth=1; for(let xx=C*0.9;xx<C*1.2;xx+=C*0.1){ ctx.beginPath();ctx.moveTo(xx,C*1.32);ctx.lineTo(xx,C*1.9);ctx.stroke(); }
+    ctx.strokeStyle='#8a7354'; ctx.lineWidth=3.2; ctx.beginPath();ctx.moveTo(C*0.74,C*1.42);ctx.lineTo(C*1.26,C*1.62);ctx.moveTo(C*0.74,C*1.78);ctx.lineTo(C*1.26,C*1.56);ctx.stroke();
+    ctx.restore();
+  }
   ctx.restore();
 }
 
