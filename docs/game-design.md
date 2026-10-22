@@ -7,7 +7,7 @@ Knowledge base for the game, extracted from the original design conversation (19
 A tower defense game. You place towers on grass tiles beside the road, and enemies walk the road toward your base. Each enemy that reaches the base costs a life.
 
 - **Device choice:** at the start the player picks Computer (horizontal map) or Phone (vertical map). Every level has both layouts.
-- **Main menu:** Play, Settings, Units, Powers, Encyclopedia, Achievements and DLC, plus a gem counter. A hidden **Testing** button appears after redeeming the code `TEST`.
+- **Main menu:** Play, Settings, Units, Powers, Encyclopedia, Achievements and DLC, plus a gem counter. A hidden **Testing** button appears while the Testing DLC ([dlc/testing.json](../dlc/testing.json)) is installed, or after redeeming the code `TEST`.
 - **Campaign map:** an island with 7 regions of 6 levels each. Only the levels listed below are built so far; unbuilt levels show an X.
 - **Gems:** earned the first time you win a level (+5). Spent on units and slots.
 - **No stars:** a level is simply beaten or not (beaten levels show a ✓ on the map). Star ratings were removed on 20 Oct 2026. Beating a level unlocks the next one.
@@ -147,6 +147,7 @@ You start with 2 power slots, which can be raised to 3 with gems.
 ---
 
 ## Testing menu
+Its own DLC pack, `dlc/testing.json` (`"testing": true`); removing the pack hides the menu again unless the `TEST` code was redeemed.
 - **Test a level:** pick any built level with a slider and play it. Nothing is saved.
 - **Sandbox:** a level editor.
   - **Map sizes:** Computer 19×12, Phone 10×18, Large 25×16 and Huge 31×20.

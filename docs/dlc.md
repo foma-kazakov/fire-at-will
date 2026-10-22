@@ -42,7 +42,8 @@ DLC levels never touch campaign progress (`fireAtWill.progress`). They give no g
 | `id` | yes | Unique name for the pack. Two files with the same id count as one (the DLC folder wins). |
 | `name` | yes | Shown on the DLC card. |
 | `author`, `version`, `description` | no | Shown on the card (version is stored for later). |
-| `levels` | yes | One or more levels, played in any order. May be empty (`[]`) when `map` is set. |
+| `levels` | yes | One or more levels, played in any order. May be empty (`[]`) when `map` or `testing` is set. |
+| `testing` | no | `true` switches on the Testing menu (Test a level, Sandbox, Enemy tester) on the main menu while the pack is installed. `levels` may then be empty. |
 | `map` | no | Extra land the pack switches on in the campaign map. Only `"halloween"` exists: the Halloween island west of the Dark Forest (its art is in the game itself). |
 
 Each level:
@@ -62,4 +63,4 @@ Each level:
 
 A DLC is data only: it can add levels built from the game's existing towers, enemies and map pieces, but not new units or code. A file the game can't read shows as a card with the reason (for example "Level 2 has no road from a spawn to a base.").
 
-An example pack is in [dlc/example-pack.json](../dlc/example-pack.json). The Halloween pack, which only adds the island for now, is [dlc/halloween.json](../dlc/halloween.json).
+An example pack is in [dlc/example-pack.json](../dlc/example-pack.json). The Halloween pack, which only adds the island for now, is [dlc/halloween.json](../dlc/halloween.json). The Testing pack, which switches on the Testing menu, is [dlc/testing.json](../dlc/testing.json).
