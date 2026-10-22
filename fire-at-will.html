@@ -390,6 +390,22 @@
     #hud{gap:10px;padding:6px 12px;font-size:.78rem;}
     #waveBanner b{font-size:1.35rem;}
   }
+  /* ---- Fire at Will Testing has its own look: a blueprint workshop instead of the sunny fields ---- */
+  .testingApp{--khaki:#b7cde3; --paper:#e4eef8; --rust:#e8742c; --brass:#4cc3f0; --ink:#0f2238;}
+  .testingApp body{background-color:#123a63;
+    background-image:linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px),
+      linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px),
+      radial-gradient(ellipse at 50% 40%,#1b5288 0%,#0e2d4f 100%);
+    background-size:96px 96px,96px 96px,24px 24px,24px 24px,100% 100%;}
+  .testingApp .sun,.testingApp .cloud,.testingApp .ridge,.testingApp .ridge2,.testingApp .farTrees,.testingApp .hill{display:none!important;}
+  .testingApp .plate{box-shadow:0 10px 0 rgba(0,0,0,.45), inset 0 0 0 3px var(--khaki), 0 0 0 1px rgba(76,195,240,.4);}
+  .testingApp .testCard{border-left:8px solid var(--rust);}
+  .testingApp .plate,.testingApp .pauseBox,.testingApp .encyBox,.testingApp .sbxPanel,.testingApp #overlay .box{
+    background-image:linear-gradient(rgba(30,90,150,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(30,90,150,.07) 1px,transparent 1px),linear-gradient(180deg,#eef5fc,#d9e6f3);
+    background-size:12px 12px,12px 12px,100% 100%;}
+  .testingApp .toolBtn.on{background:linear-gradient(180deg,#7fd6f7,#3aaee0);}
+  .testingApp h2.sub{color:var(--ink)!important;}
+  .testingApp #msg{color:#d6e9fa;}
 </style>
 </head>
 <body>

@@ -63,19 +63,26 @@ jobs:
 
   release:
     needs: build
+    # runs even when one system's build failed (GitHub sometimes has no Mac machine free);
+    # files that did build replace their old copies, and the rest keep their previous version
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
         with:
           path: out
           merge-multiple: true
-      - name: Replace the desktop release
+      - name: Update the desktop release
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run: |
-          gh release delete desktop --cleanup-tag --yes || true
-          gh release create desktop out/* \
-            --target "$GITHUB_SHA" \
-            --title "Fire at Will desktop apps" \
-            --notes "Built from fire-at-will.html at ${GITHUB_SHA::7}. Windows: Fire-at-Will-Setup.exe (installer) or Fire-at-Will-Portable.exe (no install). Mac: Fire-at-Will-Mac.dmg (Intel and Apple Silicon). Linux: Fire-at-Will-Linux.AppImage or Fire-at-Will-Linux.deb. The Fire at Will Testing app (Test a level, Sandbox, Enemy tester) has the same files with Testing in the name, for example Fire-at-Will-Testing-Mac.dmg."
+          ls out
+          [ -n "$(ls -A out 2>/dev/null)" ] || { echo "Nothing was built"; exit 1; }
+          NOTES="Fire at Will: Windows Fire-at-Will-Setup.exe (installer) or Fire-at-Will-Portable.exe (no install), Mac Fire-at-Will-Mac.dmg (Intel and Apple Silicon), Linux Fire-at-Will-Linux.AppImage or Fire-at-Will-Linux.deb. Fire at Will Testing (Test a level, Sandbox, Enemy tester) has the same files with Testing in the name, for example Fire-at-Will-Testing-Mac.dmg. Last built from ${GITHUB_SHA::7}; both apps also update their game file by themselves."
+          if gh release view desktop >/dev/null 2>&1; then
+            gh release upload desktop out/* --clobber
+            gh release edit desktop --title "Fire at Will desktop apps" --notes "$NOTES"
+          else
+            gh release create desktop out/* --target "$GITHUB_SHA" --title "Fire at Will desktop apps" --notes "$NOTES"
+          fi

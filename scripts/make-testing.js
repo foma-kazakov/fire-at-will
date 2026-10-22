@@ -9,6 +9,7 @@ const swaps = [
   ['const TESTING_APP=false;', 'const TESTING_APP=true;'],
   ['<title>Fire at Will</title>', '<title>Fire at Will Testing</title>'],
   ['<meta name="apple-mobile-web-app-title" content="Fire at Will">', '<meta name="apple-mobile-web-app-title" content="FaW Testing">'],
+  ['<meta name="theme-color" content="#c1442d">', '<meta name="theme-color" content="#123a63">'],
 ];
 for (const [from, to] of swaps) {
   if (!html.includes(from)) throw new Error('fire-at-will.html no longer contains: ' + from);

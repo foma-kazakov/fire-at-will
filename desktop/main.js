@@ -118,7 +118,7 @@ function createWindow() {
     title: TITLE,
     backgroundColor: '#22261c',
     autoHideMenuBar: true,
-    icon: path.join(__dirname, 'build', 'icon.png'),
+    icon: path.join(__dirname, 'build', TESTING ? 'icon-testing.png' : 'icon.png'),
     webPreferences: { preload: path.join(__dirname, 'preload.js') },
   });
   win.removeMenu();
