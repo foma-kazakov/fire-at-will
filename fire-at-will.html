@@ -2848,6 +2848,10 @@ function shroomExtraOpen(){ return false; } // hook: return true once the unlock
 fitNodes(SHROOM_REGIONS);
 // a valley map (its dark blue grass) plays at night
 const isNightGround=g=>String(g||'').toLowerCase()===SHROOM_GROUND.toLowerCase();
+// which DLC location a grass colour belongs to, so its ground gets that place's own little details and ambience
+function groundRegion(g){ const k=String(g||'').toLowerCase();
+  const r=ISLE_REGIONS.concat(SHROOM_REGIONS).find(o=>o.ground.toLowerCase()===k||(o.ground2&&o.ground2.toLowerCase()===k));
+  return r?r.id:null; }
 
 // a winding trail from level a to level b: the straight line is bent side to side in a few smooth swings
 function twistPath(a,b,seed){
@@ -3147,7 +3151,7 @@ function openMap(){ initAudio(); if(!deviceChosen){ goTo('orientScreen'); return
 const canvas=document.getElementById('c');
 let ctx=canvas.getContext('2d');
 let CELL,COLS,ROWS,path,paths=[],pathSet,pathCells=[];
-let CW=0,CH=0,terrainCache=null;
+let CW=0,CH=0,terrainCache=null,groundGlows=[];
 const RS=2;   // render scale: crisp on high-density screens
 let gold,lives,wave,selectedType=null,waveActive=false,gameOver=false,started=false;
 let towers=[],enemies=[],projectiles=[],preview=null,frameCount=0,hoverTower=null;
@@ -3474,6 +3478,7 @@ function drawNight(t){
   trees.forEach(tr=>{ if(!SHROOM_CAPS[tr.kind])return;
     const sw=Math.sin(t*0.018+tr.sway)*1.6;
     ctx.save(); ctx.translate(tr.col*CELL+CELL/2,tr.row*CELL+CELL/2); drawShroomSpots(ctx,tr.kind,sw,true); ctx.restore(); });
+  groundGlows.forEach(f=>drawFungus(ctx,f.x,f.y,f.sz,true,0.6+0.4*Math.sin(t*0.05+f.k)));
   drawShroomPaths(t,true); shroomHouses.forEach(h=>drawShroomHouse(h,t,true)); corpses.forEach(k=>drawCorpse(k,t,true));
   for(let k=0;k<14;k++){                     // spores drifting up through the dark
     const ph=((t*0.004+k*0.137)%1), x=((k*0.618+0.1)%1)*CW+Math.sin(t*0.01+k)*12, y=CH*(1-ph)-((k*53)%60);
@@ -7153,7 +7158,9 @@ function buildTerrain(){
     ctx.fillStyle=g; ctx.fillRect(x-R,y-R,R*2,R*2);
   }
   ctx.restore();
-  // small decorations on open ground: flowers in the fields, mushrooms and leaves in dark woods, pebbles anywhere
+  // small decorations on open ground: flowers in the fields, mushrooms and leaves in dark woods, pebbles anywhere,
+  // and each DLC location its own (bones, hay, embers, brambles, glowing fungi)
+  groundGlows=[];
   ctx.save();
   for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
     if(pathSet.has(r+','+c))continue;
@@ -7163,6 +7170,8 @@ function buildTerrain(){
     const h=hashAt(r*13.7+3,c*7.9+1); if(h<0.7)continue;
     const x=c*CELL+6+hashAt(c*2.1,r*9.3)*(CELL-12), y=r*CELL+8+hashAt(r*4.7,c*1.3)*(CELL-14);
     const pick=hashAt(r*1.9,c*6.1);
+    const reg=groundRegion(gnd);
+    if(reg){ drawGroundBit(ctx,reg,x,y,pick,hashAt(c*3.7,r*2.9)); continue; }
     const green=((nn>>8)&255)>((nn>>16)&255)*1.05;
     if(!dark&&green&&pick<0.55){
       const cols=['#fff7e6','#ffe066','#f4a6c6','#c9d8ff'], col=cols[Math.floor(hashAt(c,r)*4)];
@@ -7185,6 +7194,97 @@ function buildTerrain(){
   ctx.restore();
 }
 
+// one small ground detail in a DLC location (painted once into the terrain)
+function drawGroundBit(g,reg,x,y,pick,h2){
+  g.lineCap='round';
+  if(reg==='graveyard'){
+    if(pick<0.3){            // an old bone
+      const a=h2*Math.PI; g.save(); g.translate(x,y); g.rotate(a);
+      g.strokeStyle='#d9d3bf'; g.lineWidth=1.8; g.beginPath();g.moveTo(-3.5,0);g.lineTo(3.5,0);g.stroke();
+      g.fillStyle='#e6e0cc'; [[-3.8,-1],[-3.8,1],[3.8,-1],[3.8,1]].forEach(([bx,by])=>{ g.beginPath();g.arc(bx,by,1.2,0,Math.PI*2);g.fill(); }); g.restore();
+    } else if(pick<0.4){     // a little skull half sunk in the dirt
+      g.fillStyle='rgba(0,0,0,.25)'; g.beginPath();g.ellipse(x,y+2.2,3.6,1.3,0,0,Math.PI*2);g.fill();
+      g.fillStyle='#e2dcc8'; g.beginPath();g.arc(x,y,3,Math.PI,0);g.lineTo(x+2,y+2);g.lineTo(x-2,y+2);g.closePath();g.fill();
+      g.fillStyle='#2b2a24'; g.beginPath();g.arc(x-1.1,y-0.2,0.75,0,Math.PI*2);g.arc(x+1.1,y-0.2,0.75,0,Math.PI*2);g.fill();
+    } else if(pick<0.75){    // a tuft of dead grass
+      g.strokeStyle=h2<0.5?'#a59d7a':'#8a8466'; g.lineWidth=1;
+      for(let k=-2;k<=2;k++){ g.beginPath();g.moveTo(x+k*0.8,y+2);g.quadraticCurveTo(x+k*1.4,y-1,x+k*2.2+(h2-0.5)*2,y-3.5+Math.abs(k)*0.6);g.stroke(); }
+    } else {                 // a chip of broken headstone
+      g.fillStyle='rgba(0,0,0,.22)'; g.beginPath();g.ellipse(x+0.6,y+1.6,3.6,1.4,0,0,Math.PI*2);g.fill();
+      g.fillStyle='#8d8e88'; g.beginPath();g.moveTo(x-3,y+1);g.lineTo(x-2.4,y-2);g.lineTo(x+1.6,y-2.6);g.lineTo(x+3,y+1);g.closePath();g.fill();
+      g.strokeStyle='#55574f'; g.lineWidth=0.7; g.beginPath();g.moveTo(x-0.4,y-2.3);g.lineTo(x+0.3,y-0.6);g.lineTo(x-0.5,y+0.8);g.stroke();
+    }
+  } else if(reg==='pumpkin'){
+    if(pick<0.3){            // loose hay
+      g.strokeStyle='#e6c56a'; g.lineWidth=0.9;
+      for(let k=0;k<5;k++){ const a=(h2*3+k*0.7); g.beginPath();g.moveTo(x-Math.cos(a)*4,y-Math.sin(a)*1.6);g.lineTo(x+Math.cos(a)*4,y+Math.sin(a)*1.6);g.stroke(); }
+    } else if(pick<0.6){     // fallen autumn leaves
+      ['#d9682a','#b8401f','#e0a032'].forEach((col,k)=>{ g.save(); g.translate(x+(k-1)*3.6,y+(k%2)*2.4); g.rotate(h2*6+k*2);
+        g.fillStyle=col; g.beginPath();g.moveTo(-3,0);g.quadraticCurveTo(0,-2.2,3,0);g.quadraticCurveTo(0,2.2,-3,0);g.fill();
+        g.strokeStyle='rgba(80,30,10,.55)'; g.lineWidth=0.5; g.beginPath();g.moveTo(-2.6,0);g.lineTo(2.6,0);g.stroke(); g.restore(); });
+    } else if(pick<0.8){     // a baby pumpkin on a curly vine
+      g.strokeStyle='#4f7a2c'; g.lineWidth=1; g.beginPath();g.moveTo(x-5,y+1);g.bezierCurveTo(x-3,y-3,x-1,y+3,x+1,y-1);g.stroke();
+      g.beginPath();g.arc(x-4.5,y-1.5,1.2,0,Math.PI*1.5);g.stroke();
+      g.fillStyle='#e07a22'; g.beginPath();g.ellipse(x+2,y+0.5,2.8,2.1,0,0,Math.PI*2);g.fill();
+      g.strokeStyle='rgba(120,50,10,.6)'; g.lineWidth=0.6; g.beginPath();g.moveTo(x+2,y-1.5);g.lineTo(x+2,y+2.5);g.stroke();
+      g.fillStyle='#5a7a2c'; g.fillRect(x+1.6,y-2.4,0.9,1.2);
+    } else {                 // spilled corn kernels
+      g.fillStyle='#f2cc4a'; for(let k=0;k<5;k++){ g.beginPath();g.ellipse(x+(Math.sin(k*2.3+h2*9))*4,y+(Math.cos(k*1.7+h2*5))*2.4,1,0.75,k,0,Math.PI*2);g.fill(); }
+    }
+  } else if(reg==='ashen'){
+    if(pick<0.35){           // a glowing crack in the ash, with a short fork
+      const j=k=>(Math.sin(k*12.9+h2*40)*0.9);
+      const main=[[-5.5,j(1)],[-3,j(2)*0.6-0.4],[-0.8,j(3)],[1.2,j(4)*0.5+0.5],[3.4,j(5)],[5.5,j(6)*0.6]].map(([px,py])=>[x+px,y+py]);
+      const fork=[main[2],[x+0.2,y+2.2],[x+1.6,y+3.4]];
+      [[main,2.2,'#1a1414'],[fork,1.8,'#1a1414'],[main,0.9,'#ff7a2a'],[fork,0.7,'#ff7a2a'],[main,0.35,'rgba(255,214,130,.85)']].forEach(([pts,lw,col])=>{
+        g.strokeStyle=col; g.lineWidth=lw; g.beginPath(); pts.forEach((q,k)=>k?g.lineTo(q[0],q[1]):g.moveTo(q[0],q[1])); g.stroke(); });
+    } else if(pick<0.6){     // lumps of coal
+      [[-2.4,0.6,2.2],[1.6,-0.4,2.6],[0.2,2,1.6]].forEach(([dx,dy,r2],k)=>{ g.fillStyle='#17171a'; g.beginPath();
+        for(let q=0;q<6;q++){ const a=q/6*Math.PI*2+h2*k; const rr=r2*(0.8+0.3*((q*7+k)%3)/2); q?g.lineTo(x+dx+Math.cos(a)*rr,y+dy+Math.sin(a)*rr):g.moveTo(x+dx+Math.cos(a)*rr,y+dy+Math.sin(a)*rr); }
+        g.closePath();g.fill(); g.fillStyle='rgba(200,200,220,.4)'; g.beginPath();g.arc(x+dx-r2*0.3,y+dy-r2*0.35,0.5,0,Math.PI*2);g.fill(); });
+    } else if(pick<0.85){    // a soft heap of pale ash
+      g.fillStyle='rgba(185,182,178,.55)'; g.beginPath();g.ellipse(x,y,4.6,2.4,0,0,Math.PI*2);g.fill();
+      g.fillStyle='rgba(215,212,208,.6)'; g.beginPath();g.ellipse(x-0.6,y-0.6,2.4,1.2,0,0,Math.PI*2);g.fill();
+    } else {                 // a charred twig with a last ember
+      g.strokeStyle='#201a18'; g.lineWidth=1.6; g.beginPath();g.moveTo(x-4,y+1.5);g.lineTo(x+3.5,y-1.5);g.moveTo(x,y);g.lineTo(x+1.2,y+2.4);g.stroke();
+      g.fillStyle='#ff8a3a'; g.beginPath();g.arc(x+3.5,y-1.5,0.9,0,Math.PI*2);g.fill();
+    }
+  } else if(reg==='wretched'){
+    if(pick<0.35){           // a tangle of thorny bramble
+      [[-6,2,0,-5,6,1],[-4,-2,1,4,5,-3]].forEach(([x0,y0,cx,cy,x1,y1],k)=>{
+        const sg=h2<0.5?1:-1, P=u=>[ (1-u)*(1-u)*x0+2*u*(1-u)*cx+u*u*x1, ((1-u)*(1-u)*y0+2*u*(1-u)*cy+u*u*y1)*sg ];
+        g.strokeStyle=k?'#2a1a1e':'#140d10'; g.lineWidth=1.2; g.beginPath();g.moveTo(x+x0,y+y0*sg);g.quadraticCurveTo(x+cx,y+cy*sg,x+x1,y+y1*sg);g.stroke();
+        g.lineWidth=0.7; for(let q=1;q<6;q++){ const u=q/6, [px,py]=P(u), [nx,ny]=P(u+0.02), d=Math.hypot(nx-px,ny-py)||1, side=q%2?1:-1;
+          g.beginPath();g.moveTo(x+px,y+py);g.lineTo(x+px+(-(ny-py)/d*side+(nx-px)/d*0.5)*1.5,y+py+((nx-px)/d*side+(ny-py)/d*0.5)*1.5);g.stroke(); } });
+    } else if(pick<0.6){     // a sickly bone-white toadstool with a sagging cap
+      g.fillStyle='#cfc8b8'; g.fillRect(x-0.8,y-1,1.6,4);
+      g.fillStyle=h2<0.5?'#6a5874':'#8d8a6a'; g.beginPath();g.moveTo(x-3.8,y);g.quadraticCurveTo(x,y-5.2,x+3.8,y);g.quadraticCurveTo(x+3.4,y+1.3,x+2.4,y+0.6);g.lineTo(x-2.6,y+0.6);g.quadraticCurveTo(x-3.4,y+1.2,x-3.8,y);g.fill();
+      g.fillStyle='rgba(200,230,160,.5)'; g.beginPath();g.arc(x-1.2,y-2,0.6,0,Math.PI*2);g.arc(x+1.4,y-1.4,0.45,0,Math.PI*2);g.fill();
+    } else if(pick<0.85){    // black, rotting leaves
+      ['#2b2420','#3a2a24','#1f1a17'].forEach((col,k)=>{ g.fillStyle=col; g.beginPath();g.ellipse(x+(k-1)*4,y+(k%2)*2.6,2.8,1.3,h2*3+k,0,Math.PI*2);g.fill(); });
+    } else {                 // twisted roots clawing out of the ground
+      g.strokeStyle='#2a1f1a'; g.lineWidth=1.6;
+      [[-1,-4.6,-3],[0,-0.8,-4.6],[1,4,-3.2]].forEach(([s2,ex,ey])=>{ g.beginPath();g.moveTo(x+s2*1.4,y+2);g.quadraticCurveTo(x+ex*0.4+s2*2,y-1,x+ex,y+ey);g.stroke(); });
+    }
+  } else if(reg==='glowshroom'){
+    if(pick<0.4){            // a little cluster of glowing fungi (they light up again at night)
+      [[0,0,2.6],[-3.6,1.8,1.8],[3.2,1.4,2]].slice(0,2+(h2<0.5?1:0)).forEach(([dx,dy,sz],k)=>{
+        drawFungus(g,x+dx,y+dy+2,sz,false,0.9); groundGlows.push({x:x+dx,y:y+dy+2,sz,k:pick*50+k}); });
+    } else if(pick<0.7){     // a patch of soft blue moss
+      [[0,0,3.6],[-3,1,2.4],[3,1.2,2.6],[0.5,-2,2.2]].forEach(([dx,dy,rr],k)=>{ g.fillStyle=k%2?'#2f4d7e':'#3a5c8f';
+        g.beginPath();g.arc(x+dx,y+dy,rr,0,Math.PI*2);g.fill(); });
+      g.fillStyle='rgba(143,233,255,.55)'; [[-1.5,-0.6],[1.6,0.4],[0,-2.2]].forEach(([dx,dy])=>{ g.beginPath();g.arc(x+dx,y+dy,0.5,0,Math.PI*2);g.fill(); });
+    } else if(pick<0.9){     // a pale puffball dusted with spores
+      g.fillStyle='rgba(0,0,0,.28)'; g.beginPath();g.ellipse(x+0.5,y+2.4,3.4,1.2,0,0,Math.PI*2);g.fill();
+      g.fillStyle='#c9d3ea'; g.beginPath();g.arc(x,y,2.8,0,Math.PI*2);g.fill();
+      g.fillStyle='#7f8fb4'; [[-1,-0.8],[0.9,-1.2],[0.4,0.6],[-0.6,1]].forEach(([dx,dy])=>{ g.beginPath();g.arc(x+dx,y+dy,0.42,0,Math.PI*2);g.fill(); });
+    } else {                 // a dark, moonlit stone
+      g.fillStyle='#2a3658'; g.beginPath();g.ellipse(x,y,3.2,2.2,0.3,0,Math.PI*2);g.fill();
+      g.fillStyle='rgba(190,215,255,.35)'; g.beginPath();g.ellipse(x-0.8,y-0.8,1.3,0.7,0.3,0,Math.PI*2);g.fill();
+    }
+  }
+  g.lineCap='butt';
+}
 // a big 2x2 bush: a deep, many-lobed thicket
 function drawBigBush(x,y){            // x,y = top-left corner of its 2x2 block
   const cx=x+CELL, cy=y+CELL, sw=Math.sin(frameCount*0.02)*0.8;
@@ -7442,17 +7542,22 @@ function drawShroomEnemy(g,type,rad,base,step,t,throwing){
     g.strokeStyle=ink; g.lineWidth=2; };
   g.save(); g.lineWidth=2; g.strokeStyle=ink; g.lineJoin='round';
   if(type==='fungling'){
-    // tiny legs pattering along
-    g.lineWidth=2.2; g.lineCap='round';
-    g.beginPath();g.moveTo(-2.5,rad*0.6);g.lineTo(-2.5-step*0.7,rad*1.25);g.moveTo(2.5,rad*0.6);g.lineTo(2.5+step*0.7,rad*1.25);g.stroke();
-    g.lineCap='butt'; g.lineWidth=1.8;
-    g.fillStyle='#d6dbe8'; g.beginPath();g.ellipse(0,rad*0.2,rad*0.62,rad*0.62,0,0,Math.PI*2);g.fill();g.stroke();
-    cap(0,-rad*0.2,rad*1.15,rad*0.95);
-    glowSpot(-rad*0.45,-rad*0.6,rad*0.2,0); glowSpot(rad*0.35,-rad*0.75,rad*0.15,1); glowSpot(rad*0.75,-rad*0.3,rad*0.12,2);
-    // big googly eyes and a grin
-    g.fillStyle='#fff'; g.beginPath();g.arc(rad*0.05,rad*0.12,rad*0.24,0,Math.PI*2);g.arc(rad*0.48,rad*0.12,rad*0.2,0,Math.PI*2);g.fill();
-    g.fillStyle=ink; g.beginPath();g.arc(rad*0.12,rad*0.15,rad*0.11,0,Math.PI*2);g.arc(rad*0.53,rad*0.15,rad*0.09,0,Math.PI*2);g.fill();
-    g.lineWidth=1.2; g.beginPath();g.arc(rad*0.3,rad*0.38,rad*0.16,0.2,Math.PI-0.2);g.stroke();
+    // thin root-like legs skittering along, bent at the knee
+    g.lineWidth=1.6; g.lineCap='round'; g.strokeStyle='#8a90a6';
+    [[-1,step],[1,-step]].forEach(([sd,st])=>{ g.beginPath();g.moveTo(sd*rad*0.25,rad*0.55);
+      g.lineTo(sd*rad*0.65+st*0.4,rad*0.85);g.lineTo(sd*rad*0.45+st*0.8,rad*1.3);g.stroke(); });
+    g.strokeStyle=ink; g.lineCap='butt'; g.lineWidth=1.8;
+    // a thin, hunched stalk with no face at all
+    g.fillStyle='#c4cad9'; g.beginPath();g.moveTo(-rad*0.32,rad*0.7);g.quadraticCurveTo(-rad*0.42,rad*0.2,-rad*0.2,-rad*0.1);
+    g.lineTo(rad*0.2,-rad*0.1);g.quadraticCurveTo(rad*0.4,rad*0.2,rad*0.32,rad*0.7);g.closePath();g.fill();g.stroke();
+    // a drooping cap pulled low, dark gills underneath and threads hanging off the rim
+    cap(0,rad*0.05,rad*1.1,rad*1.05);
+    g.fillStyle='rgba(28,34,64,.55)'; g.beginPath();g.ellipse(0,rad*0.12,rad*0.85,rad*0.14,0,0,Math.PI);g.fill();
+    g.strokeStyle='rgba(150,236,255,.55)'; g.lineWidth=0.9;
+    [-0.8,-0.35,0.5,0.9].forEach((x,k)=>{ const sw=Math.sin((t||0)*0.09+k*2)*1.2;
+      g.beginPath();g.moveTo(x*rad,rad*0.12);g.quadraticCurveTo(x*rad+sw,rad*0.4,x*rad+sw*1.5,rad*(0.5+0.12*(k%2)));g.stroke(); });
+    g.strokeStyle=ink;
+    glowSpot(-rad*0.45,-rad*0.35,rad*0.2,0); glowSpot(rad*0.3,-rad*0.55,rad*0.15,1); glowSpot(rad*0.75,-rad*0.1,rad*0.12,2);
   } else if(type==='shroomwarrior'){
     g.fillStyle='#b8bfd0';
     g.fillRect(-rad*0.42,rad*0.55,rad*0.32,rad*0.42+step*0.4); g.fillRect(rad*0.1,rad*0.55,rad*0.32,rad*0.42-step*0.4);
@@ -7489,11 +7594,26 @@ function drawShroomEnemy(g,type,rad,base,step,t,throwing){
     g.beginPath();g.ellipse(rad*0.35,0,rad*0.38,rad*0.16,0,0,Math.PI*2);g.fill();g.stroke();
     if(throwing)drawFungus(g,rad*0.72,-2,2.6,false,1);
     g.restore();
-    // glowshrooms growing out of it at every angle
-    [[-0.55,-0.55,-0.6,0.42],[0.05,-0.8,0.05,0.55],[0.5,-0.55,0.55,0.36],[-0.85,0.05,-1.3,0.3],[0.2,0.25,0.3,0.22],[-0.3,-0.15,-0.2,0.25]].forEach(([x,y,rot,sz],k)=>{
-      g.save(); g.translate(x*rad,y*rad); g.rotate(rot);
-      g.fillStyle='#d6dbe8'; g.fillRect(-sz*rad*0.18,-sz*rad*0.9,sz*rad*0.36,sz*rad*0.9); g.strokeRect(-sz*rad*0.18,-sz*rad*0.9,sz*rad*0.36,sz*rad*0.9);
-      cap(0,-sz*rad*0.85,sz*rad*0.75,sz*rad*0.6); glowSpot(0,-sz*rad*1.15,sz*rad*0.16,k); g.restore(); });
+    // glowshrooms sprouting out of it: stalks rooted deep in the flesh, some forking into two caps
+    const stalk=(x0,y0,cx,cy,x1,y1,w)=>{ g.lineCap='round';
+      g.strokeStyle=ink; g.lineWidth=w+2.4; g.beginPath();g.moveTo(x0,y0);g.quadraticCurveTo(cx,cy,x1,y1);g.stroke();
+      g.strokeStyle='#d6dbe8'; g.lineWidth=w; g.beginPath();g.moveTo(x0,y0);g.quadraticCurveTo(cx,cy,x1,y1);g.stroke();
+      g.lineCap='butt'; g.strokeStyle=ink; g.lineWidth=2; };
+    const tops=[], roots=[];
+    [[-0.3,-0.15,-0.45,-0.6,-0.6,-0.98,0.42,[-0.48,-0.6,-0.98,-0.72,0.26]],
+     [0.05,-0.2,0,-0.8,0.1,-1.28,0.55,null],
+     [0.32,-0.15,0.6,-0.5,0.78,-0.82,0.34,[0.6,-0.52,0.45,-0.98,0.22]],
+     [-0.45,0.12,-0.9,0.05,-1.15,-0.18,0.3,null],
+     [-0.18,0.38,-0.3,0.32,-0.38,0.12,0.2,null]].forEach(([x0,y0,cx,cy,x1,y1,sz,br])=>{
+      const w=Math.max(2.2,sz*rad*0.42);
+      stalk(x0*rad,y0*rad,cx*rad,cy*rad,x1*rad,y1*rad,w); tops.push([cx,cy,x1,y1,sz]); roots.push([x0,y0,w]);
+      if(br){ stalk(br[0]*rad,br[1]*rad,(br[0]+br[2])/2*rad,br[1]*rad,br[2]*rad,br[3]*rad,w*0.7); tops.push([(br[0]+br[2])/2,br[1],br[2],br[3],br[4]]); } });
+    // the flesh swells up around each stalk where it bursts out
+    roots.forEach(([x0,y0,w])=>{ g.fillStyle=base; g.beginPath();g.arc(x0*rad,y0*rad,w*1.05,0,Math.PI*2);g.fill();
+      g.strokeStyle='rgba(28,34,64,.45)'; g.lineWidth=1.1; g.beginPath();g.arc(x0*rad,y0*rad+w*0.2,w*1.1,Math.PI*1.1,Math.PI*1.9);g.stroke(); });
+    g.strokeStyle=ink; g.lineWidth=2;
+    tops.forEach(([cx,cy,x1,y1,sz],k)=>{ g.save(); g.translate(x1*rad,y1*rad); g.rotate(Math.atan2(x1-cx,cy-y1));
+      cap(0,sz*rad*0.15,sz*rad*0.75,sz*rad*0.6); glowSpot(0,-sz*rad*0.15,sz*rad*0.16,k); g.restore(); });
     // eyes deep in the flesh and a gaping mouth
     g.fillStyle='#1a1d2c'; g.beginPath();g.arc(rad*0.2,rad*0.05,rad*0.09,0,Math.PI*2);g.arc(rad*0.5,rad*0.0,rad*0.08,0,Math.PI*2);g.fill();
     g.fillStyle='rgba(150,236,255,.9)'; g.beginPath();g.arc(rad*0.2,rad*0.05,rad*0.04,0,Math.PI*2);g.arc(rad*0.5,0,rad*0.035,0,Math.PI*2);g.fill();
@@ -9001,9 +9121,29 @@ function draw(){
 }
 // motes, fireflies, drifting cloud shadows, sunlight and a soft vignette
 function drawAmbience(){
-  const dark=groundIsDark();
+  const dark=groundIsDark(), reg=theme&&groundRegion(theme.ground);
   motes.forEach((m,i)=>{
-    if(dark){
+    const fade=Math.min(1,m.life/120);
+    if(reg==='graveyard'){             // low mist drifting between the graves
+      const a=fade*0.07*(1+Math.sin(frameCount*0.01+i));
+      ctx.fillStyle='rgba(215,222,214,'+a.toFixed(3)+')'; ctx.beginPath();ctx.ellipse(m.x,m.y,16+m.r*8,4+m.r*1.5,0,0,Math.PI*2);ctx.fill();
+    } else if(reg==='pumpkin'){        // autumn leaves tumbling down
+      const ly=CH-m.y, rot=frameCount*0.03+i;
+      ctx.save(); ctx.translate(m.x+Math.sin(frameCount*0.03+i)*6,ly); ctx.rotate(rot); ctx.globalAlpha=Math.min(0.85,m.life/120);
+      ctx.fillStyle=['#d9682a','#b8401f','#e0a032'][i%3]; ctx.beginPath();ctx.ellipse(0,0,2.8,1.4*Math.abs(Math.cos(rot*1.3))+0.4,0,0,Math.PI*2);ctx.fill(); ctx.restore();
+    } else if(reg==='ashen'){          // embers rising and flakes of ash
+      if(i%3){ ctx.globalAlpha=Math.min(0.55,m.life/300); ctx.fillStyle='#b9b6b2'; ctx.fillRect(m.x,m.y,m.r*1.3,m.r*0.9); ctx.globalAlpha=1; }
+      else { const a=fade*(0.6+0.4*Math.sin(frameCount*0.2+i)), g=ctx.createRadialGradient(m.x,m.y,0,m.x,m.y,5);
+        g.addColorStop(0,'rgba(255,140,50,'+(0.7*a).toFixed(3)+')'); g.addColorStop(1,'rgba(255,90,20,0)');
+        ctx.fillStyle=g; ctx.beginPath();ctx.arc(m.x,m.y,5,0,Math.PI*2);ctx.fill();
+        ctx.fillStyle='rgba(255,220,140,'+a.toFixed(3)+')'; ctx.beginPath();ctx.arc(m.x,m.y,1,0,Math.PI*2);ctx.fill(); }
+    } else if(reg==='wretched'||reg==='glowshroom'){   // sickly will-o'-wisps / drifting glowing spores
+      const pulse=0.5+0.5*Math.sin(frameCount*0.05+i*1.7), a=fade*pulse, rgb=reg==='wretched'?'170,255,190':'127,227,255';
+      const g=ctx.createRadialGradient(m.x,m.y,0,m.x,m.y,reg==='wretched'?9:6);
+      g.addColorStop(0,'rgba('+rgb+','+(0.6*a).toFixed(3)+')'); g.addColorStop(1,'rgba('+rgb+',0)');
+      ctx.fillStyle=g; ctx.beginPath();ctx.arc(m.x,m.y,9,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='rgba(235,255,250,'+a.toFixed(3)+')'; ctx.beginPath();ctx.arc(m.x,m.y,reg==='wretched'?1.6:1.1,0,Math.PI*2);ctx.fill();
+    } else if(dark){
       const pulse=0.5+0.5*Math.sin(frameCount*0.06+i*1.7), a=Math.min(1,m.life/120)*pulse;
       const g=ctx.createRadialGradient(m.x,m.y,0,m.x,m.y,7);
       g.addColorStop(0,'rgba(226,255,140,'+(0.75*a).toFixed(3)+')'); g.addColorStop(1,'rgba(226,255,140,0)');
