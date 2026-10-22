@@ -773,7 +773,7 @@ new MutationObserver(ms=>{ for(const m of ms){
     else if(m.type==='attributes')trAttr(m.target,m.attributeName);
     else m.addedNodes.forEach(trNode); } })
   .observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['placeholder','title','aria-label']});
-Object.assign(I18N.ru,{"The Graveyard":"Кладбище","Pumpkin Farm":"Тыквенная ферма","Ashen Wastes":"Пепельные пустоши","Wretched Woodland":"Гиблая чаща","The Halloween island is coming soon.":"Остров Хэллоуина скоро откроется.","Adds the Halloween island to the campaign map":"Добавляет остров Хэллоуина на карту кампании","Adds the Halloween map pieces to the Sandbox":"Добавляет детали карты Хэллоуина в Песочницу","Testing is its own app now: Fire at Will Testing.":"Тестирование теперь отдельное приложение: Fire at Will Testing.","Try levels, maps and enemies. The game's own progress is never touched.":"Пробуйте уровни, карты и врагов. Прогресс самой игры не затрагивается.","Zombie":"Зомби","Skeleton":"Скелет","Skeleton Knight":"Скелет-рыцарь","Zombie Grunt":"Зомби-пехотинец","Abandoned house":"Заброшенный дом","the abandoned house breaks open on a random wave":"заброшенный дом вскрывается на случайной волне","The door bursts — zombie grunts pour out of the abandoned house!":"Дверь вылетает — из заброшенного дома валят зомби-пехотинцы!","Restless Dead":"Неупокоенный мертвец","120 health, walks like a grunt.":"120 здоровья, ходит как пехотинец.","A bite infects your soldiers: 2.5 seconds later they rise as zombies.":"Укус заражает ваших солдат: через 2,5 секунды они встают зомби.","Rises from graves and graveyards.":"Встаёт из могил и с кладбищ.","Keep Firework soldiers and Backup out of its reach.":"Держите солдат фейерверка и подкрепление подальше от него.","Kill it at range before it bites.":"Убивайте издалека, пока не укусил.","Splash damage on the road.":"Урон по площади на дороге.","Knife Thrower":"Метатель ножей","125 health and a knife on its belt.":"125 здоровья и нож на поясе.","Stops to throw a knife that stuns a tower for 1.5 seconds.":"Останавливается и метает нож, оглушая башню на 1,5 секунды.","Throws again every 2.5 seconds.":"Бросает снова каждые 2,5 секунды.","Menders and Farms are never targeted.":"Лекари и фермы не становятся целью.","Long-range towers that hit it before it gets close: Sniper.":"Дальнобойные башни, бьющие до сближения: Снайпер.","Kill it while it stands still to throw.":"Убивайте, пока он стоит и метает.","Undead Champion":"Чемпион нежити","250 health in rusted armour.":"250 здоровья в ржавых доспехах.","Hits your units twice as hard.":"Бьёт ваших юнитов вдвое сильнее.","Marches out of graveyards and crypts.":"Выходит с кладбищ и из склепов.","Slow — easy to focus with Snipers and Cannons.":"Медленный — его легко добить Снайперами и Пушками.","Keep your units away and let towers work.":"Держите юнитов подальше, пусть работают башни.","Infected Footsoldier":"Заражённый пехотинец","A grunt the plague got to: 100 health.":"Пехотинец, до которого добралась зараза: 100 здоровья.","Its bite infects your soldiers, just like a zombie.":"Его укус заражает солдат, как у зомби.","On a random wave the abandoned house door breaks and 3–7 pour out.":"На случайной волне дверь заброшенного дома ломается и вываливаются 3–7 штук.","Grunt-level health — any tower handles it.":"Здоровья как у пехотинца — справится любая башня.","Splash near the house door.":"Урон по площади у двери дома.","Keep soldiers away from it.":"Держите солдат подальше.","Grave":"Могила","Graveyard":"Кладбище","Crypt":"Склеп","Halloween":"Хэллоуин","Graves go on grass beside the road.":"Могилы ставятся на траву у дороги.","Something already stands here.":"Здесь уже что-то стоит.","Its gate can only face this road. Use the Eraser to remove it.":"Ворота могут смотреть только на эту дорогу. Убрать кладбище можно ластиком.","Not enough room here — it needs 2×2 tiles.":"Здесь мало места — нужно 2×2 клетки.","It needs 2×2 clear tiles off the road and water.":"Нужно 2×2 свободные клетки не на дороге и не в воде.","A graveyard must have one whole side against the road (2 road tiles).":"Кладбище должно стоять целой стороной к дороге (2 клетки дороги).","Tap the graveyard again to turn its gate.":"Нажмите на кладбище ещё раз, чтобы повернуть ворота.","Not enough room here — it needs 2 tiles side by side.":"Здесь мало места — нужно 2 клетки рядом.","It needs 2 clear tiles side by side, off the road and water.":"Нужно 2 свободные клетки рядом, не на дороге и не в воде.","A graveyard gate no longer opens onto the road.":"Ворота кладбища больше не выходят на дорогу.","zombies leave the graves on the last wave":"зомби встают из могил в последней волне","the dead never stop coming":"мертвецы идут без остановки","skeletons crawl from the bones on wave 3":"скелеты выползают из костей на 3-й волне","Skeletons crawl out of the bones!":"Из костей выползают скелеты!","The graves open!":"Могилы открываются!","Check for updates":"Проверить обновления","Restart to update":"Перезапустить и обновить","A new version is downloaded.":"Новая версия загружена.","You have the latest version.":"У вас последняя версия.","Could not check for updates. Are you online?":"Не удалось проверить обновления. Есть ли интернет?","Checking for updates…":"Проверка обновлений…","A new version of the game is ready.":"Новая версия игры готова.","Restart":"Перезапустить","This DLC needs a newer version of the game.":"Для этого DLC нужна более новая версия игры.","Something stirs in the Wretched Woodland…":"В Гиблой чаще что-то шевелится…","Pumpkin":"Тыква","Gravedigger":"Могильщик","Grave Digger":"Копатель могил","280 health, but very slow.":"280 здоровья, но очень медленный.","Every 6 seconds it digs a grave right on the road (3 at most).":"Каждые 6 секунд копает могилу прямо на дороге (не больше 3).","Each grave has 500 health and blocks your Backup and Heavy Force. On the last wave a zombie climbs out of it.":"У каждой могилы 500 здоровья, она преграждает путь Подкреплению и Тяжёлой технике. На последней волне из неё вылезает зомби.","Kill it early, before it has dug its graves.":"Убейте его пораньше, пока он не выкопал могилы.","Snipers and Cannons reach it from afar.":"Снайперы и Пушки достают его издалека.","The Heavy Force tank smashes graves fastest.":"Танк Тяжёлой техники разбивает могилы быстрее всех.","Pumpkin Bomber":"Тыква-бомба","Rolling Bomb":"Катящаяся бомба","A carved pumpkin packed with powder: 90 health, rolls fast.":"Резная тыква, набитая порохом: 90 здоровья, катится быстро.","When it rolls past a tower it veers off the road straight at it.":"Проезжая мимо башни, сворачивает с дороги прямо на неё.","It blows up on the tower and knocks it out for 10 seconds, and the towers next to it for 4.":"Взрывается на башне и выводит её из строя на 10 секунд, а соседние башни — на 4.","Low health: shoot it before it gets close.":"Мало здоровья: подстрелите её, пока она не подкатилась.","Snipers and Gunners pick it off before it reaches a tower.":"Снайперы и Стрелки снимут её, пока она не добралась до башни.","Towers placed away from the road are safe from it.":"Башням вдали от дороги она не страшна.","A pumpkin bomber blew up your @!":"Тыква-бомба взорвала вашу башню «@»!","A grave on the road has been smashed!":"Могила на дороге разбита!","Thorny path":"Тернистая дорога","thorny roots hurt your units on the road":"колючие корни ранят ваших юнитов на дороге","Jack o' lantern":"Тыква-фонарь","Barn":"Амбар","Jack o' Lantern":"Джек-фонарь","Pumpkins grow on grass off the road.":"Тыквы растут на траве, не на дороге.","Not enough room here — a barn needs 3 tiles across and 2 down.":"Здесь мало места — амбару нужно 3 клетки в ширину и 2 в высоту.","A barn needs 3×2 clear tiles off the road and water.":"Амбару нужно 3×2 свободные клетки не на дороге и не в воде.","jack o' lanterns rise on a random wave":"тыквы-фонари встают на случайной волне","A jack o' lantern climbs out of the ground!":"Тыква-фонарь выбирается из земли!","Pumpkin Horror":"Тыквенный ужас","200 health on a body of twisted roots.":"200 здоровья на теле из скрученных корней.","Sleeps in the field as a carved pumpkin.":"Спит в поле резной тыквой.","On a random wave it grows legs, climbs out and walks the road.":"На случайной волне отращивает ноги, выбирается и идёт по дороге.","Its face lights up the wave before it rises.":"Её лицо загорается за волну до того, как она встанет."});
+Object.assign(I18N.ru,{"The Graveyard":"Кладбище","Pumpkin Farm":"Тыквенная ферма","Ashen Wastes":"Пепельные пустоши","Wretched Woodland":"Гиблая чаща","The Halloween island is coming soon.":"Остров Хэллоуина скоро откроется.","Adds the Halloween island to the campaign map":"Добавляет остров Хэллоуина на карту кампании","Adds the Halloween map pieces to the Sandbox":"Добавляет детали карты Хэллоуина в Песочницу","Testing is its own app now: Fire at Will Testing.":"Тестирование теперь отдельное приложение: Fire at Will Testing.","Try levels, maps and enemies. The game's own progress is never touched.":"Пробуйте уровни, карты и врагов. Прогресс самой игры не затрагивается.","Zombie":"Зомби","Skeleton":"Скелет","Skeleton Knight":"Скелет-рыцарь","Zombie Grunt":"Зомби-пехотинец","Abandoned house":"Заброшенный дом","the abandoned house breaks open on a random wave":"заброшенный дом вскрывается на случайной волне","The door bursts — zombie grunts pour out of the abandoned house!":"Дверь вылетает — из заброшенного дома валят зомби-пехотинцы!","Restless Dead":"Неупокоенный мертвец","120 health, walks like a grunt.":"120 здоровья, ходит как пехотинец.","A bite infects your soldiers: 2.5 seconds later they rise as zombies.":"Укус заражает ваших солдат: через 2,5 секунды они встают зомби.","Rises from graves and graveyards.":"Встаёт из могил и с кладбищ.","Keep Firework soldiers and Backup out of its reach.":"Держите солдат фейерверка и подкрепление подальше от него.","Kill it at range before it bites.":"Убивайте издалека, пока не укусил.","Splash damage on the road.":"Урон по площади на дороге.","Knife Thrower":"Метатель ножей","125 health and a knife on its belt.":"125 здоровья и нож на поясе.","Stops to throw a knife that stuns a tower for 1.5 seconds.":"Останавливается и метает нож, оглушая башню на 1,5 секунды.","Throws again every 2.5 seconds.":"Бросает снова каждые 2,5 секунды.","Menders and Farms are never targeted.":"Лекари и фермы не становятся целью.","Long-range towers that hit it before it gets close: Sniper.":"Дальнобойные башни, бьющие до сближения: Снайпер.","Kill it while it stands still to throw.":"Убивайте, пока он стоит и метает.","Undead Champion":"Чемпион нежити","250 health in rusted armour.":"250 здоровья в ржавых доспехах.","Hits your units twice as hard.":"Бьёт ваших юнитов вдвое сильнее.","Marches out of graveyards and crypts.":"Выходит с кладбищ и из склепов.","Slow — easy to focus with Snipers and Cannons.":"Медленный — его легко добить Снайперами и Пушками.","Keep your units away and let towers work.":"Держите юнитов подальше, пусть работают башни.","Infected Footsoldier":"Заражённый пехотинец","A grunt the plague got to: 100 health.":"Пехотинец, до которого добралась зараза: 100 здоровья.","Its bite infects your soldiers, just like a zombie.":"Его укус заражает солдат, как у зомби.","On a random wave the abandoned house door breaks and 3–7 pour out.":"На случайной волне дверь заброшенного дома ломается и вываливаются 3–7 штук.","Grunt-level health — any tower handles it.":"Здоровья как у пехотинца — справится любая башня.","Splash near the house door.":"Урон по площади у двери дома.","Keep soldiers away from it.":"Держите солдат подальше.","Grave":"Могила","Graveyard":"Кладбище","Crypt":"Склеп","Halloween":"Хэллоуин","Graves go on grass beside the road.":"Могилы ставятся на траву у дороги.","Something already stands here.":"Здесь уже что-то стоит.","Its gate can only face this road. Use the Eraser to remove it.":"Ворота могут смотреть только на эту дорогу. Убрать кладбище можно ластиком.","Not enough room here — it needs 2×2 tiles.":"Здесь мало места — нужно 2×2 клетки.","It needs 2×2 clear tiles off the road and water.":"Нужно 2×2 свободные клетки не на дороге и не в воде.","A graveyard must have one whole side against the road (2 road tiles).":"Кладбище должно стоять целой стороной к дороге (2 клетки дороги).","Tap the graveyard again to turn its gate.":"Нажмите на кладбище ещё раз, чтобы повернуть ворота.","Not enough room here — it needs 2 tiles side by side.":"Здесь мало места — нужно 2 клетки рядом.","It needs 2 clear tiles side by side, off the road and water.":"Нужно 2 свободные клетки рядом, не на дороге и не в воде.","A graveyard gate no longer opens onto the road.":"Ворота кладбища больше не выходят на дорогу.","zombies leave the graves on the last wave":"зомби встают из могил в последней волне","the dead never stop coming":"мертвецы идут без остановки","skeletons crawl from the bones on wave 3":"скелеты выползают из костей на 3-й волне","Skeletons crawl out of the bones!":"Из костей выползают скелеты!","The graves open!":"Могилы открываются!","Check for updates":"Проверить обновления","Restart to update":"Перезапустить и обновить","A new version is downloaded.":"Новая версия загружена.","You have the latest version.":"У вас последняя версия.","Could not check for updates. Are you online?":"Не удалось проверить обновления. Есть ли интернет?","Checking for updates…":"Проверка обновлений…","A new version of the game is ready.":"Новая версия игры готова.","Restart":"Перезапустить","This DLC needs a newer version of the game.":"Для этого DLC нужна более новая версия игры.","Something stirs in the Wretched Woodland…":"В Гиблой чаще что-то шевелится…","Pumpkin":"Тыква","Corn rows":"Кукурузные ряды","Well":"Колодец","Candle shrine":"Алтарь со свечами","Open grave":"Открытая могила","Corn does not grow in water.":"Кукуруза не растёт в воде.","That goes on grass beside the road.":"Это ставится на траву у дороги.","A well has no road to a Base nearby.":"У колодца нет рядом дороги к базе.","enemies hide in the corn":"враги прячутся в кукурузе","tumorlings climb out of the well":"из колодца вылезают опухольки","candles make the towers next to them shoot faster":"свечи ускоряют стрельбу соседних башен","a zombie climbs out of each open grave mid-wave":"посреди волны из каждой открытой могилы вылезает зомби","Gravedigger":"Могильщик","Grave Digger":"Копатель могил","280 health, but very slow.":"280 здоровья, но очень медленный.","Every 6 seconds it digs a grave right on the road (3 at most).":"Каждые 6 секунд копает могилу прямо на дороге (не больше 3).","Each grave has 500 health and blocks your Backup and Heavy Force. On the last wave a zombie climbs out of it.":"У каждой могилы 500 здоровья, она преграждает путь Подкреплению и Тяжёлой технике. На последней волне из неё вылезает зомби.","Kill it early, before it has dug its graves.":"Убейте его пораньше, пока он не выкопал могилы.","Snipers and Cannons reach it from afar.":"Снайперы и Пушки достают его издалека.","The Heavy Force tank smashes graves fastest.":"Танк Тяжёлой техники разбивает могилы быстрее всех.","Pumpkin Bomber":"Тыква-бомба","Rolling Bomb":"Катящаяся бомба","A carved pumpkin packed with powder: 90 health, rolls fast.":"Резная тыква, набитая порохом: 90 здоровья, катится быстро.","When it rolls past a tower it veers off the road straight at it.":"Проезжая мимо башни, сворачивает с дороги прямо на неё.","It blows up on the tower and knocks it out for 10 seconds, and the towers next to it for 4.":"Взрывается на башне и выводит её из строя на 10 секунд, а соседние башни — на 4.","Low health: shoot it before it gets close.":"Мало здоровья: подстрелите её, пока она не подкатилась.","Snipers and Gunners pick it off before it reaches a tower.":"Снайперы и Стрелки снимут её, пока она не добралась до башни.","Towers placed away from the road are safe from it.":"Башням вдали от дороги она не страшна.","A pumpkin bomber blew up your @!":"Тыква-бомба взорвала вашу башню «@»!","A grave on the road has been smashed!":"Могила на дороге разбита!","Thorny path":"Тернистая дорога","thorny roots hurt your units on the road":"колючие корни ранят ваших юнитов на дороге","Jack o' lantern":"Тыква-фонарь","Barn":"Амбар","Jack o' Lantern":"Джек-фонарь","Pumpkins grow on grass off the road.":"Тыквы растут на траве, не на дороге.","Not enough room here — a barn needs 3 tiles across and 2 down.":"Здесь мало места — амбару нужно 3 клетки в ширину и 2 в высоту.","A barn needs 3×2 clear tiles off the road and water.":"Амбару нужно 3×2 свободные клетки не на дороге и не в воде.","jack o' lanterns rise on a random wave":"тыквы-фонари встают на случайной волне","A jack o' lantern climbs out of the ground!":"Тыква-фонарь выбирается из земли!","Pumpkin Horror":"Тыквенный ужас","200 health on a body of twisted roots.":"200 здоровья на теле из скрученных корней.","Sleeps in the field as a carved pumpkin.":"Спит в поле резной тыквой.","On a random wave it grows legs, climbs out and walks the road.":"На случайной волне отращивает ноги, выбирается и идёт по дороге.","Its face lights up the wave before it rises.":"Её лицо загорается за волну до того, как она встанет."});
 Object.assign(I18N.ru,{"Extra levels from DLC files.":"Дополнительные уровни из файлов DLC.","Drop a DLC file here":"Перетащите сюда файл DLC","or tap to choose one":"или нажмите, чтобы выбрать его","DLC folder":"Папка DLC","Open DLC folder":"Открыть папку DLC","No DLC yet. Put a DLC file in the DLC folder, or drop it above.":"DLC пока нет. Положите файл DLC в папку DLC или перетащите его выше.","No DLC yet. Drop a DLC file above.":"DLC пока нет. Перетащите файл DLC выше.","Remove":"Удалить","beaten #/#":"пройдено #/#","from the DLC folder":"из папки DLC"," · built into Testing":" · встроено в Тестирование","built into Testing":"встроено в Тестирование","ℹ Description":"ℹ Описание","Every DLC is built in. Play its levels, or drop in a new DLC file.":"Все DLC уже встроены. Играйте их уровни или добавьте новый файл DLC.","DLC removed.":"DLC удалено.","DLC added":"DLC добавлено","That file is too big for a DLC.":"Этот файл слишком большой для DLC.","This file is not a DLC (it is not JSON).":"Этот файл не DLC (это не JSON).","This file is not a Fire at Will DLC.":"Этот файл не DLC для Fire at Will.","This DLC has no id or name.":"У этого DLC нет id или названия.","This DLC has no levels.":"В этом DLC нет уровней.","Level # has no map (level code).":"У уровня # нет карты (кода уровня).","Level # has a wave with no known enemies.":"В уровне # есть волна без известных врагов.","Level # has no road from a spawn to a base.":"В уровне # нет дороги от точки появления до базы.","Campaign":"Кампания","◀ Back":"◀ Назад","Final wave":"Последняя волна","Lives left: #/#":"Осталось жизней: #/#","Lives left: #/# · 💎 +#":"Осталось жизней: #/# · 💎 +#"});
 // words drawn straight onto the canvas go through the same table
 ['fillText','strokeText','measureText'].forEach(fn=>{ const orig=CanvasRenderingContext2D.prototype[fn];
@@ -3774,6 +3774,10 @@ function updateTheDead(){
       g.done=true; if(wi)wi.spawned++;
       const e=spawnDead('zombie',g.x,g.y); e.waveNo=wave; fxSmoke(g.x,g.y,6,'110,84,52',5); });
     roadGraves=roadGraves.filter(g=>!g.done); }
+  // corn rows: enemies walking through the corn can't be seen or shot until they come out, and the stalks sway as they push through
+  if(corns.length){ const ck=new Map(corns.map(k=>[k.row+','+k.col,k]));
+    corns.forEach(k=>{ k.rustle=k.rustle>0.01?k.rustle*0.95:0; });
+    enemies.forEach(e=>{ const k=ck.get(Math.floor(e.y/CELL)+','+Math.floor(e.x/CELL)); e.inCorn=!!k; if(k)k.rustle=Math.min(1,k.rustle+0.12); }); }
   // graveyards and crypts never stop once the first wave is called
   if(wave<1)return;
   graveyards.forEach(g=>{
@@ -3806,6 +3810,22 @@ function updateTheDead(){
     if(j.wait>0){ if(--j.wait===0){ j.rise=1; setMsg("A jack o' lantern climbs out of the ground!"); } return; }
     if(j.rise>0&&++j.rise>JACK_RISE){ j.risen=true; j.rise=0; const x=j.col*CELL+CELL/2, y=j.row*CELL+CELL/2;
       fxSmoke(x,y+6,8,'110,84,52',6); const e=spawnDead('jack',x,y); e.waveNo=j.waveNo; const wi=waveInfo[j.waveNo]; if(wi)wi.spawned++; } });
+  // wells work like a small lake: now and then one or two tumorlings climb out and head for the road
+  if(wells.length&&wellWave&&wave>=wellWave&&waveActive){
+    if(wellNext>0)wellNext--;
+    else { wellNext=WELL_GAP; const w=wells[Math.floor(Math.random()*wells.length)];
+      if(w.routes.length){ w.splash=50; const n=1+Math.floor(Math.random()*2);
+        for(let i=0;i<n;i++)setTimeout(()=>{ if(gameOver)return; const P=w.routes[Math.floor(Math.random()*w.routes.length)];
+          const e=makeEnemy('tumorling'); e.pth=P; e.pos=0; e.x=P[0].x; e.y=P[0].y; enemies.push(e); },i*350); } } }
+  wells.forEach(w=>{ if(w.splash>0)w.splash--; });
+  // open graves: halfway through every wave a zombie claws its way out of each one
+  if(openGraves.length&&wave>openGraveWave){ openGraveWave=wave; const wi=waveInfo[wave];
+    openGraves.forEach(g=>{ g.waiting=true; g.waveNo=wave; if(wi)wi.total++; }); }
+  openGraves.forEach(g=>{
+    if(g.rise>0){ if(++g.rise>GRAVE_RISE){ g.rise=0; const x=g.col*CELL+CELL/2, y=g.row*CELL+CELL/2;
+      fxSmoke(x,y+4,7,'110,84,52',6); const e=spawnDead('zombie',x,y); e.waveNo=g.waveNo; const wi=waveInfo[g.waveNo]; if(wi)wi.spawned++; } return; }
+    if(!g.waiting)return; const wi=waveInfo[g.waveNo];
+    if(!wi||wi.spawned>=Math.floor(wi.total/2)){ g.waiting=false; g.rise=1; } });
 }
 
 /* ---------- police cars ---------- */
@@ -4587,7 +4607,7 @@ const undeep=hex=>DEEP_GROUND[String(hex||'').toLowerCase()]||hex;
 const SBX_TOOLS=[['path','Path'],['spawn','Spawn'],['base','Base'],['tree','Tree'],['lake','Lake'],['lakespawn','Lake spawn'],
   ['bridge','Bridge'],['webpath','Web path'],['forest','Forest'],['webforest','Webbed forest'],['plainsforest','Plains forest'],
   ['spider','Spider den'],['nest','Spider nest'],['queen','Spider queen'],['web','Web'],['solidweb','Solid web'],['webwall','Web wall'],['cocoon','Cocoon'],['eggs','Egg sacs'],['silkbridge','Silk bridge'],
-  ['tunnelin','Tunnel in'],['tunnelout','Tunnel out'],['ruin','Webbed ruin'],['bones','Bones'],['grave','Grave'],['graveyard','Graveyard'],['crypt','Crypt'],['house','Abandoned house'],['pumpkin','Pumpkin'],['jack',"Jack o' lantern"],['barn','Barn'],['thornpath','Thorny path'],
+  ['tunnelin','Tunnel in'],['tunnelout','Tunnel out'],['ruin','Webbed ruin'],['bones','Bones'],['grave','Grave'],['graveyard','Graveyard'],['crypt','Crypt'],['house','Abandoned house'],['pumpkin','Pumpkin'],['jack',"Jack o' lantern"],['barn','Barn'],['thornpath','Thorny path'],['corn','Corn rows'],['well','Well'],['candles','Candle shrine'],['opengrave','Open grave'],
   ['bush','Bush'],['bigbush','Big bush'],['sewer','Sewer'],['erase','Eraser']];
 const SBX_SIZES={computer:{COLS:19,ROWS:12},phone:{COLS:10,ROWS:18},large:{COLS:25,ROWS:16},huge:{COLS:31,ROWS:20}};
 const SBX_SECTIONS={
@@ -4600,7 +4620,7 @@ const SBX_SECTIONS={
 function sbxSections(){
   if(!halloweenOn())return SBX_SECTIONS.tabs;
   const t=Object.assign({},SBX_SECTIONS.tabs); t.Spiders=t.Spiders.filter(k=>k!=='bones');
-  t.Halloween=['grave','graveyard','crypt','bones','house']; t['Pumpkin Farm']=['pumpkin','jack','barn','thornpath']; return t;
+  t.Halloween=['grave','graveyard','crypt','bones','house','candles','opengrave']; t['Pumpkin Farm']=['pumpkin','jack','barn','thornpath','corn','well']; return t;
 }
 /* ---------- block descriptions (the sandbox's Description button) ----------
    One entry per sandbox block, in the order they are looked for on a tile: the topmost thing first.
@@ -4611,6 +4631,14 @@ const BLOCK_INFO={
     does:['A pumpkin patch: blocks building and can never be cleared in a game. Comes in 3 random looks.','Тыквенная грядка: мешает строить, и в игре её не убрать. 3 случайных вида.']},
   jack:{arr:'jacks',size:['1 tile','1 клетка'],where:['On grass off the road.','На траве, не на дороге.'],
     does:["Sleeps as a carved pumpkin and blocks building. Its face lights up the wave before a random wave (wave 2 to the last); then it climbs out and walks the road as a Jack o' Lantern enemy (200 health). The tile is free after that.",'Спит резной тыквой и мешает строить. Лицо загорается за волну до случайной волны (со 2-й до последней); тогда она выбирается и идёт по дороге врагом Джек-фонарь (200 здоровья). После этого клетка свободна.']},
+  well:{arr:'wells',size:['1 tile','1 клетка'],where:['On grass beside the road.','На траве у дороги.'],
+    does:['A stone well that works like a small lake: from wave 3, every 12 seconds 1 or 2 tumorlings climb out and walk to the nearest road. (A lake sends 2–4 every 7 seconds.) Blocks building.','Каменный колодец, работает как маленькое озеро: с 3-й волны каждые 12 секунд из него вылезают 1–2 опухольки и идут к ближайшей дороге. (Озеро выпускает 2–4 каждые 7 секунд.) Мешает строить.']},
+  candles:{arr:'candles',size:['1 tile','1 клетка'],where:['On grass beside the road.','На траве у дороги.'],
+    does:['A stone covered in lit candles. The towers on the 8 tiles around it reload 20% faster. Blocks building.','Камень с горящими свечами. Башни на 8 клетках вокруг перезаряжаются на 20% быстрее. Мешает строить.']},
+  opengrave:{arr:'openGraves',size:['1 tile','1 клетка'],where:['On grass beside the road.','На траве у дороги.'],
+    does:['A dug-up grave. Halfway through every wave (once half its enemies are out) a hand reaches up and a zombie climbs out. Blocks building.','Разрытая могила. В середине каждой волны (когда вышла половина врагов) из неё тянется рука и вылезает зомби. Мешает строить.']},
+  corn:{arr:'corns',size:['1 tile','1 клетка'],where:['On the road or on grass. Drag to plant rows.','На дороге или на траве. Тяните, чтобы сажать ряды.'],
+    does:['Tall, thick corn. Enemies inside it are hidden: towers cannot see or shoot them until they come out, and the stalks sway as they push through. On grass it blocks building; on the road enemies walk through it.','Высокая густая кукуруза. Враги в ней скрыты: башни их не видят и не стреляют, пока они не выйдут, а стебли качаются, когда они пробираются. На траве мешает строить, на дороге враги идут сквозь неё.']},
   grave:{arr:'graves',size:['1 tile','1 клетка'],where:['On grass beside the road.','На траве у дороги.'],
     does:['Blocks building. When the last wave starts, one zombie climbs out, then it stays an open hole.','Мешает строить. В начале последней волны из неё вылезает один зомби, дальше остаётся открытая яма.']},
   webwall:{arr:'webWalls',size:['1 tile','1 клетка'],where:['On the road or on grass, not on open water.','На дороге или траве, не на открытой воде.'],
@@ -4715,7 +4743,7 @@ let sbxTab='Plains';
 let sbx=null, sbxTool='path', sbxPainting=false, sbxNote='', sbxShowRoutes=true, sbxTerrain=null, sbxTerrainKey='', sbxFrame=0, sbxAnimOn=false, sbxR=null;
 function sbxBlank(orient){
   const C=SBX_SIZES[orient]||SBX_SIZES.computer;
-  return {orient,COLS:C.COLS,ROWS:C.ROWS,path:[],spawns:[],bases:[],trees:[],lake:[],lakeSpawns:[],forest:[],spiderDens:[],nests:[],webs:[],solidWebs:[],bridges:[],webPaths:[],bushes:[],bigBushes:[],queens:[],webWalls:[],cocoons:[],eggSacs:[],bones:[],ruins:[],silkBridges:[],tunnelIns:[],tunnelOuts:[],sewers:[],graves:[],graveyards:[],crypts:[],houses:[],pumpkins:[],jacks:[],barns:[],thornPaths:[],
+  return {orient,COLS:C.COLS,ROWS:C.ROWS,path:[],spawns:[],bases:[],trees:[],lake:[],lakeSpawns:[],forest:[],spiderDens:[],nests:[],webs:[],solidWebs:[],bridges:[],webPaths:[],bushes:[],bigBushes:[],queens:[],webWalls:[],cocoons:[],eggSacs:[],bones:[],ruins:[],silkBridges:[],tunnelIns:[],tunnelOuts:[],sewers:[],graves:[],graveyards:[],crypts:[],houses:[],pumpkins:[],jacks:[],barns:[],thornPaths:[],corns:[],wells:[],candles:[],openGraves:[],
     pathIdx:1,grassIdx:1,pathCol:PATH_COLORS[1].c,ground:GRASS_COLORS[1].c,pathCustom:false,grassCustom:false};
 }
 function sbxFix(d){                    // fill in anything an older save or code is missing
@@ -4776,7 +4804,8 @@ function sbxApply(r,c,first){
   if(r<0||c<0||r>=sbx.ROWS||c>=sbx.COLS)return;
   const t=sbxTool;
   const clearProps=()=>{ sDel(sbx.trees,r,c); sDel(sbx.lake,r,c); sDel(sbx.sewers,r,c); sDel(sbx.forest,r,c);
-    sDel(sbx.lakeSpawns,r,c); sDel(sbx.spiderDens,r,c); sDel(sbx.nests,r,c); sDel(sbx.bridges,r,c); sDel(sbx.webPaths,r,c); sDel(sbx.bushes,r,c); };
+    sDel(sbx.lakeSpawns,r,c); sDel(sbx.spiderDens,r,c); sDel(sbx.nests,r,c); sDel(sbx.bridges,r,c); sDel(sbx.webPaths,r,c); sDel(sbx.bushes,r,c);
+    sDel(sbx.wells,r,c); sDel(sbx.candles,r,c); sDel(sbx.openGraves,r,c); };
   const clearRoad=()=>{ sDel(sbx.path,r,c); sDel(sbx.spawns,r,c); sDel(sbx.bases,r,c); sDel(sbx.webs,r,c); sDel(sbx.solidWebs,r,c); };
   const onRoad=()=>sHas(sbx.path,r,c)||sHas(sbx.bridges,r,c);
   if(t==='path'){ clearProps(); if(!onRoad())sbx.path.push([r,c]); }
@@ -4838,13 +4867,13 @@ function sbxApply(r,c,first){
     if(sHas(arr,r,c)){ sDel(arr,r,c); return; }
     if(sbxCoverAt(r,c)){ sbxNote='Something already stands here.'; return; }
     sDel(sbx.trees,r,c); sDel(sbx.bushes,r,c); sDel(sbx.sewers,r,c); sDel(sbx.nests,r,c); sDel(sbx.cocoons,r,c);
-    [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.pumpkins,sbx.jacks].forEach(a=>sDel(a,r,c)); arr.push(t==='bones'?[r,c,Math.floor(Math.random()*5)]:[r,c]); }
+    [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.pumpkins,sbx.jacks,sbx.corns,sbx.wells,sbx.candles,sbx.openGraves].forEach(a=>sDel(a,r,c)); arr.push(t==='bones'?[r,c,Math.floor(Math.random()*5)]:[r,c]); }
   else if(t==='grave'){ if(!first)return;
     if(onRoad()||sHas(sbx.lake,r,c)){ sbxNote='Graves go on grass beside the road.'; return; }
     if(sHas(sbx.graves,r,c)){ sDel(sbx.graves,r,c); return; }
     if(sbxCoverAt(r,c)){ sbxNote='Something already stands here.'; return; }
     sDel(sbx.trees,r,c); sDel(sbx.bushes,r,c); sDel(sbx.sewers,r,c); sDel(sbx.nests,r,c); sDel(sbx.cocoons,r,c);
-    [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.pumpkins,sbx.jacks].forEach(a=>sDel(a,r,c)); sbx.graves.push([r,c]); }
+    [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.pumpkins,sbx.jacks,sbx.corns,sbx.wells,sbx.candles,sbx.openGraves].forEach(a=>sDel(a,r,c)); sbx.graves.push([r,c]); }
   else if(t==='graveyard'){ if(!first)return;
     const hit=sbxCoverAt(r,c);
     if(hit&&hit.arr===sbx.graveyards){                     // tap it again: the gate turns to the next side on the road
@@ -4857,7 +4886,7 @@ function sbxApply(r,c,first){
     const sides=sbxGateSides(r,c);
     if(!sides.length){ sbxNote='A graveyard must have one whole side against the road (2 road tiles).'; return; }
     for(let rr=r;rr<r+2;rr++)for(let cc=c;cc<c+2;cc++){ sDel(sbx.trees,rr,cc); sDel(sbx.bushes,rr,cc); sDel(sbx.sewers,rr,cc); sDel(sbx.nests,rr,cc); sDel(sbx.solidWebs,rr,cc); sDel(sbx.webWalls,rr,cc);
-      [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.cocoons,sbx.pumpkins,sbx.jacks].forEach(a=>sDel(a,rr,cc)); }
+      [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.cocoons,sbx.pumpkins,sbx.jacks,sbx.corns,sbx.wells,sbx.candles,sbx.openGraves].forEach(a=>sDel(a,rr,cc)); }
     sbx.graveyards.push([r,c,sides[0]]);
     if(sides.length>1)sbxNote='Tap the graveyard again to turn its gate.'; }
   else if(t==='crypt'){ if(!first)return;
@@ -4866,7 +4895,7 @@ function sbxApply(r,c,first){
     for(let cc=c;cc<c+2;cc++){
       if(sHas(sbx.path,r,cc)||sHas(sbx.bridges,r,cc)||sHas(sbx.lake,r,cc)||sbxCoverAt(r,cc)){ sbxNote='It needs 2 clear tiles side by side, off the road and water.'; return; } }
     for(let cc=c;cc<c+2;cc++){ sDel(sbx.trees,r,cc); sDel(sbx.bushes,r,cc); sDel(sbx.sewers,r,cc); sDel(sbx.nests,r,cc); sDel(sbx.solidWebs,r,cc); sDel(sbx.webWalls,r,cc);
-      [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.cocoons,sbx.pumpkins,sbx.jacks].forEach(a=>sDel(a,r,cc)); }
+      [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.cocoons,sbx.pumpkins,sbx.jacks,sbx.corns,sbx.wells,sbx.candles,sbx.openGraves].forEach(a=>sDel(a,r,cc)); }
     sbx.crypts.push([r,c,'r']); }
   else if(t==='house'){ if(!first)return;
     const hit=sbxCoverAt(r,c); if(hit&&hit.arr===sbx.houses){ sbx.houses.splice(sbx.houses.indexOf(hit.item),1); return; }
@@ -4874,7 +4903,7 @@ function sbxApply(r,c,first){
     for(let rr=r;rr<r+2;rr++)for(let cc=c;cc<c+2;cc++){
       if(sHas(sbx.path,rr,cc)||sHas(sbx.bridges,rr,cc)||sHas(sbx.lake,rr,cc)||sbxCoverAt(rr,cc)){ sbxNote='It needs 2×2 clear tiles off the road and water.'; return; } }
     for(let rr=r;rr<r+2;rr++)for(let cc=c;cc<c+2;cc++){ sDel(sbx.trees,rr,cc); sDel(sbx.bushes,rr,cc); sDel(sbx.sewers,rr,cc); sDel(sbx.nests,rr,cc); sDel(sbx.solidWebs,rr,cc); sDel(sbx.webWalls,rr,cc);
-      [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.cocoons,sbx.pumpkins,sbx.jacks].forEach(a=>sDel(a,rr,cc)); }
+      [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.cocoons,sbx.pumpkins,sbx.jacks,sbx.corns,sbx.wells,sbx.candles,sbx.openGraves].forEach(a=>sDel(a,rr,cc)); }
     sbx.houses.push([r,c]); }
   else if(t==='pumpkin'||t==='jack'){ if(!first)return;
     const arr=t==='pumpkin'?sbx.pumpkins:sbx.jacks;
@@ -4882,15 +4911,29 @@ function sbxApply(r,c,first){
     if(sHas(arr,r,c)){ sDel(arr,r,c); return; }
     if(sbxCoverAt(r,c)){ sbxNote='Something already stands here.'; return; }
     sDel(sbx.trees,r,c); sDel(sbx.bushes,r,c); sDel(sbx.sewers,r,c); sDel(sbx.nests,r,c); sDel(sbx.cocoons,r,c);
-    [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.pumpkins,sbx.jacks].forEach(a=>sDel(a,r,c));
+    [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.pumpkins,sbx.jacks,sbx.corns,sbx.wells,sbx.candles,sbx.openGraves].forEach(a=>sDel(a,r,c));
     arr.push(t==='pumpkin'?[r,c,Math.floor(Math.random()*3)]:[r,c]); }
+  else if(t==='corn'){
+    if(sHas(sbx.corns,r,c)){ if(first)sDel(sbx.corns,r,c); return; }
+    if(sHas(sbx.lake,r,c)&&!sHas(sbx.bridges,r,c)){ if(first)sbxNote='Corn does not grow in water.'; return; }
+    if(!onRoad()){ if(sbxCoverAt(r,c)){ if(first)sbxNote='Something already stands here.'; return; }
+      sDel(sbx.trees,r,c); sDel(sbx.bushes,r,c); sDel(sbx.sewers,r,c); sDel(sbx.nests,r,c); sDel(sbx.cocoons,r,c); sDel(sbx.solidWebs,r,c); sDel(sbx.webWalls,r,c); sDel(sbx.forest,r,c);
+      [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.pumpkins,sbx.jacks,sbx.wells,sbx.candles,sbx.openGraves].forEach(a=>sDel(a,r,c)); }
+    sbx.corns.push([r,c]); }
+  else if(t==='well'||t==='candles'||t==='opengrave'){ if(!first)return;
+    const arr=t==='well'?sbx.wells:t==='candles'?sbx.candles:sbx.openGraves;
+    if(onRoad()||sHas(sbx.lake,r,c)){ sbxNote='That goes on grass beside the road.'; return; }
+    if(sHas(arr,r,c)){ sDel(arr,r,c); return; }
+    if(sbxCoverAt(r,c)){ sbxNote='Something already stands here.'; return; }
+    sDel(sbx.trees,r,c); sDel(sbx.bushes,r,c); sDel(sbx.sewers,r,c); sDel(sbx.nests,r,c); sDel(sbx.cocoons,r,c); sDel(sbx.forest,r,c);
+    [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.pumpkins,sbx.jacks,sbx.corns,sbx.wells,sbx.candles,sbx.openGraves].forEach(a=>sDel(a,r,c)); arr.push([r,c]); }
   else if(t==='barn'){ if(!first)return;
     const hit=sbxCoverAt(r,c); if(hit&&hit.arr===sbx.barns){ sbx.barns.splice(sbx.barns.indexOf(hit.item),1); return; }
     if(r+2>sbx.ROWS||c+3>sbx.COLS){ sbxNote='Not enough room here — a barn needs 3 tiles across and 2 down.'; return; }
     for(let rr=r;rr<r+2;rr++)for(let cc=c;cc<c+3;cc++){
       if(sHas(sbx.path,rr,cc)||sHas(sbx.bridges,rr,cc)||sHas(sbx.lake,rr,cc)||sbxCoverAt(rr,cc)){ sbxNote='A barn needs 3×2 clear tiles off the road and water.'; return; } }
     for(let rr=r;rr<r+2;rr++)for(let cc=c;cc<c+3;cc++){ sDel(sbx.trees,rr,cc); sDel(sbx.bushes,rr,cc); sDel(sbx.sewers,rr,cc); sDel(sbx.nests,rr,cc); sDel(sbx.solidWebs,rr,cc); sDel(sbx.webWalls,rr,cc);
-      [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.cocoons,sbx.pumpkins,sbx.jacks].forEach(a=>sDel(a,rr,cc)); }
+      [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.cocoons,sbx.pumpkins,sbx.jacks,sbx.corns,sbx.wells,sbx.candles,sbx.openGraves].forEach(a=>sDel(a,rr,cc)); }
     sbx.barns.push([r,c,'r']); }
   else if(t==='silkbridge'){
     if(!sHas(sbx.lake,r,c)){ if(first)sbxNote='Silk bridges go across a lake.'; return; }
@@ -4936,7 +4979,7 @@ function sbxCoverAt(r,c){
 // the eraser peels off only the topmost thing on a tile: a web before its road, a bridge before its lake
 function sbxEraseTop(r,c){
   const cov=sbxCoverAt(r,c); if(cov){ cov.arr.splice(cov.arr.indexOf(cov.item),1); return; }
-  const layers=[sbx.pumpkins,sbx.jacks,sbx.thornPaths,sbx.graves,sbx.webWalls,sbx.cocoons,sbx.eggSacs,sbx.bones,sbx.ruins,sbx.tunnelIns,sbx.tunnelOuts,sbx.solidWebs,sbx.webs,sbx.spawns,sbx.bases,sbx.nests,sbx.spiderDens,sbx.lakeSpawns,sbx.bushes,sbx.trees,sbx.sewers,sbx.bridges,sbx.silkBridges,sbx.webPaths,sbx.path,sbx.lake,sbx.forest];
+  const layers=[sbx.wells,sbx.candles,sbx.openGraves,sbx.corns,sbx.pumpkins,sbx.jacks,sbx.thornPaths,sbx.graves,sbx.webWalls,sbx.cocoons,sbx.eggSacs,sbx.bones,sbx.ruins,sbx.tunnelIns,sbx.tunnelOuts,sbx.solidWebs,sbx.webs,sbx.spawns,sbx.bases,sbx.nests,sbx.spiderDens,sbx.lakeSpawns,sbx.bushes,sbx.trees,sbx.sewers,sbx.bridges,sbx.silkBridges,sbx.webPaths,sbx.path,sbx.lake,sbx.forest];
   for(const L of layers){ if(sHas(L,r,c)){ sDel(L,r,c); return; } }
 }
 // breadth-first walk across a set of tiles; returns the tile list from start to the first goal reached
@@ -5002,6 +5045,11 @@ function sbxRoutes(){
     const cand=sbx.path.slice().sort((a,b)=>Math.hypot(a[0]-n[0],a[1]-n[1])-Math.hypot(b[0]-n[0],b[1]-n[1]));
     for(const R of cand){ const rs=toBases(R); if(rs.length)return {at:n,routes:rs.map(rc=>[n].concat(sbxWaypoints(rc)))}; }
     return {at:n,routes:[]}; });
+  // wells: their creatures climb out and walk to the nearest road tile that leads to a base
+  out.wells=sbx.wells.map(n=>{
+    const cand=sbx.path.slice().sort((a,b)=>Math.hypot(a[0]-n[0],a[1]-n[1])-Math.hypot(b[0]-n[0],b[1]-n[1]));
+    for(const R of cand){ const rs=toBases(R); if(rs.length)return {at:n,routes:rs.map(rc=>[n].concat(sbxWaypoints(rc)))}; }
+    errs.push('A well has no road to a Base nearby.'); return {at:n,routes:[]}; });
   // nests crawl to the nearest road tile that leads to a base
   out.nests=[];
   sbx.nests.forEach(n=>{
@@ -5016,7 +5064,7 @@ function sbxCode(){
   return JSON.stringify({v:3,orient:sbx.orient,COLS:sbx.COLS,ROWS:sbx.ROWS,ground:sbx.ground,pathCol:sbx.pathCol,
     routeGroups:R.groups,lakeExits:R.lakeExits,spiderRoutes:R.spiderRoutes,
     nests:R.nests,trees:sbx.trees,lake:sbx.lake,lakeSpawns:sbx.lakeSpawns,forest:sbx.forest,spiderDens:sbx.spiderDens,
-    spiderNests:sbx.nests,webs:sbx.webs,solidWebs:sbx.solidWebs,bridges:sbx.bridges,webPaths:sbx.webPaths,bushes:sbx.bushes,bigBushes:sbx.bigBushes,queens:sbx.queens,webWalls:sbx.webWalls,cocoons:sbx.cocoons,eggSacs:sbx.eggSacs,bones:sbx.bones,ruins:sbx.ruins,silkBridges:sbx.silkBridges,tunnelIns:sbx.tunnelIns,tunnelOuts:sbx.tunnelOuts,sewers:sbx.sewers,graves:sbx.graves,graveyards:sbx.graveyards,crypts:sbx.crypts,houses:sbx.houses,pumpkins:sbx.pumpkins,jacks:sbx.jacks,barns:sbx.barns,thornPaths:sbx.thornPaths,
+    spiderNests:sbx.nests,webs:sbx.webs,solidWebs:sbx.solidWebs,bridges:sbx.bridges,webPaths:sbx.webPaths,bushes:sbx.bushes,bigBushes:sbx.bigBushes,queens:sbx.queens,webWalls:sbx.webWalls,cocoons:sbx.cocoons,eggSacs:sbx.eggSacs,bones:sbx.bones,ruins:sbx.ruins,silkBridges:sbx.silkBridges,tunnelIns:sbx.tunnelIns,tunnelOuts:sbx.tunnelOuts,sewers:sbx.sewers,graves:sbx.graves,graveyards:sbx.graveyards,crypts:sbx.crypts,houses:sbx.houses,pumpkins:sbx.pumpkins,jacks:sbx.jacks,barns:sbx.barns,thornPaths:sbx.thornPaths,corns:sbx.corns,wells:sbx.wells,candles:sbx.candles,openGraves:sbx.openGraves,
     road:sbx.path,spawns:sbx.spawns,bases:sbx.bases});
 }
 function sbxRender(){
@@ -5057,6 +5105,10 @@ function sbxRender(){
     if(sbx.houses.length)parts.push('the abandoned house breaks open on a random wave');
     if(sbx.jacks.length)parts.push("jack o' lanterns rise on a random wave");
     if(sbx.thornPaths.length)parts.push('thorny roots hurt your units on the road');
+    if(sbx.corns.length)parts.push('enemies hide in the corn');
+    if(sbx.wells.length)parts.push('tumorlings climb out of the well');
+    if(sbx.candles.length)parts.push('candles make the towers next to them shoot faster');
+    if(sbx.openGraves.length)parts.push('a zombie climbs out of each open grave mid-wave');
     if(sbx.bushes.length)parts.push('thieves hide in '+sbx.bushes.length+' bush'+(sbx.bushes.length>1?'es':''));
     if(sbx.tunnelIns.length!==sbx.tunnelOuts.length)parts.push('a tunnel is missing its partner');
     else if(sbx.tunnelIns.length&&R.groups.some(g=>g.some(wp=>wp.some(p=>p[2]))))parts.push('half the enemies take the tunnel');
@@ -5071,7 +5123,7 @@ function sbxDraw(){
   if(!sbx||!sbxR)return;
   const cv=document.getElementById('sbxCanvas');
   const saved={ctx,CELL,COLS,ROWS,CW,CH,paths,path,pathSet,pathCells,lake,grove,trees,sewers,lab,theme,themeB,splitEdge,
-    terrainCache,forestPathIdx,forestIdxs,denPoints,nestPts,webs,bridges,webPaths,bigBushes,queens,webWalls,cocoons,eggSacs,boneHeaps,ruins,silkBridges,tunnels,piers,lakeExitPts,lakeSpawnPts,frameCount,extraBases,hiddenPaths,graves,graveyards,crypts,houses,pumpkins,jacks,barns,thornPaths};
+    terrainCache,forestPathIdx,forestIdxs,denPoints,nestPts,webs,bridges,webPaths,bigBushes,queens,webWalls,cocoons,eggSacs,boneHeaps,ruins,silkBridges,tunnels,piers,lakeExitPts,lakeSpawnPts,frameCount,extraBases,hiddenPaths,graves,graveyards,crypts,houses,pumpkins,jacks,barns,thornPaths,corns,wells,candles,openGraves};
   try{
     const S=40, pt=([r,c])=>({x:c*S+S/2,y:r*S+S/2});
     ctx=cv.getContext('2d'); ctx.setTransform(2,0,0,2,0,0);
@@ -5085,6 +5137,7 @@ function sbxDraw(){
     graves=sbx.graves.map(([r,c])=>({row:r,col:c})); graveyards=sbx.graveyards.map(([r,c,d])=>({row:r,col:c,dir:d}));
     crypts=sbx.crypts.map(([r,c,d])=>({row:r,col:c,dir:d||'r'})); houses=sbx.houses.map(([r,c])=>({row:r,col:c}));
     pumpkins=sbx.pumpkins.map(([r,c,v])=>({row:r,col:c,v:v||0})); jacks=sbx.jacks.map(([r,c])=>({row:r,col:c})); barns=sbx.barns.map(([r,c,d])=>({row:r,col:c,dir:d||'r'})); thornPaths=sbx.thornPaths.map(([r,c])=>({row:r,col:c}));
+    corns=sbx.corns.map(([r,c])=>({row:r,col:c,rustle:0})); wells=sbx.wells.map(([r,c])=>({row:r,col:c,routes:[],splash:0})); candles=sbx.candles.map(([r,c])=>({row:r,col:c})); openGraves=sbx.openGraves.map(([r,c])=>({row:r,col:c,rise:0}));
     ruins=sbx.ruins.map(([r,c])=>({row:r,col:c})); silkBridges=sbx.silkBridges.map(([r,c])=>({row:r,col:c}));
     tunnels=sbx.tunnelIns.map((tin,i)=>({in:tin,out:sbx.tunnelOuts[i]})).concat(sbx.tunnelOuts.slice(sbx.tunnelIns.length).map(o=>({in:null,out:o})));
     lake=sbx.lake.map(([r,c])=>({row:r,col:c,x:c*S+S/2,y:r*S+S/2}));
@@ -5108,7 +5161,7 @@ function sbxDraw(){
     bigBushes.forEach(b=>drawBigBush(b.col*S,b.row*S));
     cocoons.forEach(k=>drawCocoon(k.col*S+S/2,k.row*S+S/2,k.row*31+k.col,sbxFrame));
     boneHeaps.forEach(k=>drawBones(k.col*S+S/2,k.row*S+S/2,k.row*17+k.col,k.v));
-    drawHalloweenPieces(sbxFrame);
+    drawHalloweenPieces(sbxFrame); drawCorn(sbxFrame);
     ruins.forEach(k=>drawRuin(k.col*S+S/2,k.row*S+S/2,k.row*13+k.col));
     eggSacs.forEach(k=>drawEggSacs(k.col*S+S/2,k.row*S+S/2,k.row*7+k.col,sbxFrame));
     queens.forEach(q=>drawSpiderQueen(q.col*S,q.row*S,sbxFrame));
@@ -5128,10 +5181,11 @@ function sbxDraw(){
       sbxR.lakeExits.forEach(e=>e.routes.forEach(wp=>dash(wp,'rgba(170,230,190,.8)',1)));
       sbxR.spiderRoutes.forEach(wp=>dash(wp,'rgba(255,130,120,.75)'));
       sbxR.nests.forEach(n=>n.routes.forEach(wp=>dash(wp,'rgba(255,130,120,.75)')));
+      (sbxR.wells||[]).forEach(n=>n.routes.forEach(wp=>dash(wp,'rgba(170,230,190,.8)')));
     }
   } finally {
     ({ctx,CELL,COLS,ROWS,CW,CH,paths,path,pathSet,pathCells,lake,grove,trees,sewers,lab,theme,themeB,splitEdge,
-      terrainCache,forestPathIdx,forestIdxs,denPoints,nestPts,webs,bridges,webPaths,bigBushes,queens,webWalls,cocoons,eggSacs,boneHeaps,ruins,silkBridges,tunnels,piers,lakeExitPts,lakeSpawnPts,frameCount,extraBases,hiddenPaths,graves,graveyards,crypts,houses,pumpkins,jacks,barns,thornPaths}=saved);
+      terrainCache,forestPathIdx,forestIdxs,denPoints,nestPts,webs,bridges,webPaths,bigBushes,queens,webWalls,cocoons,eggSacs,boneHeaps,ruins,silkBridges,tunnels,piers,lakeExitPts,lakeSpawnPts,frameCount,extraBases,hiddenPaths,graves,graveyards,crypts,houses,pumpkins,jacks,barns,thornPaths,corns,wells,candles,openGraves}=saved);
   }
 }
 function sbxToggleRoutes(){ sbxShowRoutes=!sbxShowRoutes; sbxRender(); }
@@ -5172,7 +5226,7 @@ function sbxSetOrient(o){
   const C=SBX_SIZES[o];
   const keep=arr=>arr.filter(([r,c])=>r<C.ROWS&&c<C.COLS);
   sbx.orient=o; sbx.COLS=C.COLS; sbx.ROWS=C.ROWS;
-  ['path','spawns','bases','trees','lake','lakeSpawns','forest','sewers','spiderDens','nests','webs','solidWebs','bridges','webPaths','bushes','webWalls','cocoons','eggSacs','bones','ruins','silkBridges','tunnelIns','tunnelOuts','graves','pumpkins','jacks','thornPaths'].forEach(k=>sbx[k]=keep(sbx[k]));
+  ['path','spawns','bases','trees','lake','lakeSpawns','forest','sewers','spiderDens','nests','webs','solidWebs','bridges','webPaths','bushes','webWalls','cocoons','eggSacs','bones','ruins','silkBridges','tunnelIns','tunnelOuts','graves','pumpkins','jacks','thornPaths','corns','wells','candles','openGraves'].forEach(k=>sbx[k]=keep(sbx[k]));
   sbx.graveyards=sbx.graveyards.filter(([r,c])=>r+2<=C.ROWS&&c+2<=C.COLS); sbx.houses=sbx.houses.filter(([r,c])=>r+2<=C.ROWS&&c+2<=C.COLS); sbx.barns=sbx.barns.filter(([r,c,d])=>d==='d'?r+3<=C.ROWS&&c+2<=C.COLS:r+2<=C.ROWS&&c+3<=C.COLS); sbx.crypts=sbx.crypts.filter(([r,c,d])=>d==='d'?r+2<=C.ROWS&&c<C.COLS:r<C.ROWS&&c+2<=C.COLS);
   sbx.bigBushes=sbx.bigBushes.filter(([r,c])=>r+2<=C.ROWS&&c+2<=C.COLS); sbx.queens=sbx.queens.filter(([r,c])=>r+4<=C.ROWS&&c+3<=C.COLS);
   sbxRender();
@@ -5201,7 +5255,7 @@ function sbxParse(d){
     const n=sbxFix({orient:d.orient,COLS:d.COLS,ROWS:d.ROWS,ground:d.ground,path:d.road||[],spawns:d.spawns||[],bases:d.bases||[],base:d.base,
       trees:d.trees||[],lake:d.lake||[],lakeSpawns:d.lakeSpawns||[],forest:d.forest||[],spiderDen:d.spiderDen||null,spiderDens:d.spiderDens||[],
       nests:d.spiderNests||[],webs:d.webs||[],solidWebs:d.solidWebs||[],bridges:d.bridges||[],webPaths:d.webPaths||[],bushes:d.bushes||[],bigBushes:d.bigBushes||[],queens:d.queens||[],webWalls:d.webWalls||[],cocoons:d.cocoons||[],eggSacs:d.eggSacs||[],bones:d.bones||[],ruins:d.ruins||[],silkBridges:d.silkBridges||[],
-      tunnelIns:d.tunnelIns||[],tunnelOuts:d.tunnelOuts||[],sewers:d.sewers||[],graves:d.graves||[],graveyards:d.graveyards||[],crypts:d.crypts||[],houses:d.houses||[],pumpkins:d.pumpkins||[],jacks:d.jacks||[],barns:d.barns||[],thornPaths:d.thornPaths||[]});
+      tunnelIns:d.tunnelIns||[],tunnelOuts:d.tunnelOuts||[],sewers:d.sewers||[],graves:d.graves||[],graveyards:d.graveyards||[],crypts:d.crypts||[],houses:d.houses||[],pumpkins:d.pumpkins||[],jacks:d.jacks||[],barns:d.barns||[],thornPaths:d.thornPaths||[],corns:d.corns||[],wells:d.wells||[],candles:d.candles||[],openGraves:d.openGraves||[]});
     if(!n.path.length&&Array.isArray(d.paths)){        // older code: rebuild the road from its waypoints
       d.paths.forEach(wp=>{ for(let i=0;i<wp.length-1;i++){ const [r1,c1]=wp[i],[r2,c2]=wp[i+1], m=Math.abs(r2-r1)+Math.abs(c2-c1);
         for(let k=0;k<=m;k++){ const p=[r1+Math.sign(r2-r1)*k,c1+Math.sign(c2-c1)*k]; if(!sHas(n.path,p[0],p[1]))n.path.push(p);} } });
@@ -5231,6 +5285,7 @@ function sbxLayout(R){
     lake:sbx.lake,keepLake:true,sewers:sbx.sewers,treesAt:sbx.trees,grove:sbx.forest,extraRoad:sbx.path.concat(sbx.bridges,sbx.silkBridges),bases:sbx.bases,
     bridges:sbx.bridges,webPaths:sbx.webPaths,bushes:sbx.bushes,bigBushes:sbx.bigBushes,queens:sbx.queens,webWalls:sbx.webWalls,cocoons:sbx.cocoons,
     eggSacs:R.eggs,bones:sbx.bones,ruins:sbx.ruins,silkBridges:sbx.silkBridges,graves:sbx.graves,graveyards:sbx.graveyards,crypts:sbx.crypts,houses:sbx.houses,pumpkins:sbx.pumpkins,jacks:sbx.jacks,barns:sbx.barns,thornPaths:sbx.thornPaths,
+    corns:sbx.corns,wells:R.wells||[],candles:sbx.candles,openGraves:sbx.openGraves,
     tunnels:sbx.tunnelIns.map((tin,i)=>({in:tin,out:sbx.tunnelOuts[i]})).filter(t=>t.out),
     lakeSpawns:sbx.lakeSpawns,lakeExits:R.lakeExits.map(e=>({exit:e.exit,routes:e.routes}))};
   if(R.spiderRoutes.length){ L.forestPaths=R.spiderRoutes; L.forestHidden=true;
@@ -5287,7 +5342,7 @@ function dlcParse(text){
     const def={name:lv.name?String(lv.name).slice(0,40):('Level '+(i+1)),code,startGold:Math.max(0,Math.round(+lv.startGold||400)),
       lives:Math.max(1,Math.round(+lv.lives||20)),waves,region:REGIONS.some(r=>r.id===lv.region)?lv.region:'fields',
       hpMul:Math.min(10,Math.max(0.2,+lv.hpMul||1)),speedMul:Math.min(3,Math.max(0.3,+lv.speedMul||1))};
-    ['sewerWave','lakeWave','bigSpiderWave','bonesWave'].forEach(k=>{ if(lv[k]!=null)def[k]=Math.max(0,Math.round(+lv[k]||0)); });
+    ['sewerWave','lakeWave','bigSpiderWave','bonesWave','wellWave'].forEach(k=>{ if(lv[k]!=null)def[k]=Math.max(0,Math.round(+lv[k]||0)); });
     if(def.bonesWave==null&&(code.bones||[]).length)def.bonesWave=3;
     if(lv.spiders&&lv.spiders.wave)def.spiders={wave:Math.round(+lv.spiders.wave),count:Math.round(+lv.spiders.count||9)};
     let L; try{ L=layoutFromCode(code); }catch(e){ L=null; }
@@ -5445,6 +5500,9 @@ function startGame(){
   houses=(L.houses||[]).map(([r,c])=>({row:r,col:c,broken:false,crack:0,breakWave:0})); houseWave=0; jackWave=0; knivesFx=[]; roadGraves=[];
   pumpkins=(L.pumpkins||[]).map(([r,c,v])=>({row:r,col:c,v:v||0})); barns=(L.barns||[]).map(([r,c,d])=>({row:r,col:c,dir:d||'r'})); thornPaths=(L.thornPaths||[]).map(([r,c])=>({row:r,col:c}));
   jacks=(L.jacks||[]).map(([r,c])=>({row:r,col:c,risen:false,rise:0,wait:0,breakWave:0}));
+  corns=(L.corns||[]).map(([r,c])=>({row:r,col:c,rustle:0})); candles=(L.candles||[]).map(([r,c])=>({row:r,col:c}));
+  openGraves=(L.openGraves||[]).map(([r,c])=>({row:r,col:c,waiting:false,rise:0,waveNo:0})); openGraveWave=0; wellNext=240;
+  wells=(L.wells||[]).map(k=>Array.isArray(k)?{row:k[0],col:k[1],routes:[],splash:0}:{row:k.at[0],col:k.at[1],routes:k.routes.map(wp=>wp.map(toPt)),splash:0});
   ruins=(L.ruins||[]).map(([r,c])=>({row:r,col:c})); silkBridges=(L.silkBridges||[]).map(([r,c])=>({row:r,col:c}));
   tunnels=(L.tunnels||[]).map(t=>({in:t.in,out:t.out}));
   lakeExitPts=(L.lakeExits||[]).map(ex=>Object.assign(toPt(ex.exit),{routes:ex.routes.map(wp=>wp.map(toPt))}));
@@ -5485,7 +5543,7 @@ function startGame(){
   webs=(L.webs||[]).map(([r,c])=>({row:r,col:c,born:-9999})).concat((L.solidWebs||[]).map(([r,c])=>({row:r,col:c,born:-9999,solid:true})));
   webRolled=new Map(); spiderDone=false; bigSpiderDone=false; pendingForest=0;
   lake=(L.lake||[]).map(([r0,c0])=>L.keepLake?[r0,c0]:nudgeOff(r0,c0)).map(([r,c])=>({row:r,col:c,x:c*CELL+CELL/2,y:r*CELL+CELL/2}));
-  lakeWave=(lvDef&&lvDef.lakeWave)||0; lakeNext=0; bonesWave=(lvDef&&lvDef.bonesWave)||0;
+  lakeWave=(lvDef&&lvDef.lakeWave)||0; lakeNext=0; wellWave=(lvDef&&lvDef.wellWave!=null)?lvDef.wellWave:3; bonesWave=(lvDef&&lvDef.bonesWave)||0;
   if(lvDef&&lvDef.trees)placeTrees(lvDef.trees);
   if(L.treesAt)trees=L.treesAt.map(([r,c,k])=>({row:r,col:c,kind:k||'oak',rotten:k==='rotten',sway:(r*1.7+c)%6}));
   const lv=LEVELS[currentLevel];
@@ -5569,6 +5627,7 @@ function cellFree(row,col){
   if(graveyards.some(g=>row>=g.row&&row<g.row+2&&col>=g.col&&col<g.col+2))return false;
   if(houses.some(h=>row>=h.row&&row<h.row+2&&col>=h.col&&col<h.col+2))return false;
   if(pumpkins.some(k=>k.row===row&&k.col===col)||jacks.some(k=>!k.risen&&k.row===row&&k.col===col))return false;
+  if([corns,wells,candles,openGraves].some(a=>a.some(k=>k.row===row&&k.col===col)))return false;
   if(barns.some(b=>{ const v=b.dir==='d'; return row>=b.row&&row<b.row+(v?3:2)&&col>=b.col&&col<b.col+(v?2:3); }))return false;
   if(crypts.some(k=>{ const v=k.dir==='d'; return row>=k.row&&row<k.row+(v?2:1)&&col>=k.col&&col<k.col+(v?1:2); }))return false;
   return !towers.some(t=>t.row===row&&t.col===col);
@@ -5864,7 +5923,7 @@ function continueRun(){
   sewers.forEach(sw=>{ if(sw.wave&&wave>=sw.wave)sw.done=true; });
   if(bonesWave&&wave>=bonesWave)boneHeaps.forEach(k=>k.done=true);
   if(wave>=totalWaves)graves.forEach(g=>g.done=true);
-  houseWave=wave; jackWave=wave;
+  houseWave=wave; jackWave=wave; openGraveWave=wave;
   if(Array.isArray(sv.houses))houses.forEach((h,i)=>{ const q=sv.houses[i]; if(q){ h.breakWave=q[0]; h.broken=!!q[1]; } });
   houses.forEach(h=>{ if(!h.broken&&h.breakWave<=wave)h.broken=true; });
   if(Array.isArray(sv.jacks))jacks.forEach((j,i)=>{ const q=sv.jacks[i]; if(q){ j.breakWave=q[0]; j.risen=!!q[1]; } });
@@ -5951,6 +6010,9 @@ function update(){
   towers.forEach(t=>{
     if(t.spawnT<1)t.spawnT=Math.min(1,t.spawnT+0.15);
     if(t.flash>0)t.flash--;
+    // a candle shrine next to a tower makes it reload a fifth faster
+    if(candles.length&&t.cd>0&&candles.some(k=>Math.abs(k.row-t.row)<=1&&Math.abs(k.col-t.col)<=1)){
+      t.candleAcc=(t.candleAcc||0)+CANDLE_BOOST; if(t.candleAcc>=1){ t.candleAcc-=1; t.cd--; } }
     if(t.isTime){
       if(t.timeCd>0){
         t.timeCd--;
@@ -5967,7 +6029,7 @@ function update(){
       if(t.chew>0){ t.chew--; if(t.grabFx>0)t.grabFx--; return; }
       let prey=null,bl=-Infinity;
       enemies.forEach(e=>{
-        if(e.boss)return;                        // too big to swallow
+        if(e.boss||e.inCorn)return;              // too big to swallow, or out of sight in the corn
         if(Math.hypot(e.x-t.x,e.y-t.y)>t.range)return;
         const PP=e.pth||path; const n2=PP[Math.floor(e.pos)+1];
         const lead=e.pos*1000-(n2?Math.hypot(n2.x-e.x,n2.y-e.y):0);
@@ -6012,6 +6074,7 @@ function update(){
       if(!enemies.length)return;
       let best=null,bl=-Infinity;
       enemies.forEach(e=>{
+        if(e.inCorn)return;
         const P=e.pth||path; const nx=P[Math.floor(e.pos)+1];
         const lead=e.pos*1000-(nx?Math.hypot(nx.x-e.x,nx.y-e.y):0);
         if(lead>bl){bl=lead;best=e;}
@@ -6022,6 +6085,7 @@ function update(){
     }
     let target=null,best=-Infinity;
     for(const e of enemies){
+      if(e.inCorn)continue;                        // hidden in the corn
       if(Math.hypot(e.x-t.x,e.y-t.y)>t.range)continue;
       const P=e.pth||path; const nx=P[Math.floor(e.pos)+1];
       const lead=e.pos*1000-(nx?Math.hypot(nx.x-e.x,nx.y-e.y):0);
@@ -6562,6 +6626,7 @@ function drawBones(cx,cy,seed,v){
 const UNDEAD=['zombie','skeleton','skeletonknight','jack','gravedigger','pumpkinbomber'];
 let graves=[], graveyards=[], crypts=[], houses=[], houseWave=0, bonesWave=0, knivesFx=[], roadGraves=[]; const GRAVEDIGGER_MAX=3, ROAD_GRAVE_HP=500;
 let pumpkins=[], jacks=[], barns=[], thornPaths=[], jackWave=0; const JACK_RISE=70, THORN_DPS=6;
+let corns=[], wells=[], candles=[], openGraves=[], openGraveWave=0, wellWave=0, wellNext=0; const CANDLE_BOOST=0.2, WELL_GAP=720, GRAVE_RISE=50;
 // the Halloween undead, drawn facing right around their feet like the other walkers
 function drawUndeadShape(g,type,rad,base,step,throwing,roll){
   const bone='#e8e1c9', boneDk='#6a6352';
@@ -6952,9 +7017,100 @@ function drawHalloweenPieces(t){
   barns.forEach(b=>drawBarn(b,t));
   pumpkins.forEach(k=>drawPumpkin(k.col*CELL+CELL/2,k.row*CELL+CELL/2+3,CELL*(k.v===2?0.3:0.34),k.v,false,false,t));
   jacks.forEach(j=>drawJack(j,t));
+  wells.forEach(w=>drawWell(w,t));
+  candles.forEach(k=>drawCandles(k,t));
+  openGraves.forEach(g=>drawOpenGrave(g,t));
   roadGraves.forEach(g=>{ drawGrave(g.x,g.y,g.seed,false);
     if(g.hp<ROAD_GRAVE_HP){ const w=24; ctx.fillStyle='rgba(0,0,0,.6)'; ctx.fillRect(g.x-w/2,g.y-CELL*0.5,w,4);
       ctx.fillStyle='#c9bfa8'; ctx.fillRect(g.x-w/2,g.y-CELL*0.5,w*Math.max(0,g.hp)/ROAD_GRAVE_HP,4); } });
+}
+// corn rows: a thick stand of tall stalks with cobs and tassels; it sways while something pushes through it
+function drawCorn(t){
+  corns.forEach(k=>{ const x0=k.col*CELL, y0=k.row*CELL, seed=k.row*37+k.col*11, rs=k.rustle||0;
+    ctx.save(); ctx.lineCap='round';
+    ctx.fillStyle='rgba(38,28,12,.35)'; ctx.fillRect(x0+1,y0+CELL*0.5,CELL-2,CELL*0.48);
+    for(let rr=0;rr<3;rr++)for(let cc=0;cc<4;cc++){ const i=rr*4+cc;
+      const sx=x0+CELL*(0.12+cc*0.25)+(hsh2(seed,i,1)-0.5)*5, sy=y0+CELL*(0.42+rr*0.27)+(hsh2(seed,i,2)-0.5)*3;
+      const h=CELL*(0.78+hsh2(seed,i,3)*0.25);
+      const sw=Math.sin(t*0.35+i*1.7)*rs*5+Math.sin(t*0.025+seed+i)*0.9;
+      const tx=sx+sw, ty=sy-h, back=rr===0;
+      ctx.strokeStyle=back?'#4b6620':'#5f8229'; ctx.lineWidth=2.6;
+      ctx.beginPath();ctx.moveTo(sx,sy);ctx.quadraticCurveTo(sx+sw*0.3,sy-h*0.5,tx,ty);ctx.stroke();
+      ctx.strokeStyle=back?'#5a7a28':'#7a9e35'; ctx.lineWidth=2;
+      [[0.3,-1],[0.5,1],[0.7,-1]].forEach(([f,sd])=>{ const lx=sx+sw*f*f, ly=sy-h*f;
+        ctx.beginPath();ctx.moveTo(lx,ly);ctx.quadraticCurveTo(lx+sd*7+sw*0.5,ly-5,lx+sd*10+sw,ly+3);ctx.stroke(); });
+      if(hsh2(seed,i,4)>0.45){ const cx=sx+sw*0.36+2, cy=sy-h*0.5;                  // a cob in its husk
+        ctx.fillStyle='#e9c44c'; ctx.beginPath();ctx.ellipse(cx,cy,2.3,4.6,0.25,0,Math.PI*2);ctx.fill();
+        ctx.strokeStyle='#8fae3c'; ctx.lineWidth=1.4; ctx.beginPath();ctx.moveTo(cx-2.5,cy+4);ctx.quadraticCurveTo(cx-3,cy-1,cx-1,cy-5);ctx.stroke(); }
+      ctx.strokeStyle='#d9b45c'; ctx.lineWidth=1.2;                                     // the tassel
+      ctx.beginPath(); [-3,0,3].forEach(d=>{ ctx.moveTo(tx,ty);ctx.lineTo(tx+d+sw*0.3,ty-4); }); ctx.stroke();
+    }
+    ctx.restore(); });
+}
+// a stone well with a little roof, a crank and a bucket; the water ripples when something climbs out
+function drawWell(w,t){
+  const R=CELL*0.3, x=w.col*CELL+CELL/2, y=w.row*CELL+CELL/2+5;
+  ctx.save(); ctx.translate(x,y); ctx.lineCap='round';
+  ctx.fillStyle='rgba(0,0,0,.25)'; ctx.beginPath();ctx.ellipse(0,R*0.75,R*1.3,R*0.45,0,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#77736a'; ctx.strokeStyle='#2c2a26'; ctx.lineWidth=1.5;               // the round stone wall
+  ctx.beginPath();ctx.moveTo(-R,0);ctx.lineTo(-R,R*0.6);ctx.ellipse(0,R*0.6,R,R*0.45,0,Math.PI,0,true);ctx.lineTo(R,0);ctx.closePath();ctx.fill();ctx.stroke();
+  ctx.strokeStyle='rgba(40,38,34,.55)'; ctx.lineWidth=1;
+  [R*0.22,R*0.44].forEach((yy,j)=>{ ctx.beginPath();ctx.ellipse(0,yy,R,R*0.45,0,0.15,Math.PI-0.15);ctx.stroke();
+    for(let a=0.4+j*0.3;a<Math.PI-0.2;a+=0.6){ const bx=Math.cos(a)*R; ctx.beginPath();ctx.moveTo(bx,yy+Math.sin(a)*R*0.45-R*0.22+2);ctx.lineTo(bx,yy+Math.sin(a)*R*0.45);ctx.stroke(); } });
+  ctx.fillStyle='#8c887e'; ctx.strokeStyle='#2c2a26'; ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.ellipse(0,0,R,R*0.45,0,0,Math.PI*2);ctx.fill();ctx.stroke();
+  ctx.fillStyle='#1d3436'; ctx.beginPath();ctx.ellipse(0,0,R*0.74,R*0.3,0,0,Math.PI*2);ctx.fill();   // dark water
+  if(w.splash>0){ const k=1-w.splash/50; ctx.strokeStyle='rgba(170,220,200,'+(0.8*(1-k)).toFixed(2)+')'; ctx.lineWidth=1.4;
+    ctx.beginPath();ctx.ellipse(0,0,R*0.2+R*0.5*k,R*0.08+R*0.2*k,0,0,Math.PI*2);ctx.stroke(); }
+  ctx.strokeStyle='#4a3420'; ctx.lineWidth=2.6;                                         // posts, crank and roof
+  ctx.beginPath();ctx.moveTo(-R*0.9,R*0.1);ctx.lineTo(-R*0.9,-R*1.55);ctx.moveTo(R*0.9,R*0.1);ctx.lineTo(R*0.9,-R*1.55);ctx.stroke();
+  ctx.lineWidth=1.8; ctx.beginPath();ctx.moveTo(-R*0.9,-R*1.05);ctx.lineTo(R*1.15,-R*1.05);ctx.lineTo(R*1.15,-R*0.8);ctx.stroke();
+  ctx.strokeStyle='#c9b48a'; ctx.lineWidth=1; ctx.beginPath();ctx.moveTo(-R*0.1,-R*1.05);ctx.lineTo(-R*0.1,-R*0.45);ctx.stroke();
+  ctx.fillStyle='#6b4a2a'; ctx.strokeStyle='#2a1c10'; ctx.fillRect(-R*0.28,-R*0.48,R*0.36,R*0.3); ctx.strokeRect(-R*0.28,-R*0.48,R*0.36,R*0.3);
+  ctx.fillStyle='#5a3a24'; ctx.strokeStyle='#22180e'; ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(-R*1.3,-R*1.45);ctx.lineTo(0,-R*2.2);ctx.lineTo(R*1.3,-R*1.45);ctx.lineTo(R*1.1,-R*1.3);ctx.lineTo(0,-R*1.95);ctx.lineTo(-R*1.1,-R*1.3);ctx.closePath();ctx.fill();ctx.stroke();
+  ctx.restore();
+}
+// a candle shrine: a mossy stone with lit candles on it, glowing warm over the towers around it
+function drawCandles(k,t){
+  const x=k.col*CELL+CELL/2, y=k.row*CELL+CELL/2+6, seed=k.row*19+k.col;
+  ctx.save();
+  const fl=0.5+0.5*Math.sin(t*0.21+seed)*Math.sin(t*0.13+seed*2);
+  const g=ctx.createRadialGradient(x,y-6,2,x,y-6,CELL*0.9); g.addColorStop(0,'rgba(255,190,90,'+(0.32+0.1*fl).toFixed(2)+')'); g.addColorStop(1,'rgba(255,170,60,0)');
+  ctx.fillStyle=g; ctx.beginPath();ctx.arc(x,y-6,CELL*0.9,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='rgba(0,0,0,.25)'; ctx.beginPath();ctx.ellipse(x,y+7,15,4,0,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#6f6c66'; ctx.strokeStyle='#2a2926'; ctx.lineWidth=1.4;                 // the stone
+  ctx.beginPath();ctx.roundRect(x-14,y-1,28,9,3);ctx.fill();ctx.stroke();
+  ctx.fillStyle='#5f7a3a'; ctx.beginPath();ctx.ellipse(x-8,y+6,4,1.8,0,0,Math.PI*2);ctx.fill();
+  [[-9,9],[-4,14],[1,11],[6,16],[10,8]].forEach(([dx,h],i)=>{ const cx=x+dx, top=y-h+2;
+    ctx.fillStyle='#efe5cc'; ctx.strokeStyle='#5b5244'; ctx.lineWidth=1;
+    ctx.beginPath();ctx.rect(cx-1.8,top,3.6,h-1);ctx.fill();ctx.stroke();
+    ctx.fillStyle='#f6eedb'; ctx.beginPath();ctx.ellipse(cx+1,top+3,1,2.2,0,0,Math.PI*2);ctx.fill();   // a wax drip
+    const f=1+0.25*Math.sin(t*0.35+i*2.1+seed), wob=Math.sin(t*0.2+i)*0.8;
+    ctx.fillStyle='rgba(255,150,40,.9)'; ctx.beginPath();ctx.moveTo(cx-2.2,top-1);ctx.quadraticCurveTo(cx+wob,top-8*f,cx+2.2,top-1);ctx.quadraticCurveTo(cx,top+1.5,cx-2.2,top-1);ctx.fill();
+    ctx.fillStyle='rgba(255,236,150,.95)'; ctx.beginPath();ctx.ellipse(cx+wob*0.4,top-2.4,0.9,2*f,0,0,Math.PI*2);ctx.fill(); });
+  ctx.restore();
+}
+// an open grave: a dug pit with its earth piled beside it and the spade still stuck in; a hand reaches up before a zombie climbs out
+function drawOpenGrave(g,t){
+  const x=g.col*CELL+CELL/2, y=g.row*CELL+CELL/2+3, seed=g.row*29+g.col;
+  ctx.save(); ctx.translate(x,y); ctx.lineCap='round';
+  ctx.save(); ctx.translate(-1,-12); ctx.rotate((hsh2(seed,3,1)-0.5)*0.3);                 // the stone at the head
+  ctx.fillStyle='#8e9398'; ctx.strokeStyle='#33363a'; ctx.lineWidth=1.3;
+  ctx.beginPath();ctx.moveTo(-6,3);ctx.lineTo(-6,-6);ctx.arc(0,-6,6,Math.PI,0);ctx.lineTo(6,3);ctx.closePath();ctx.fill();ctx.stroke();
+  ctx.fillStyle='rgba(0,0,0,.18)'; ctx.fillRect(1.5,-10,4.5,13); ctx.restore();
+  ctx.fillStyle='#6b5034'; ctx.strokeStyle='#2a1f14'; ctx.lineWidth=1.3;                 // the heap of earth
+  ctx.beginPath();ctx.ellipse(11,6,7,5,0.3,0,Math.PI*2);ctx.fill();ctx.stroke();
+  ctx.fillStyle='#4b3824'; ctx.beginPath();ctx.roundRect(-9,-4,17,15,3);ctx.fill();ctx.stroke();   // the pit
+  ctx.fillStyle='#120d09'; ctx.beginPath();ctx.roundRect(-7,-2,13,11,2);ctx.fill();
+  ctx.fillStyle='#7d6043'; [[-10,10],[7,-4],[-8,-5]].forEach(([a,b])=>{ ctx.beginPath();ctx.arc(a,b,1.8,0,Math.PI*2);ctx.fill(); });
+  ctx.strokeStyle='#5a3e24'; ctx.lineWidth=2; ctx.beginPath();ctx.moveTo(12,3);ctx.lineTo(16,-11);ctx.stroke();   // the spade
+  ctx.fillStyle='#9aa0a6'; ctx.strokeStyle='#2a2c2e'; ctx.lineWidth=1; ctx.beginPath();ctx.moveTo(9.5,2);ctx.lineTo(14.5,3.5);ctx.lineTo(12.5,8);ctx.closePath();ctx.fill();ctx.stroke();
+  if(g.rise>0){ const k=Math.min(1,g.rise/(GRAVE_RISE*0.6)), sh=Math.sin(t*0.9)*1.2;              // a rotten hand claws upward
+    ctx.strokeStyle='#5d6b4a'; ctx.lineWidth=3; ctx.beginPath();ctx.moveTo(-1,8);ctx.lineTo(-1+sh,8-12*k);ctx.stroke();
+    ctx.lineWidth=1.4; [-2,0,2].forEach(d=>{ ctx.beginPath();ctx.moveTo(-1+sh,8-12*k);ctx.lineTo(-1+sh+d*1.3,8-12*k-3.5);ctx.stroke(); });
+    if(g.rise%8===0)sparks.push({x:x+(Math.random()-0.5)*12,y:y+2,vx:(Math.random()-0.5)*1.6,vy:-Math.random()*1.8,life:16,col:'#6b5034'}); }
+  ctx.restore();
 }
 // thrown knives spin through the air; a bitten unit glows sick green until it turns
 function drawUndeadFx(){
@@ -7607,6 +7763,7 @@ function draw(){
     ctx.fillStyle=p.boom?'#3a352a':'#fff6dc'; ctx.beginPath();ctx.arc(px,py+arc,p.boom?3.6:2.4,0,Math.PI*2);ctx.fill();
   });
   enemies.forEach((e,idx)=>{
+    if(e.inCorn)return;                            // out of sight in the corn
     const rad=e.r||10;
     const bob=(e.frozen>0||e.held>0)?0:Math.sin((frameCount+idx*10)*0.2)*1.5;
     const P=e.pth||path;
@@ -7819,6 +7976,7 @@ function draw(){
         ctx.fillStyle='rgba(255,255,255,.28)'; ctx.fillRect(e.x-bw/2+1,by+0.6,Math.max(0,bw*frac-2),bh*0.35); }
     }
   });
+  drawCorn(frameCount);
 
   // particles
   sparks.forEach(sp=>{

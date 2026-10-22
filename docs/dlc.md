@@ -58,6 +58,7 @@ Each level:
 | `waves` | sandbox waves | A list of waves; each wave is a list of `[enemy, count, gap in ms]` groups (or `{"type","count","gap"}`). Enemies: `grunt`, `runner`, `gunner`, `thief`, `husker`, `brute`, `rat`, `tumor`, `tumorling`, `drowned`, `spider`, `bigspider`, `grassmer`, `zombie`, `skeleton`, `skeletonknight`, `zombiegrunt`, `jack`, `gravedigger`, `pumpkinbomber`. |
 | `sewerWave`, `lakeWave` | auto | Wave when rats leave sewers / tumorlings leave lakes (0 = never). Only filled in by themselves when `waves` is left out. |
 | `bonesWave` | 3 if the map has bones | Wave when skeletons crawl out of bones (0 = never). |
+| `wellWave` | 3 | Wave when tumorlings start climbing out of wells (0 = never). |
 | `spiders`, `bigSpiderWave` | auto | `{"wave": 5, "count": 9}` for spiders from dens, and the wave of the big spider. |
 
 A DLC is data only: it can add levels built from the game's existing towers, enemies and map pieces, but not new units or code. A file the game can't read shows as a card with the reason (for example "Level 2 has no road from a spawn to a base.").
