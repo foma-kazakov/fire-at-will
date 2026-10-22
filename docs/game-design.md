@@ -202,3 +202,8 @@ A separate app with its own play link and desktop builds: `fire-at-will-testing.
 - **Achievements:** conditions for the two "???" ones.
 - **Shop:** in the pause menu, currently "coming soon".
 - **Other projects (separate):** **Last Stand**, a spin-off tower defense, and **Fire at Will: Hold 'Em**, a multiplayer tower defense inspired by Kingdom Rush Battles.
+
+### Testing menu side panel (2026-10-22)
+The Testing app's main menu has a panel on the right (below on phones): language (English/Русский), theme, Encyclopedia and Notes.
+- Themes: **Classic** (the blueprint look), **Metal** (steel and rust, from the first Last Stand's "Ironfront" theme), **Sunset** (the dusk sky of the first Fire at Will Hold 'Em). Stored in `fireAtWillTesting.theme`.
+- **Notes**: a list of notes for ideas and level codes, stored in `fireAtWillTesting.notes` (never in progress). The desktop app keeps them across self-updates; in a browser a warning comes first, and "Save as file" downloads them as text.

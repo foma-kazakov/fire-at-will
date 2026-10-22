@@ -454,6 +454,22 @@
   .themeBtn i.swSunset{background:radial-gradient(circle at 50% 120%,#fff3b0 0 30%,#ff9a45 45%,transparent 47%),linear-gradient(180deg,#221a57,#9a3f86 45%,#ff9150 85%);}
   .testSide .menuBtn{width:100%;margin:16px 0 0;padding:12px;font-size:.95rem;}
   .stars{display:none;}
+  .sideTwo{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .sideTwo .menuBtn{font-size:.78rem;padding:11px 4px;margin-top:10px;}
+  .notesPlate{width:560px;max-width:calc(100vw - 32px);box-sizing:border-box;padding:24px 28px!important;}
+  .notesBtns{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:8px 0;}
+  #notesWarn{background:#fff3d6;border:3px solid var(--rust);border-radius:12px;padding:14px 16px;color:var(--ink);text-align:left;}
+  #notesWarn b{font-family:'Bungee','Russo One',sans-serif;font-size:1rem;display:block;margin-bottom:6px;color:var(--rust);}
+  #notesWarn p{margin:6px 0;font-size:.88rem;}
+  #notesItems{display:grid;gap:8px;max-height:46vh;overflow-y:auto;padding:2px;}
+  .noteItem{background:var(--khaki);border:3px solid var(--ink);border-radius:10px;box-shadow:0 3px 0 var(--ink);padding:9px 12px;cursor:pointer;text-align:left;color:var(--ink);}
+  .noteItem b{display:block;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .noteItem span{display:block;font-size:.76rem;opacity:.7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .notesEmpty{font-size:.88rem;opacity:.7;color:var(--ink);padding:10px;}
+  #noteTitle{width:100%;box-sizing:border-box;padding:8px 10px;border:2px solid var(--ink);border-radius:8px;font:600 1rem 'Rubik',sans-serif;background:#fffdf6;color:var(--ink);}
+  #noteText{width:100%;box-sizing:border-box;height:42vh;min-height:160px;margin-top:8px;padding:10px;border:2px solid var(--ink);border-radius:8px;resize:vertical;
+    font:.86rem/1.4 ui-monospace,Menlo,Consolas,monospace;background:#fffdf6;color:var(--ink);}
+  #notesWhere{font-size:.75rem;opacity:.65;color:var(--ink);margin-top:6px;}
   @media (max-width:760px){
     #testScreen.active{justify-content:flex-start;overflow-y:auto;}
     .testRow{flex-direction:column;align-items:center;gap:16px;padding:6px 0 24px;}
@@ -570,6 +586,10 @@
       <button class="themeBtn" data-th="sunset" onclick="tApplyTheme('sunset',true)"><i class="swSunset"></i>Sunset</button>
     </div>
     <button class="menuBtn" onclick="goTo('settingsScreen')">Sound and more</button>
+    <div class="sideTwo">
+      <button class="menuBtn" onclick="goTo('encyScreen')" data-i18n="encyclopedia">Encyclopedia</button>
+      <button class="menuBtn" onclick="openNotes()">📝 Notes</button>
+    </div>
   </div></div></div>
 
   <div id="levelTestScreen" class="screen"><div class="plate" style="width:420px">
@@ -629,6 +649,29 @@
       <textarea id="sbxCode" spellcheck="false" placeholder="Level code appears here. Paste one in and press Load code to open it."></textarea>
     </div>
   </div>
+
+  <div id="notesScreen" class="screen"><div class="plate notesPlate">
+    <h1 class="title" style="font-size:2rem">📝 Notes</h1>
+    <div id="notesWarn">
+      <b>Notes are made for the downloaded app</b>
+      <p>Here in a browser your notes can be wiped by the next update, or when the browser clears its site data. Only the downloaded app keeps them safe.</p>
+      <p>You can still use them, but save anything important with "Save as file".</p>
+      <div class="notesBtns"><button class="toolBtn" onclick="notesAccept()">Use notes anyway</button></div>
+    </div>
+    <div id="notesMain">
+      <div id="notesList">
+        <div class="notesBtns"><button class="toolBtn" onclick="notesNew()">+ New note</button><button class="toolBtn" onclick="notesSaveFile()">Save as file</button></div>
+        <div id="notesItems"></div>
+      </div>
+      <div id="notesEdit">
+        <input id="noteTitle" placeholder="Title" oninput="notesType()" maxlength="80">
+        <textarea id="noteText" placeholder="Write anything here: ideas, level codes, waves to try..." oninput="notesType()" spellcheck="false"></textarea>
+        <div class="notesBtns"><button class="toolBtn" onclick="notesShowList()">← All notes</button><button class="toolBtn" onclick="notesCopy()">Copy</button><button class="toolBtn" id="noteDel" onclick="notesDelete()">Delete</button></div>
+      </div>
+      <div id="notesWhere"></div>
+    </div>
+    <button class="backBtn inkBack" onclick="goTo('testScreen')" data-i18n="back">Back</button>
+  </div></div>
 
   <div id="wavesScreen" class="screen"><div class="wvWrap">
     <div class="wvHead">
@@ -922,6 +965,65 @@ function tApplyTheme(k,save){
   if(save){ try{ localStorage.setItem(T_THEME_KEY,k); }catch(e){} }
 }
 if(TESTING_APP){ let k='classic'; try{ k=localStorage.getItem(T_THEME_KEY)||'classic'; }catch(e){} tApplyTheme(k,false); }
+/* Notes (Testing app): ideas and level codes. Kept in their own key, never in any progress.
+   The downloaded app keeps them across its self-updates; a browser may not, so it warns first. */
+const NOTES_KEY='fireAtWillTesting.notes';
+let notes=[], noteOpen=-1, notesOk=false, notesTimer=null;
+Object.assign(I18N.ru,{"Notes":"Заметки","📝 Notes":"📝 Заметки","Notes are made for the downloaded app":"Заметки сделаны для скачанного приложения",
+  "Here in a browser your notes can be wiped by the next update, or when the browser clears its site data. Only the downloaded app keeps them safe.":"В браузере заметки могут стереться при следующем обновлении или когда браузер очистит данные сайта. Надёжно их хранит только скачанное приложение.",
+  "You can still use them, but save anything important with \"Save as file\".":"Пользоваться ими можно, но всё важное сохраняйте кнопкой «Сохранить файлом».",
+  "Use notes anyway":"Всё равно открыть","+ New note":"+ Новая заметка","Save as file":"Сохранить файлом","← All notes":"← Все заметки","Copy":"Копировать","Delete":"Удалить",
+  "Tap again to delete":"Нажмите ещё раз, чтобы удалить","Copied":"Скопировано","Title":"Название","Write anything here: ideas, level codes, waves to try...":"Пишите что угодно: идеи, коды уровней, волны для проверки...",
+  "No notes yet. Make one with + New note.":"Заметок пока нет. Создайте первую кнопкой «+ Новая заметка».","Untitled":"Без названия","(empty)":"(пусто)",
+  "Saved in the app. Notes stay through updates.":"Сохранено в приложении. Заметки переживают обновления.","Saved in this browser only. It may not keep them.":"Сохранено только в этом браузере. Он может их не сохранить."});
+function notesLoad(){ try{ const d=JSON.parse(localStorage.getItem(NOTES_KEY)||'[]'); notes=Array.isArray(d)?d.filter(n=>n&&typeof n.text==='string'):[]; }catch(e){ notes=[]; } }
+function notesStore(){ try{ localStorage.setItem(NOTES_KEY,JSON.stringify(notes)); }catch(e){} }
+function openNotes(){
+  notesLoad(); goTo('notesScreen');
+  const warn=!DESK&&!notesOk;
+  document.getElementById('notesWarn').style.display=warn?'block':'none';
+  document.getElementById('notesMain').style.display=warn?'none':'block';
+  document.getElementById('notesWhere').textContent=DESK?'Saved in the app. Notes stay through updates.':'Saved in this browser only. It may not keep them.';
+  notesShowList();
+}
+function notesAccept(){ notesOk=true; openNotes(); }
+function notesShowList(){
+  noteOpen=-1; document.getElementById('notesList').style.display='block'; document.getElementById('notesEdit').style.display='none';
+  const box=document.getElementById('notesItems'); box.innerHTML='';
+  if(!notes.length){ const e=document.createElement('div'); e.className='notesEmpty'; e.textContent='No notes yet. Make one with + New note.'; box.appendChild(e); return; }
+  notes.forEach((n,i)=>{ const c=document.createElement('div'); c.className='noteItem'; c.onclick=()=>notesEdit(i);
+    const b=document.createElement('b'); b.setAttribute('data-notr',''); b.textContent=n.title||trText('Untitled');
+    const sp=document.createElement('span'); sp.setAttribute('data-notr',''); sp.textContent=(n.text.split('\n').find(l=>l.trim())||trText('(empty)')).slice(0,120);
+    c.appendChild(b); c.appendChild(sp); box.appendChild(c); });
+}
+function notesEdit(i){
+  noteOpen=i; const n=notes[i];
+  document.getElementById('notesList').style.display='none'; document.getElementById('notesEdit').style.display='block';
+  document.getElementById('noteTitle').value=n.title||''; document.getElementById('noteText').value=n.text;
+  const d=document.getElementById('noteDel'); d.dataset.arm=''; d.textContent=trText('Delete');
+}
+function notesNew(){ notes.unshift({title:'',text:'',t:Date.now()}); notesStore(); notesEdit(0); document.getElementById('noteTitle').focus(); }
+function notesType(){
+  const n=notes[noteOpen]; if(!n)return;
+  n.title=document.getElementById('noteTitle').value; n.text=document.getElementById('noteText').value; n.t=Date.now();
+  clearTimeout(notesTimer); notesTimer=setTimeout(notesStore,300);
+}
+function notesDelete(){
+  const d=document.getElementById('noteDel');
+  if(!d.dataset.arm){ d.dataset.arm='1'; d.textContent=trText('Tap again to delete'); return; }
+  notes.splice(noteOpen,1); notesStore(); notesShowList();
+}
+function notesCopy(){
+  const txt=document.getElementById('noteText').value;
+  const done=()=>{ const b=event&&event.target; if(b){ const o=b.textContent; b.textContent=trText('Copied'); setTimeout(()=>b.textContent=o,1200); } };
+  try{ navigator.clipboard.writeText(txt).then(done,()=>{}); }catch(e){}
+}
+function notesSaveFile(){
+  const txt=notes.map(n=>'# '+(n.title||'Untitled')+'\n'+n.text).join('\n\n');
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([txt],{type:'text/plain'}));
+  a.download='fire-at-will-notes.txt'; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },500);
+}
+window.addEventListener('beforeunload',()=>{ if(notesTimer){ clearTimeout(notesTimer); notesStore(); } });
 applyLang('en');
 
 /* ---------- audio ---------- */
