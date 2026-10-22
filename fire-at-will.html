@@ -742,7 +742,7 @@ new MutationObserver(ms=>{ for(const m of ms){
     else if(m.type==='attributes')trAttr(m.target,m.attributeName);
     else m.addedNodes.forEach(trNode); } })
   .observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['placeholder','title','aria-label']});
-Object.assign(I18N.ru,{"The Graveyard":"Кладбище","Pumpkin Farm":"Тыквенная ферма","Ashen Wastes":"Пепельные пустоши","Wretched Woodland":"Гиблая чаща","The Halloween island is coming soon.":"Остров Хэллоуина скоро откроется.","Adds the Halloween island to the campaign map":"Добавляет остров Хэллоуина на карту кампании","Zombie":"Зомби","Skeleton":"Скелет","Grave":"Могила","Graveyard":"Кладбище","Crypt":"Склеп","Halloween":"Хэллоуин","Graves go on grass beside the road.":"Могилы ставятся на траву у дороги.","Something already stands here.":"Здесь уже что-то стоит.","Its gate can only face this road. Use the Eraser to remove it.":"Ворота могут смотреть только на эту дорогу. Убрать кладбище можно ластиком.","Not enough room here — it needs 2×2 tiles.":"Здесь мало места — нужно 2×2 клетки.","It needs 2×2 clear tiles off the road and water.":"Нужно 2×2 свободные клетки не на дороге и не в воде.","A graveyard must have one whole side against the road (2 road tiles).":"Кладбище должно стоять целой стороной к дороге (2 клетки дороги).","Tap the graveyard again to turn its gate.":"Нажмите на кладбище ещё раз, чтобы повернуть ворота.","Not enough room here — it needs 2 tiles side by side.":"Здесь мало места — нужно 2 клетки рядом.","It needs 2 clear tiles side by side, off the road and water.":"Нужно 2 свободные клетки рядом, не на дороге и не в воде.","A graveyard gate no longer opens onto the road.":"Ворота кладбища больше не выходят на дорогу.","zombies leave the graves on the last wave":"зомби встают из могил в последней волне","the dead never stop coming":"мертвецы идут без остановки","skeletons crawl from the bones on wave 3":"скелеты выползают из костей на 3-й волне","Skeletons crawl out of the bones!":"Из костей выползают скелеты!","The graves open!":"Могилы открываются!","Check for updates":"Проверить обновления","Restart to update":"Перезапустить и обновить","A new version is downloaded.":"Новая версия загружена.","You have the latest version.":"У вас последняя версия.","Could not check for updates. Are you online?":"Не удалось проверить обновления. Есть ли интернет?","Checking for updates…":"Проверка обновлений…","A new version of the game is ready.":"Новая версия игры готова.","Restart":"Перезапустить","This DLC needs a newer version of the game.":"Для этого DLC нужна более новая версия игры.","Something stirs in the Wretched Woodland…":"В Гиблой чаще что-то шевелится…"});
+Object.assign(I18N.ru,{"The Graveyard":"Кладбище","Pumpkin Farm":"Тыквенная ферма","Ashen Wastes":"Пепельные пустоши","Wretched Woodland":"Гиблая чаща","The Halloween island is coming soon.":"Остров Хэллоуина скоро откроется.","Adds the Halloween island to the campaign map":"Добавляет остров Хэллоуина на карту кампании","Zombie":"Зомби","Skeleton":"Скелет","Skeleton Knight":"Скелет-рыцарь","Zombie Grunt":"Зомби-пехотинец","Abandoned house":"Заброшенный дом","zombie grunts leave the houses every wave":"зомби-пехотинцы выходят из домов каждую волну","Zombie grunts stumble out of the abandoned house!":"Из заброшенного дома ковыляют зомби-пехотинцы!","Restless Dead":"Неупокоенный мертвец","120 health, walks like a grunt.":"120 здоровья, ходит как пехотинец.","A bite infects your soldiers: 2.5 seconds later they rise as zombies.":"Укус заражает ваших солдат: через 2,5 секунды они встают зомби.","Rises from graves and graveyards.":"Встаёт из могил и с кладбищ.","Keep Firework soldiers and Backup out of its reach.":"Держите солдат фейерверка и подкрепление подальше от него.","Kill it at range before it bites.":"Убивайте издалека, пока не укусил.","Splash damage on the road.":"Урон по площади на дороге.","Knife Thrower":"Метатель ножей","125 health and a knife on its belt.":"125 здоровья и нож на поясе.","Stops to throw a knife that stuns a tower for 1.5 seconds.":"Останавливается и метает нож, оглушая башню на 1,5 секунды.","Throws again every 2.5 seconds.":"Бросает снова каждые 2,5 секунды.","Menders and Farms are never targeted.":"Лекари и фермы не становятся целью.","Long-range towers that hit it before it gets close: Sniper.":"Дальнобойные башни, бьющие до сближения: Снайпер.","Kill it while it stands still to throw.":"Убивайте, пока он стоит и метает.","Undead Champion":"Чемпион нежити","250 health in rusted armour.":"250 здоровья в ржавых доспехах.","Hits your units twice as hard.":"Бьёт ваших юнитов вдвое сильнее.","Marches out of graveyards and crypts.":"Выходит с кладбищ и из склепов.","Slow — easy to focus with Snipers and Cannons.":"Медленный — его легко добить Снайперами и Пушками.","Keep your units away and let towers work.":"Держите юнитов подальше, пусть работают башни.","Infected Footsoldier":"Заражённый пехотинец","A grunt the plague got to: 100 health.":"Пехотинец, до которого добралась зараза: 100 здоровья.","Its bite infects your soldiers, just like a zombie.":"Его укус заражает солдат, как у зомби.","Three stumble out of each abandoned house every wave.":"Каждую волну из заброшенного дома выходят трое.","Grunt-level health — any tower handles it.":"Здоровья как у пехотинца — справится любая башня.","Splash near the house door.":"Урон по площади у двери дома.","Keep soldiers away from it.":"Держите солдат подальше.","Grave":"Могила","Graveyard":"Кладбище","Crypt":"Склеп","Halloween":"Хэллоуин","Graves go on grass beside the road.":"Могилы ставятся на траву у дороги.","Something already stands here.":"Здесь уже что-то стоит.","Its gate can only face this road. Use the Eraser to remove it.":"Ворота могут смотреть только на эту дорогу. Убрать кладбище можно ластиком.","Not enough room here — it needs 2×2 tiles.":"Здесь мало места — нужно 2×2 клетки.","It needs 2×2 clear tiles off the road and water.":"Нужно 2×2 свободные клетки не на дороге и не в воде.","A graveyard must have one whole side against the road (2 road tiles).":"Кладбище должно стоять целой стороной к дороге (2 клетки дороги).","Tap the graveyard again to turn its gate.":"Нажмите на кладбище ещё раз, чтобы повернуть ворота.","Not enough room here — it needs 2 tiles side by side.":"Здесь мало места — нужно 2 клетки рядом.","It needs 2 clear tiles side by side, off the road and water.":"Нужно 2 свободные клетки рядом, не на дороге и не в воде.","A graveyard gate no longer opens onto the road.":"Ворота кладбища больше не выходят на дорогу.","zombies leave the graves on the last wave":"зомби встают из могил в последней волне","the dead never stop coming":"мертвецы идут без остановки","skeletons crawl from the bones on wave 3":"скелеты выползают из костей на 3-й волне","Skeletons crawl out of the bones!":"Из костей выползают скелеты!","The graves open!":"Могилы открываются!","Check for updates":"Проверить обновления","Restart to update":"Перезапустить и обновить","A new version is downloaded.":"Новая версия загружена.","You have the latest version.":"У вас последняя версия.","Could not check for updates. Are you online?":"Не удалось проверить обновления. Есть ли интернет?","Checking for updates…":"Проверка обновлений…","A new version of the game is ready.":"Новая версия игры готова.","Restart":"Перезапустить","This DLC needs a newer version of the game.":"Для этого DLC нужна более новая версия игры.","Something stirs in the Wretched Woodland…":"В Гиблой чаще что-то шевелится…"});
 Object.assign(I18N.ru,{"Extra levels from DLC files.":"Дополнительные уровни из файлов DLC.","Drop a DLC file here":"Перетащите сюда файл DLC","or tap to choose one":"или нажмите, чтобы выбрать его","DLC folder":"Папка DLC","Open DLC folder":"Открыть папку DLC","No DLC yet. Put a DLC file in the DLC folder, or drop it above.":"DLC пока нет. Положите файл DLC в папку DLC или перетащите его выше.","No DLC yet. Drop a DLC file above.":"DLC пока нет. Перетащите файл DLC выше.","Remove":"Удалить","beaten #/#":"пройдено #/#","from the DLC folder":"из папки DLC","DLC removed.":"DLC удалено.","DLC added":"DLC добавлено","That file is too big for a DLC.":"Этот файл слишком большой для DLC.","This file is not a DLC (it is not JSON).":"Этот файл не DLC (это не JSON).","This file is not a Fire at Will DLC.":"Этот файл не DLC для Fire at Will.","This DLC has no id or name.":"У этого DLC нет id или названия.","This DLC has no levels.":"В этом DLC нет уровней.","Level # has no map (level code).":"У уровня # нет карты (кода уровня).","Level # has a wave with no known enemies.":"В уровне # есть волна без известных врагов.","Level # has no road from a spawn to a base.":"В уровне # нет дороги от точки появления до базы.","Campaign":"Кампания","◀ Back":"◀ Назад","Final wave":"Последняя волна","Lives left: #/#":"Осталось жизней: #/#","Lives left: #/# · 💎 +#":"Осталось жизней: #/# · 💎 +#"});
 // words drawn straight onto the canvas go through the same table
 ['fillText','strokeText','measureText'].forEach(fn=>{ const orig=CanvasRenderingContext2D.prototype[fn];
@@ -1325,6 +1325,18 @@ const ENCY=[
  {type:'bigspider',role:'Forest Matriarch',
   skills:['120 health and a heavy, armoured body.','Slower than its brood, but it webs the road just the same.','Arrives on the final wave.'],
   weak:['Slow — easy to focus with Snipers.','Fire Rain clears its webs behind it.','Keep units off its trail until the webs are cleared.']},
+ {type:'zombie',role:'Restless Dead',
+  skills:['120 health, walks like a grunt.','A bite infects your soldiers: 2.5 seconds later they rise as zombies.','Rises from graves and graveyards.'],
+  weak:['Keep Firework soldiers and Backup out of its reach.','Kill it at range before it bites.','Splash damage on the road.']},
+ {type:'skeleton',role:'Knife Thrower',
+  skills:['125 health and a knife on its belt.','Stops to throw a knife that stuns a tower for 1.5 seconds.','Throws again every 2.5 seconds.'],
+  weak:['Menders and Farms are never targeted.','Long-range towers that hit it before it gets close: Sniper.','Kill it while it stands still to throw.']},
+ {type:'skeletonknight',role:'Undead Champion',
+  skills:['250 health in rusted armour.','Hits your units twice as hard.','Marches out of graveyards and crypts.'],
+  weak:['Slow — easy to focus with Snipers and Cannons.','Ice Age and Lightning.','Keep your units away and let towers work.']},
+ {type:'zombiegrunt',role:'Infected Footsoldier',
+  skills:['A grunt the plague got to: 100 health.','Its bite infects your soldiers, just like a zombie.','Three stumble out of each abandoned house every wave.'],
+  weak:['Grunt-level health — any tower handles it.','Splash near the house door.','Keep soldiers away from it.']},
  {type:'grassmer',role:'Boss — The Fields',
   skills:['2600 health and immune to poison.','Sprouts three weakened grunts from its body every few seconds.','Slow but nearly unstoppable in a straight fight.'],
   weak:['Sustained single-target damage: Sniper, Cannon.','Ice Age and Lightning.','Clear its sprouts fast or they overwhelm you.']},
@@ -1454,6 +1466,7 @@ function drawSpiderShape(g,rad,col,big,leg){
 function drawEnemyIcon(cv,type,infected){
   const g=cv.getContext('2d');
   const E=ENEMIES[type]; if(!E)return;
+  if(E.looksInfected)infected=true;
   const S=112; cv.width=S; cv.height=S;
   g.clearRect(0,0,S,S);
   const rad=Math.min(34,(E.r||10)*2.5);
@@ -1475,6 +1488,8 @@ function drawEnemyIcon(cv,type,infected){
       g.beginPath();g.arc(b[0]*rad,b[1]*rad,b[2]*rad,0,Math.PI*2);g.fill(); });
     g.fillStyle='#c9e08a';
     g.beginPath();g.arc(-rad*0.25,-rad*0.2,rad*0.16,0,Math.PI*2);g.fill();
+  } else if(UNDEAD.includes(type)){
+    drawUndeadShape(g,type,rad,col,0,false);
   } else if(type==='drowned'){
     drawDrownedShape(g,rad,col,0,0);
   } else if(E.webs){
@@ -1600,9 +1615,11 @@ const ENEMIES={
   drowned:{name:'Drowned',hp:150,speed:0.65,reward:16,r:11,col:'#3d5c5c',poisonHit:300,region:'forest'},
   spider:{name:'Spider',hp:75,speed:2.0,reward:9,r:9,col:'#4b3a52',webs:1/4,region:'forest'},
   bigspider:{name:'Big Spider',hp:120,speed:0.85,reward:40,r:16,col:'#2e2433',webs:1/4,region:'forest'},
-  // Halloween placeholders until their real designs arrive
-  zombie:{name:'Zombie',hp:170,speed:0.55,reward:12,r:11,col:'#6f8f5a',region:'halloween'},
-  skeleton:{name:'Skeleton',hp:80,speed:1.1,reward:9,r:10,col:'#e3dcc4',region:'halloween'},
+  // the Halloween undead
+  zombie:{name:'Zombie',hp:120,speed:1.0,reward:12,r:10,col:'#5d6b4a',bites:true,region:'halloween'},
+  skeleton:{name:'Skeleton',hp:125,speed:1.0,reward:13,r:10,col:'#e3dcc4',knives:true,region:'halloween'},
+  skeletonknight:{name:'Skeleton Knight',hp:250,speed:0.85,reward:24,r:12,col:'#e3dcc4',dmg:2,region:'halloween'},
+  zombiegrunt:{name:'Zombie Grunt',hp:100,speed:1.0,reward:11,r:10,col:null,bites:true,looksInfected:true,region:'halloween'},
   grassmer:{name:'Grassmer',hp:2600,speed:0.55,reward:90,r:20,col:'#3f7d3a',boss:true,region:'fields'},
 };
 function W(type,count,gap){ return {type,count,gap:gap||500}; }
@@ -3045,6 +3062,7 @@ function updateGuards(){
     if(g.poison>0){ g.poison--; if(frameCount%30===0)g.hp-=3; }
     if(towers.indexOf(g.home)<0){ guards.splice(i,1); continue; }
     webTrap(g);
+    if(g.bitten){ g.bitten--; if(g.bitten<=0||g.hp<=0){ guards.splice(i,1); spawnDead('zombie',g.x,g.y); fxSmoke(g.x,g.y,5,'120,170,90'); continue; } }
     if(g.hp<=0){ guards.splice(i,1); continue; }
     // brawl with anything standing on them
     let foe=null,fd=22;
@@ -3055,6 +3073,7 @@ function updateGuards(){
       else { g.cd=36; hurt(foe,g.dmg,'contact'); if(foe.poisonHit)g.poison=Math.max(g.poison,foe.poisonHit); }
       g.hp-=0.32*(foe.dmgMul||1);
       if(foe.poisons)g.poison=180;                 // rats leave them sickened
+      if(foe.bites&&!g.bitten)g.bitten=150;        // a zombie bite turns them in 2.5 seconds
     }
   }
 }
@@ -3065,7 +3084,7 @@ function drawGuards(){
     ctx.strokeStyle='#22261c'; ctx.lineWidth=2;
     ctx.fillStyle=g.poison>0?'#8fb84f':'#5b7f45';
     ctx.beginPath();ctx.roundRect(-5,-4,10,9,3);ctx.fill();ctx.stroke();
-    ctx.fillStyle='#e7b98a';
+    ctx.fillStyle=g.bitten?'#9cbf7a':'#e7b98a';
     ctx.beginPath();ctx.arc(0,-7,4,0,Math.PI*2);ctx.fill();ctx.stroke();
     ctx.fillStyle='#c25a3a';
     ctx.beginPath();ctx.ellipse(0,-9,6,3.5,0,Math.PI,0);ctx.fill();ctx.stroke();
@@ -3709,14 +3728,21 @@ function updateTheDead(){
     if(g.cd>0){ g.cd--; return; }
     g.cd=150+Math.floor(Math.random()*150);
     const o={d:[0,1.2],u:[0,-1.2],l:[-1.2,0],r:[1.2,0]}[g.dir]||[0,1.2];
-    spawnDead(Math.random()<0.5?'zombie':'skeleton',(g.col+1+o[0])*CELL,(g.row+1+o[1])*CELL,{nestborn:true});
+    const roll=Math.random();
+    spawnDead(roll<0.45?'zombie':roll<0.85?'skeleton':'skeletonknight',(g.col+1+o[0])*CELL,(g.row+1+o[1])*CELL,{nestborn:true});
   });
   crypts.forEach(k=>{
     if(k.cd>0){ k.cd--; return; }
     k.cd=240+Math.floor(Math.random()*240);
     const x=k.dir==='d'?k.col*CELL+CELL/2:(k.col+2)*CELL+4, y=k.dir==='d'?(k.row+2)*CELL+4:k.row*CELL+CELL*0.7;
-    spawnDead('skeleton',x,y,{nestborn:true});
+    spawnDead(Math.random()<0.8?'skeleton':'skeletonknight',x,y,{nestborn:true});
   });
+  // abandoned houses: three zombie grunts stumble out as each wave starts, and they count towards the wave
+  if(houses.length&&wave>houseWave){ houseWave=wave; const myWave=wave, wi=waveInfo[myWave];
+    houses.forEach(h=>{ const x=(h.col+1)*CELL, y=(h.row+2)*CELL+4;
+      for(let i=0;i<3;i++){ if(wi)wi.total++;
+        setTimeout(()=>{ if(gameOver)return; const e=spawnDead('zombiegrunt',x,y); e.waveNo=myWave; if(wi)wi.spawned++; },400+i*500); } });
+    setMsg('Zombie grunts stumble out of the abandoned house!'); }
 }
 
 /* ---------- police cars ---------- */
@@ -3908,6 +3934,20 @@ function updateSpecials(){
       bolts.push({x1:e.x,y1:e.y,x2:best.x,y2:best.y,life:12,suppress:true});
     }
   });
+  // skeletons stop and throw a knife that stuns a tower for 1.5 seconds, every 2.5 seconds
+  enemies.forEach(e=>{
+    if(e.throwFx>0)e.throwFx--;
+    if(!e.knives)return;
+    if(e.knifeCd>0){ e.knifeCd--; return; }
+    let best=null,bd=150;
+    towers.forEach(t=>{ if(t.isFarm||t.isMender||t.disabled>0)return;
+      const d=Math.hypot(t.x-e.x,t.y-e.y); if(d<bd){bd=d;best=t;} });
+    if(!best)return;
+    e.knifeCd=150; e.held=Math.max(e.held||0,22); e.throwFx=14;
+    const tw=best; knivesFx.push({x1:e.x,y1:e.y-10,x2:tw.x,y2:tw.y,life:12,max:12});
+    setTimeout(()=>{ if(towers.includes(tw))tw.disabled=Math.max(tw.disabled,Math.round(90*(e.dmgMul||1))); },200);
+  });
+  for(let i=knivesFx.length-1;i>=0;i--){ if(--knivesFx[i].life<=0)knivesFx.splice(i,1); }
   towers.forEach(t=>{ if(t.disabled>0)t.disabled--; });
 
   // thieves emerge from a bush, grab a tower, and run for the map edge
@@ -4079,8 +4119,10 @@ function updatePowers(){
         if(a.machine){ a.hp-=e.hp*0.5; if(a.hp>0)hurt(e,60,'contact'); if(e.hp<0)e.hp=0; }
         else { a.hp-=e.hp; e.hp=0; }
         if(e.poisonHit)a.poison=Math.max(a.poison||0,e.poisonHit);
+        if(e.bites&&a.kind==='soldier'&&!a.bitten){ a.bitten=150; if(a.hp<=0)a.hp=1; }
       }
     });
+    if(a.bitten){ a.bitten--; if(a.bitten<=0){ allies.splice(i,1); spawnDead('zombie',a.x,a.y); fxSmoke(a.x,a.y,5,'120,170,90'); continue; } }
     if(a.poison>0){ a.poison--; if(frameCount%30===0)a.hp-=3; }
     if(a.hp<=0){
       if(a.kind==='tank'){
@@ -4428,7 +4470,7 @@ const GRASS_COLORS=(()=>{ const out=[{name:'Classic grass',c:'#3e5230'}];
 const SBX_TOOLS=[['path','Path'],['spawn','Spawn'],['base','Base'],['tree','Tree'],['lake','Lake'],['lakespawn','Lake spawn'],
   ['bridge','Bridge'],['webpath','Web path'],['forest','Forest'],['webforest','Webbed forest'],['plainsforest','Plains forest'],
   ['spider','Spider den'],['nest','Spider nest'],['queen','Spider queen'],['web','Web'],['solidweb','Solid web'],['webwall','Web wall'],['cocoon','Cocoon'],['eggs','Egg sacs'],['silkbridge','Silk bridge'],
-  ['tunnelin','Tunnel in'],['tunnelout','Tunnel out'],['ruin','Webbed ruin'],['bones','Bones'],['grave','Grave'],['graveyard','Graveyard'],['crypt','Crypt'],
+  ['tunnelin','Tunnel in'],['tunnelout','Tunnel out'],['ruin','Webbed ruin'],['bones','Bones'],['grave','Grave'],['graveyard','Graveyard'],['crypt','Crypt'],['house','Abandoned house'],
   ['bush','Bush'],['bigbush','Big bush'],['sewer','Sewer'],['erase','Eraser']];
 const SBX_SIZES={computer:{COLS:19,ROWS:12},phone:{COLS:10,ROWS:18},large:{COLS:25,ROWS:16},huge:{COLS:31,ROWS:20}};
 const SBX_SECTIONS={
@@ -4441,13 +4483,13 @@ const SBX_SECTIONS={
 function sbxSections(){
   if(!halloweenOn())return SBX_SECTIONS.tabs;
   const t=Object.assign({},SBX_SECTIONS.tabs); t.Spiders=t.Spiders.filter(k=>k!=='bones');
-  t.Halloween=['grave','graveyard','crypt','bones']; return t;
+  t.Halloween=['grave','graveyard','crypt','bones','house']; return t;
 }
 let sbxTab='Plains';
 let sbx=null, sbxTool='path', sbxPainting=false, sbxNote='', sbxShowRoutes=true, sbxTerrain=null, sbxTerrainKey='', sbxFrame=0, sbxAnimOn=false, sbxR=null;
 function sbxBlank(orient){
   const C=SBX_SIZES[orient]||SBX_SIZES.computer;
-  return {orient,COLS:C.COLS,ROWS:C.ROWS,path:[],spawns:[],bases:[],trees:[],lake:[],lakeSpawns:[],forest:[],spiderDens:[],nests:[],webs:[],solidWebs:[],bridges:[],webPaths:[],bushes:[],bigBushes:[],queens:[],webWalls:[],cocoons:[],eggSacs:[],bones:[],ruins:[],silkBridges:[],tunnelIns:[],tunnelOuts:[],sewers:[],graves:[],graveyards:[],crypts:[],
+  return {orient,COLS:C.COLS,ROWS:C.ROWS,path:[],spawns:[],bases:[],trees:[],lake:[],lakeSpawns:[],forest:[],spiderDens:[],nests:[],webs:[],solidWebs:[],bridges:[],webPaths:[],bushes:[],bigBushes:[],queens:[],webWalls:[],cocoons:[],eggSacs:[],bones:[],ruins:[],silkBridges:[],tunnelIns:[],tunnelOuts:[],sewers:[],graves:[],graveyards:[],crypts:[],houses:[],
     pathIdx:1,grassIdx:1,pathCol:PATH_COLORS[1].c,ground:GRASS_COLORS[1].c,pathCustom:false,grassCustom:false};
 }
 function sbxFix(d){                    // fill in anything an older save or code is missing
@@ -4592,6 +4634,14 @@ function sbxApply(r,c,first){
     for(let cc=c;cc<c+2;cc++){ sDel(sbx.trees,r,cc); sDel(sbx.bushes,r,cc); sDel(sbx.sewers,r,cc); sDel(sbx.nests,r,cc); sDel(sbx.solidWebs,r,cc); sDel(sbx.webWalls,r,cc);
       [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.cocoons].forEach(a=>sDel(a,r,cc)); }
     sbx.crypts.push([r,c,'r']); }
+  else if(t==='house'){ if(!first)return;
+    const hit=sbxCoverAt(r,c); if(hit&&hit.arr===sbx.houses){ sbx.houses.splice(sbx.houses.indexOf(hit.item),1); return; }
+    if(r+2>sbx.ROWS||c+2>sbx.COLS){ sbxNote='Not enough room here — it needs 2×2 tiles.'; return; }
+    for(let rr=r;rr<r+2;rr++)for(let cc=c;cc<c+2;cc++){
+      if(sHas(sbx.path,rr,cc)||sHas(sbx.bridges,rr,cc)||sHas(sbx.lake,rr,cc)||sbxCoverAt(rr,cc)){ sbxNote='It needs 2×2 clear tiles off the road and water.'; return; } }
+    for(let rr=r;rr<r+2;rr++)for(let cc=c;cc<c+2;cc++){ sDel(sbx.trees,rr,cc); sDel(sbx.bushes,rr,cc); sDel(sbx.sewers,rr,cc); sDel(sbx.nests,rr,cc); sDel(sbx.solidWebs,rr,cc); sDel(sbx.webWalls,rr,cc);
+      [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.cocoons].forEach(a=>sDel(a,rr,cc)); }
+    sbx.houses.push([r,c]); }
   else if(t==='silkbridge'){
     if(!sHas(sbx.lake,r,c)){ if(first)sbxNote='Silk bridges go across a lake.'; return; }
     if(sHas(sbx.silkBridges,r,c)){ if(first)sDel(sbx.silkBridges,r,c); return; }
@@ -4625,6 +4675,7 @@ function sbxGateSides(r,c,m){
 }
 // which multi-tile piece (big bush, queen, graveyard or crypt) covers this tile, if any
 function sbxCoverAt(r,c){
+  for(const h of sbx.houses) if(r>=h[0]&&r<h[0]+2&&c>=h[1]&&c<h[1]+2)return {arr:sbx.houses,item:h};
   for(const g of sbx.graveyards) if(r>=g[0]&&r<g[0]+2&&c>=g[1]&&c<g[1]+2)return {arr:sbx.graveyards,item:g};
   for(const k of sbx.crypts){ const v=k[2]==='d'; if(r>=k[0]&&r<k[0]+(v?2:1)&&c>=k[1]&&c<k[1]+(v?1:2))return {arr:sbx.crypts,item:k}; }
   for(const q of sbx.queens) if(r>=q[0]&&r<q[0]+4&&c>=q[1]&&c<q[1]+3)return {arr:sbx.queens,item:q};
@@ -4714,7 +4765,7 @@ function sbxCode(){
   return JSON.stringify({v:3,orient:sbx.orient,COLS:sbx.COLS,ROWS:sbx.ROWS,ground:sbx.ground,pathCol:sbx.pathCol,
     routeGroups:R.groups,lakeExits:R.lakeExits,spiderRoutes:R.spiderRoutes,
     nests:R.nests,trees:sbx.trees,lake:sbx.lake,lakeSpawns:sbx.lakeSpawns,forest:sbx.forest,spiderDens:sbx.spiderDens,
-    spiderNests:sbx.nests,webs:sbx.webs,solidWebs:sbx.solidWebs,bridges:sbx.bridges,webPaths:sbx.webPaths,bushes:sbx.bushes,bigBushes:sbx.bigBushes,queens:sbx.queens,webWalls:sbx.webWalls,cocoons:sbx.cocoons,eggSacs:sbx.eggSacs,bones:sbx.bones,ruins:sbx.ruins,silkBridges:sbx.silkBridges,tunnelIns:sbx.tunnelIns,tunnelOuts:sbx.tunnelOuts,sewers:sbx.sewers,graves:sbx.graves,graveyards:sbx.graveyards,crypts:sbx.crypts,
+    spiderNests:sbx.nests,webs:sbx.webs,solidWebs:sbx.solidWebs,bridges:sbx.bridges,webPaths:sbx.webPaths,bushes:sbx.bushes,bigBushes:sbx.bigBushes,queens:sbx.queens,webWalls:sbx.webWalls,cocoons:sbx.cocoons,eggSacs:sbx.eggSacs,bones:sbx.bones,ruins:sbx.ruins,silkBridges:sbx.silkBridges,tunnelIns:sbx.tunnelIns,tunnelOuts:sbx.tunnelOuts,sewers:sbx.sewers,graves:sbx.graves,graveyards:sbx.graveyards,crypts:sbx.crypts,houses:sbx.houses,
     road:sbx.path,spawns:sbx.spawns,bases:sbx.bases});
 }
 function sbxRender(){
@@ -4752,6 +4803,7 @@ function sbxRender(){
     if(sbx.graves.length)parts.push('zombies leave the graves on the last wave');
     if(sbx.graveyards.length||sbx.crypts.length)parts.push('the dead never stop coming');
     if(sbx.bones.length)parts.push('skeletons crawl from the bones on wave 3');
+    if(sbx.houses.length)parts.push('zombie grunts leave the houses every wave');
     if(sbx.bushes.length)parts.push('thieves hide in '+sbx.bushes.length+' bush'+(sbx.bushes.length>1?'es':''));
     if(sbx.tunnelIns.length!==sbx.tunnelOuts.length)parts.push('a tunnel is missing its partner');
     else if(sbx.tunnelIns.length&&R.groups.some(g=>g.some(wp=>wp.some(p=>p[2]))))parts.push('half the enemies take the tunnel');
@@ -4766,7 +4818,7 @@ function sbxDraw(){
   if(!sbx||!sbxR)return;
   const cv=document.getElementById('sbxCanvas');
   const saved={ctx,CELL,COLS,ROWS,CW,CH,paths,path,pathSet,pathCells,lake,grove,trees,sewers,lab,theme,themeB,splitEdge,
-    terrainCache,forestPathIdx,forestIdxs,denPoints,nestPts,webs,bridges,webPaths,bigBushes,queens,webWalls,cocoons,eggSacs,boneHeaps,ruins,silkBridges,tunnels,piers,lakeExitPts,lakeSpawnPts,frameCount,extraBases,hiddenPaths,graves,graveyards,crypts};
+    terrainCache,forestPathIdx,forestIdxs,denPoints,nestPts,webs,bridges,webPaths,bigBushes,queens,webWalls,cocoons,eggSacs,boneHeaps,ruins,silkBridges,tunnels,piers,lakeExitPts,lakeSpawnPts,frameCount,extraBases,hiddenPaths,graves,graveyards,crypts,houses};
   try{
     const S=40, pt=([r,c])=>({x:c*S+S/2,y:r*S+S/2});
     ctx=cv.getContext('2d'); ctx.setTransform(2,0,0,2,0,0);
@@ -4778,7 +4830,7 @@ function sbxDraw(){
     cocoons=sbx.cocoons.map(([r,c])=>({row:r,col:c}));
     eggSacs=sbx.eggSacs.map(([r,c])=>({row:r,col:c})); boneHeaps=sbx.bones.map(([r,c,v])=>({row:r,col:c,v}));
     graves=sbx.graves.map(([r,c])=>({row:r,col:c})); graveyards=sbx.graveyards.map(([r,c,d])=>({row:r,col:c,dir:d}));
-    crypts=sbx.crypts.map(([r,c,d])=>({row:r,col:c,dir:d||'r'}));
+    crypts=sbx.crypts.map(([r,c,d])=>({row:r,col:c,dir:d||'r'})); houses=sbx.houses.map(([r,c])=>({row:r,col:c}));
     ruins=sbx.ruins.map(([r,c])=>({row:r,col:c})); silkBridges=sbx.silkBridges.map(([r,c])=>({row:r,col:c}));
     tunnels=sbx.tunnelIns.map((tin,i)=>({in:tin,out:sbx.tunnelOuts[i]})).concat(sbx.tunnelOuts.slice(sbx.tunnelIns.length).map(o=>({in:null,out:o})));
     lake=sbx.lake.map(([r,c])=>({row:r,col:c,x:c*S+S/2,y:r*S+S/2}));
@@ -4825,7 +4877,7 @@ function sbxDraw(){
     }
   } finally {
     ({ctx,CELL,COLS,ROWS,CW,CH,paths,path,pathSet,pathCells,lake,grove,trees,sewers,lab,theme,themeB,splitEdge,
-      terrainCache,forestPathIdx,forestIdxs,denPoints,nestPts,webs,bridges,webPaths,bigBushes,queens,webWalls,cocoons,eggSacs,boneHeaps,ruins,silkBridges,tunnels,piers,lakeExitPts,lakeSpawnPts,frameCount,extraBases,hiddenPaths,graves,graveyards,crypts}=saved);
+      terrainCache,forestPathIdx,forestIdxs,denPoints,nestPts,webs,bridges,webPaths,bigBushes,queens,webWalls,cocoons,eggSacs,boneHeaps,ruins,silkBridges,tunnels,piers,lakeExitPts,lakeSpawnPts,frameCount,extraBases,hiddenPaths,graves,graveyards,crypts,houses}=saved);
   }
 }
 function sbxToggleRoutes(){ sbxShowRoutes=!sbxShowRoutes; sbxRender(); }
@@ -4865,7 +4917,7 @@ function sbxSetOrient(o){
   const keep=arr=>arr.filter(([r,c])=>r<C.ROWS&&c<C.COLS);
   sbx.orient=o; sbx.COLS=C.COLS; sbx.ROWS=C.ROWS;
   ['path','spawns','bases','trees','lake','lakeSpawns','forest','sewers','spiderDens','nests','webs','solidWebs','bridges','webPaths','bushes','webWalls','cocoons','eggSacs','bones','ruins','silkBridges','tunnelIns','tunnelOuts','graves'].forEach(k=>sbx[k]=keep(sbx[k]));
-  sbx.graveyards=sbx.graveyards.filter(([r,c])=>r+2<=C.ROWS&&c+2<=C.COLS); sbx.crypts=sbx.crypts.filter(([r,c,d])=>d==='d'?r+2<=C.ROWS&&c<C.COLS:r<C.ROWS&&c+2<=C.COLS);
+  sbx.graveyards=sbx.graveyards.filter(([r,c])=>r+2<=C.ROWS&&c+2<=C.COLS); sbx.houses=sbx.houses.filter(([r,c])=>r+2<=C.ROWS&&c+2<=C.COLS); sbx.crypts=sbx.crypts.filter(([r,c,d])=>d==='d'?r+2<=C.ROWS&&c<C.COLS:r<C.ROWS&&c+2<=C.COLS);
   sbx.bigBushes=sbx.bigBushes.filter(([r,c])=>r+2<=C.ROWS&&c+2<=C.COLS); sbx.queens=sbx.queens.filter(([r,c])=>r+4<=C.ROWS&&c+3<=C.COLS);
   sbxRender();
 }
@@ -4893,7 +4945,7 @@ function sbxParse(d){
     const n=sbxFix({orient:d.orient,COLS:d.COLS,ROWS:d.ROWS,ground:d.ground,path:d.road||[],spawns:d.spawns||[],bases:d.bases||[],base:d.base,
       trees:d.trees||[],lake:d.lake||[],lakeSpawns:d.lakeSpawns||[],forest:d.forest||[],spiderDen:d.spiderDen||null,spiderDens:d.spiderDens||[],
       nests:d.spiderNests||[],webs:d.webs||[],solidWebs:d.solidWebs||[],bridges:d.bridges||[],webPaths:d.webPaths||[],bushes:d.bushes||[],bigBushes:d.bigBushes||[],queens:d.queens||[],webWalls:d.webWalls||[],cocoons:d.cocoons||[],eggSacs:d.eggSacs||[],bones:d.bones||[],ruins:d.ruins||[],silkBridges:d.silkBridges||[],
-      tunnelIns:d.tunnelIns||[],tunnelOuts:d.tunnelOuts||[],sewers:d.sewers||[],graves:d.graves||[],graveyards:d.graveyards||[],crypts:d.crypts||[]});
+      tunnelIns:d.tunnelIns||[],tunnelOuts:d.tunnelOuts||[],sewers:d.sewers||[],graves:d.graves||[],graveyards:d.graveyards||[],crypts:d.crypts||[],houses:d.houses||[]});
     if(!n.path.length&&Array.isArray(d.paths)){        // older code: rebuild the road from its waypoints
       d.paths.forEach(wp=>{ for(let i=0;i<wp.length-1;i++){ const [r1,c1]=wp[i],[r2,c2]=wp[i+1], m=Math.abs(r2-r1)+Math.abs(c2-c1);
         for(let k=0;k<=m;k++){ const p=[r1+Math.sign(r2-r1)*k,c1+Math.sign(c2-c1)*k]; if(!sHas(n.path,p[0],p[1]))n.path.push(p);} } });
@@ -4922,7 +4974,7 @@ function sbxLayout(R){
   const L={COLS:sbx.COLS,ROWS:sbx.ROWS,paths:flat,routeGroups:groups,
     lake:sbx.lake,keepLake:true,sewers:sbx.sewers,treesAt:sbx.trees,grove:sbx.forest,extraRoad:sbx.path.concat(sbx.bridges,sbx.silkBridges),bases:sbx.bases,
     bridges:sbx.bridges,webPaths:sbx.webPaths,bushes:sbx.bushes,bigBushes:sbx.bigBushes,queens:sbx.queens,webWalls:sbx.webWalls,cocoons:sbx.cocoons,
-    eggSacs:R.eggs,bones:sbx.bones,ruins:sbx.ruins,silkBridges:sbx.silkBridges,graves:sbx.graves,graveyards:sbx.graveyards,crypts:sbx.crypts,
+    eggSacs:R.eggs,bones:sbx.bones,ruins:sbx.ruins,silkBridges:sbx.silkBridges,graves:sbx.graves,graveyards:sbx.graveyards,crypts:sbx.crypts,houses:sbx.houses,
     tunnels:sbx.tunnelIns.map((tin,i)=>({in:tin,out:sbx.tunnelOuts[i]})).filter(t=>t.out),
     lakeSpawns:sbx.lakeSpawns,lakeExits:R.lakeExits.map(e=>({exit:e.exit,routes:e.routes}))};
   if(R.spiderRoutes.length){ L.forestPaths=R.spiderRoutes; L.forestHidden=true;
@@ -5129,6 +5181,7 @@ function startGame(){
   graves=(L.graves||[]).map(([r,c])=>({row:r,col:c,done:false}));
   graveyards=(L.graveyards||[]).map(([r,c,d])=>({row:r,col:c,dir:d||'d',cd:60+Math.floor(Math.random()*120)}));
   crypts=(L.crypts||[]).map(([r,c,d])=>({row:r,col:c,dir:d||'r',cd:120+Math.floor(Math.random()*180)}));
+  houses=(L.houses||[]).map(([r,c])=>({row:r,col:c})); houseWave=0; knivesFx=[];
   ruins=(L.ruins||[]).map(([r,c])=>({row:r,col:c})); silkBridges=(L.silkBridges||[]).map(([r,c])=>({row:r,col:c}));
   tunnels=(L.tunnels||[]).map(t=>({in:t.in,out:t.out}));
   lakeExitPts=(L.lakeExits||[]).map(ex=>Object.assign(toPt(ex.exit),{routes:ex.routes.map(wp=>wp.map(toPt))}));
@@ -5250,6 +5303,7 @@ function cellFree(row,col){
   if(webs.some(w=>w.solid&&w.row===row&&w.col===col))return false;
   if(graves.some(g=>g.row===row&&g.col===col))return false;
   if(graveyards.some(g=>row>=g.row&&row<g.row+2&&col>=g.col&&col<g.col+2))return false;
+  if(houses.some(h=>row>=h.row&&row<h.row+2&&col>=h.col&&col<h.col+2))return false;
   if(crypts.some(k=>{ const v=k.dir==='d'; return row>=k.row&&row<k.row+(v?2:1)&&col>=k.col&&col<k.col+(v?1:2); }))return false;
   return !towers.some(t=>t.row===row&&t.col===col);
 }
@@ -5410,7 +5464,8 @@ function makeEnemy(type,pathIdx){
   return {type,pos:0,pth:P,x:P[0].x,y:P[0].y,hp,maxHp:hp,
     speed:E.speed*diffCfg.speedMul, reward:E.reward, r:E.r, col:E.col,
     boss:!!E.boss, shoots:!!E.shoots, steals:!!E.steals, poisons:!!E.poisons,
-    infects:(E.infects===undefined?-1:E.infects), mindless:!!E.mindless, dmgMul:1,
+    infects:(E.infects===undefined?-1:E.infects), mindless:!!E.mindless, dmgMul:E.dmg||1,
+    bites:!!E.bites, knives:!!E.knives, knifeCd:E.knives?90:0, throwFx:0, infected:!!E.looksInfected,
     shield:E.shield||0, maxShield:E.shield||0, shieldCdMax:E.shieldCd||0, shieldCd:0,
     shotCd:E.shoots?300:0, flash:0, webs:E.webs||0, cellKey:null, poisonHit:E.poisonHit||0};
 }
@@ -5543,6 +5598,7 @@ function continueRun(){
   sewers.forEach(sw=>{ if(sw.wave&&wave>=sw.wave)sw.done=true; });
   if(bonesWave&&wave>=bonesWave)boneHeaps.forEach(k=>k.done=true);
   if(wave>=totalWaves)graves.forEach(g=>g.done=true);
+  houseWave=wave;
   { const d=LEVELS[currentLevel].def||{};
     if(d.spiders&&wave>=d.spiders.wave)spiderDone=true;
     if(d.bigSpiderWave&&wave>=d.bigSpiderWave)bigSpiderDone=true; }
@@ -6174,8 +6230,102 @@ function drawBones(cx,cy,seed,v){
   }
   ctx.restore();
 }
-/* ---------- Halloween ground pieces: graves, graveyards, crypts ---------- */
-let graves=[], graveyards=[], crypts=[], bonesWave=0;
+/* ---------- Halloween ground pieces: graves, graveyards, crypts, abandoned houses ---------- */
+const UNDEAD=['zombie','skeleton','skeletonknight'];
+let graves=[], graveyards=[], crypts=[], houses=[], houseWave=0, bonesWave=0, knivesFx=[];
+// the Halloween undead, drawn facing right around their feet like the other walkers
+function drawUndeadShape(g,type,rad,base,step,throwing){
+  const bone='#e8e1c9', boneDk='#6a6352';
+  g.lineWidth=2; g.strokeStyle='#22261c';
+  if(type==='zombie'){
+    g.fillStyle='#3d3a33';                                         // ragged trousers
+    g.fillRect(-4.6,rad*0.8,4.2,rad*0.42+step*0.5); g.fillRect(0.4,rad*0.8,4.2,rad*0.42-step*0.5);
+    g.fillStyle=base;                                              // torn shirt
+    g.beginPath();g.moveTo(-rad*0.6,-rad*0.5);g.lineTo(rad*0.6,-rad*0.5);g.lineTo(rad*0.6,rad*0.75);
+    g.lineTo(rad*0.3,rad*0.95);g.lineTo(0,rad*0.75);g.lineTo(-rad*0.3,rad*0.95);g.lineTo(-rad*0.6,rad*0.75);g.closePath();g.fill();g.stroke();
+    g.fillStyle='rgba(0,0,0,.25)'; g.fillRect(-rad*0.2,-rad*0.2,rad*0.35,rad*0.3);
+    g.fillStyle='#8fb070';                                         // arms reaching forward
+    [-rad*0.25,rad*0.1].forEach((ay,k)=>{ g.beginPath();g.roundRect(rad*0.2,ay+(k?step*0.4:-step*0.4),rad*1.05,4.2,2);g.fill();g.stroke(); });
+    g.beginPath();g.arc(0,-rad*0.95,rad*0.47,0,Math.PI*2);g.fill();g.stroke();
+    g.fillStyle='#c0392b'; g.beginPath();g.arc(rad*0.22,-rad*1.02,1.5,0,Math.PI*2);g.fill();
+    g.fillStyle='#2a1a14'; g.beginPath();g.ellipse(rad*0.3,-rad*0.72,2,1.4,0,0,Math.PI*2);g.fill();
+    g.strokeStyle='#5d7a48'; g.lineWidth=1.4; g.beginPath();g.moveTo(-rad*0.3,-rad*1.3);g.lineTo(-rad*0.05,-rad*1.05);g.stroke();
+    return;
+  }
+  // skeletons: bone legs, a ribcage, a skull; the knight wears a helm and breastplate and carries a sword
+  const knight=type==='skeletonknight';
+  g.strokeStyle=boneDk; g.lineWidth=3; g.lineCap='round';
+  g.beginPath();g.moveTo(-2,rad*0.55);g.lineTo(-3,rad*1.2+step*0.5);g.moveTo(2,rad*0.55);g.lineTo(3,rad*1.2-step*0.5);g.stroke();
+  g.strokeStyle=bone; g.lineWidth=1.6; g.stroke();
+  g.strokeStyle='#22261c'; g.lineWidth=2;
+  if(knight){
+    g.fillStyle='#5d636b'; g.beginPath();g.roundRect(-rad*0.62,-rad*0.55,rad*1.24,rad*1.2,4);g.fill();g.stroke();
+    g.fillStyle='rgba(255,255,255,.18)'; g.fillRect(-rad*0.5,-rad*0.45,rad*0.3,rad*0.9);
+    g.fillStyle='#7a2e2a'; g.fillRect(-rad*0.62,rad*0.45,rad*1.24,3);
+  } else {
+    g.strokeStyle=boneDk; g.lineWidth=1.2; g.beginPath();g.moveTo(0,-rad*0.5);g.lineTo(0,rad*0.55);g.stroke();
+    for(let k=0;k<4;k++){ const yy=-rad*0.38+k*rad*0.22;
+      g.strokeStyle=boneDk; g.lineWidth=3; g.beginPath();g.moveTo(-rad*0.45,yy);g.quadraticCurveTo(0,yy-3,rad*0.45,yy);g.stroke();
+      g.strokeStyle=bone; g.lineWidth=1.6; g.stroke(); }
+    // belt with the knife sheath
+    g.fillStyle='#4a3a26'; g.strokeStyle='#22261c'; g.lineWidth=1.2; g.fillRect(-rad*0.5,rad*0.45,rad,3); g.strokeRect(-rad*0.5,rad*0.45,rad,3);
+    g.fillStyle='#6b5233'; g.fillRect(-rad*0.42,rad*0.45,3,6);
+    if(!throwing){ g.fillStyle='#c9ced4'; g.fillRect(-rad*0.42+0.5,rad*0.45-5,2,5); }
+  }
+  // arm: raised to throw, or hanging
+  g.strokeStyle=boneDk; g.lineWidth=3;
+  g.beginPath(); if(throwing){ g.moveTo(rad*0.3,-rad*0.3);g.lineTo(rad*0.5,-rad*1.2); } else { g.moveTo(rad*0.3,-rad*0.3);g.lineTo(rad*0.75,rad*0.3+step*0.4); } g.stroke();
+  g.strokeStyle=bone; g.lineWidth=1.6; g.stroke();
+  if(knight){                                                       // sword and round shield
+    g.strokeStyle='#22261c'; g.lineWidth=1.2; g.fillStyle='#cfd4da';
+    g.beginPath();g.moveTo(rad*0.75,rad*0.3);g.lineTo(rad*1.05,-rad*1.0);g.lineTo(rad*1.2,-rad*0.95);g.lineTo(rad*0.88,rad*0.33);g.closePath();g.fill();g.stroke();
+    g.fillStyle='#6b4a26'; g.fillRect(rad*0.6,rad*0.25,rad*0.45,2.6);
+    g.fillStyle='#7a2e2a'; g.strokeStyle='#22261c'; g.lineWidth=2;
+    g.beginPath();g.arc(-rad*0.7,rad*0.05,rad*0.42,0,Math.PI*2);g.fill();g.stroke();
+    g.fillStyle='#c9a85a'; g.beginPath();g.arc(-rad*0.7,rad*0.05,rad*0.12,0,Math.PI*2);g.fill();
+  }
+  if(throwing&&!knight){ g.fillStyle='#c9ced4'; g.strokeStyle='#22261c'; g.lineWidth=1;
+    g.beginPath();g.moveTo(rad*0.5,-rad*1.2);g.lineTo(rad*0.42,-rad*1.75);g.lineTo(rad*0.6,-rad*1.2);g.closePath();g.fill();g.stroke(); }
+  // skull
+  g.fillStyle=bone; g.strokeStyle='#22261c'; g.lineWidth=2;
+  g.beginPath();g.arc(0,-rad*0.98,rad*0.46,0,Math.PI*2);g.fill();g.stroke();
+  g.fillStyle='#1a1612';
+  g.beginPath();g.ellipse(rad*0.12,-rad*1.02,2,2.4,0,0,Math.PI*2);g.fill();
+  g.beginPath();g.ellipse(rad*0.38,-rad*1.0,1.6,2.2,0,0,Math.PI*2);g.fill();
+  g.fillRect(rad*0.15,-rad*0.72,rad*0.3,1.4);
+  if(knight){ g.fillStyle='#4b5158'; g.strokeStyle='#22261c'; g.lineWidth=2;
+    g.beginPath();g.arc(0,-rad*1.05,rad*0.52,Math.PI,0);g.lineTo(rad*0.52,-rad*0.9);g.lineTo(-rad*0.52,-rad*0.9);g.closePath();g.fill();g.stroke();
+    g.fillStyle='#7a2e2a'; g.beginPath();g.moveTo(-rad*0.1,-rad*1.55);g.quadraticCurveTo(-rad*0.7,-rad*1.9,-rad*0.9,-rad*1.4);g.lineTo(-rad*0.1,-rad*1.45);g.closePath();g.fill(); }
+}
+// an abandoned house, 2x2 tiles: zombie grunts stumble out of its door at the start of every wave
+function drawHouse(h,t){
+  const C=CELL, x=h.col*C, y=h.row*C;
+  ctx.save(); ctx.translate(x,y);
+  ctx.fillStyle='rgba(0,0,0,.25)'; ctx.fillRect(6,C*0.55,C*2-6,C*1.45);
+  ctx.strokeStyle='#211a14'; ctx.lineWidth=2;
+  ctx.fillStyle='#6d5a44'; ctx.fillRect(5,C*0.62,C*2-10,C*1.3); ctx.strokeRect(5,C*0.62,C*2-10,C*1.3);
+  ctx.strokeStyle='rgba(30,22,16,.55)'; ctx.lineWidth=1;
+  for(let yy=C*0.75;yy<C*1.9;yy+=6){ ctx.beginPath();ctx.moveTo(6,yy);ctx.lineTo(C*2-6,yy);ctx.stroke(); }
+  // sagging roof with a hole in it
+  ctx.strokeStyle='#211a14'; ctx.lineWidth=2; ctx.fillStyle='#4a3b30';
+  ctx.beginPath();ctx.moveTo(0,C*0.68);ctx.lineTo(C*0.55,C*0.1);ctx.quadraticCurveTo(C,C*0.2,C*1.45,C*0.1);ctx.lineTo(C*2,C*0.68);ctx.closePath();ctx.fill();ctx.stroke();
+  ctx.fillStyle='#16110d'; ctx.beginPath();ctx.moveTo(C*1.2,C*0.3);ctx.lineTo(C*1.45,C*0.24);ctx.lineTo(C*1.5,C*0.5);ctx.lineTo(C*1.25,C*0.52);ctx.closePath();ctx.fill();
+  ctx.strokeStyle='#2c231c'; ctx.lineWidth=1.6;
+  [[C*1.22,C*0.26,C*1.5,C*0.5],[C*1.3,C*0.24,C*1.25,C*0.52]].forEach(([a,b,c,d])=>{ ctx.beginPath();ctx.moveTo(a,b);ctx.lineTo(c,d);ctx.stroke(); });
+  // chimney
+  ctx.fillStyle='#5a4b40'; ctx.lineWidth=1.6; ctx.strokeStyle='#211a14'; ctx.fillRect(C*0.35,C*0.05,9,C*0.3); ctx.strokeRect(C*0.35,C*0.05,9,C*0.3);
+  // boarded windows
+  [[C*0.22,C*0.9],[C*1.42,C*0.9]].forEach(([wx,wy])=>{ ctx.fillStyle='#1b1511'; ctx.fillRect(wx,wy,C*0.38,C*0.34); ctx.strokeRect(wx,wy,C*0.38,C*0.34);
+    ctx.strokeStyle='#8a7354'; ctx.lineWidth=3; ctx.beginPath();ctx.moveTo(wx-2,wy+3);ctx.lineTo(wx+C*0.4,wy+C*0.3);ctx.moveTo(wx-2,wy+C*0.28);ctx.lineTo(wx+C*0.4,wy+4);ctx.stroke();
+    ctx.strokeStyle='#211a14'; ctx.lineWidth=1.6; });
+  // the door hangs open on a dark hall, with a sickly glow
+  ctx.fillStyle='#0f0b09'; ctx.fillRect(C*0.8,C*1.3,C*0.4,C*0.62); ctx.strokeRect(C*0.8,C*1.3,C*0.4,C*0.62);
+  const gl=0.15+0.1*Math.sin((t||0)*0.05+h.col);
+  ctx.fillStyle='rgba(176,127,208,'+gl.toFixed(2)+')'; ctx.fillRect(C*0.84,C*1.5,C*0.32,C*0.4);
+  ctx.fillStyle='#5b4733'; ctx.beginPath();ctx.moveTo(C*1.2,C*1.3);ctx.lineTo(C*1.38,C*1.38);ctx.lineTo(C*1.38,C*1.98);ctx.lineTo(C*1.2,C*1.92);ctx.closePath();ctx.fill();ctx.stroke();
+  ctx.restore();
+}
+
 // a lone grave: a mound of earth and a headstone; once its zombie has climbed out, the mound is a dark hole
 function drawGrave(cx,cy,seed,open){
   const tilt=(hsh2(seed,4,1)-0.5)*0.25;
@@ -6267,6 +6417,18 @@ function drawHalloweenPieces(t){
   graves.forEach(g=>drawGrave(g.col*CELL+CELL/2,g.row*CELL+CELL/2,g.row*23+g.col,g.done));
   graveyards.forEach(g=>drawGraveyard(g,t));
   crypts.forEach(k=>drawCrypt(k,t));
+  houses.forEach(h=>drawHouse(h,t));
+}
+// thrown knives spin through the air; a bitten unit glows sick green until it turns
+function drawUndeadFx(){
+  knivesFx.forEach(k=>{ const f=1-k.life/k.max, x=k.x1+(k.x2-k.x1)*f, y=k.y1+(k.y2-k.y1)*f-Math.sin(f*Math.PI)*14;
+    ctx.save(); ctx.translate(x,y); ctx.rotate(f*Math.PI*4);
+    ctx.fillStyle='#d5dade'; ctx.strokeStyle='#22261c'; ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(-1.5,0);ctx.lineTo(0,-8);ctx.lineTo(1.5,0);ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.fillStyle='#5a3e24'; ctx.fillRect(-1.5,0,3,4); ctx.restore(); });
+  guards.concat(allies).forEach(u=>{ if(!u.bitten)return;
+    ctx.strokeStyle='rgba(120,190,90,'+(0.45+0.3*Math.sin(frameCount*0.3)).toFixed(2)+')'; ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.arc(u.x,u.y-4,13,0,Math.PI*2);ctx.stroke(); });
 }
 // a ruined watchtower smothered in silk; pay to cut it clear and the tile is yours to build on
 function drawRuin(cx,cy,seed){
@@ -6810,6 +6972,7 @@ function draw(){
   });
   drawPowers();
   drawGuards();
+  drawUndeadFx();
   allies.forEach(a=>{ if(!(a.delay>0))drawWebbedOverlay(a,a.r||11); });
   allies.concat(guards).forEach(u=>{ if(!(u.poison>0)||u.delay>0)return;
     for(let k=0;k<3;k++){ const ph=((frameCount+k*17)%45)/45;
@@ -6942,6 +7105,8 @@ function draw(){
       ctx.fillStyle='#c9e08a';
       ctx.beginPath();ctx.arc(-rad*0.25,-rad*0.2,rad*0.16,0,Math.PI*2);ctx.fill();
       ctx.beginPath();ctx.arc(rad*0.2,-rad*0.3,rad*0.12,0,Math.PI*2);ctx.fill();
+    } else if(UNDEAD.includes(e.type)){
+      drawUndeadShape(ctx,e.type,rad,base,(e.frozen>0||e.held>0)?0:step,e.throwFx>0);
     } else if(e.type==='drowned'){
       drawDrownedShape(ctx,rad,base,step,(e.frozen>0||e.held>0)?0:frameCount+idx*9);
     } else if(e.webs){

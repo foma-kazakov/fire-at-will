@@ -18,7 +18,13 @@ A tower defense game. You place towers on grass tiles beside the road, and enemi
   - **Graveyard** (2×2): must have one whole side against 2 road tiles; its open gate sits in the middle of that side. Tap it again in the sandbox to turn the gate to another side that touches the road. From the first wave on it never stops: a zombie or skeleton every 5–11 s (they don't hold up the win, like spider nests).
   - **Crypt** (1×2): skeletons only, from the dark door on its right end (bottom end in the phone layout), one every 9–18 s, never stopping.
   - **Bones** (changed from decor): work like a sewer, 5 skeletons once on wave 3 (`bonesWave`); 5 random looks like trees. They move from the Spiders tab to the Halloween tab when the DLC is installed.
-  - **Zombie** (170 hp, slow) and **Skeleton** (80 hp, a bit fast) are placeholders until the user describes them; they aren't in the encyclopedia yet.
+  - **Abandoned house** (2×2, anywhere off the road, door at the bottom): at the start of every wave 3 zombie grunts walk out of it onto the nearest road; they count toward the wave.
+  - Graveyard mix: zombie 45%, skeleton 40%, skeleton knight 15%. Crypt mix: skeleton 80%, skeleton knight 20%.
+- **Halloween enemies (designed by the user, 22 Oct 2026; balance by Claude):**
+  - **Zombie**: 120 hp, grunt speed (1.0), 12 gold. Its bite infects a standing unit (firework-station soldiers, Backup soldiers; not machines or tanks): the unit turns green and rises as a zombie 2.5 s later.
+  - **Skeleton**: 125 hp, speed 1.0, 13 gold, knife on its belt. Stops for about 0.4 s to throw a knife at a tower within 150 px (not farms or menders), stunning it for 1.5 s; 2.5 s recharge.
+  - **Skeleton knight**: 250 hp, speed 0.85, 24 gold, deals double damage to units.
+  - **Zombie grunt**: comes out of abandoned houses; a grunt (100 hp, 1.0, 11 gold) that looks infected and bites like a zombie.
 - **Map obstacles:** trees and webbed ruins block building and can be cleared for gold: trees 100, ruins 75, webs 25. Solid webs can't be removed.
 - **Pause menu:** Resume, Settings, Shop ("coming soon"), and Save & Exit, which saves the run so you can continue it later from the main menu.
 - **DLC:** extra level packs as JSON files, loaded on the DLC screen; the desktop app reads `Documents/Fire at Will/DLC` by itself. Format and details in [dlc.md](dlc.md). Added 21 Oct 2026.
