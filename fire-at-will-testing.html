@@ -2400,7 +2400,7 @@ const ISLE_REGIONS=[
   {id:'graveyard',name:'The Graveyard',levels:3,ground:'#565C50',ground2:'#33382F',pathCol:'#7d7768',decor:'grave',
    density:24,tints:['#8C9196','#7D8287','#9EA4A9'],
    poly:[IN,IA,IB,IC,ID,IQ1,IQ2,IM],nodes:[[-430,290],[-290,235],[-160,280]]},
-  {id:'pumpkin',name:'Pumpkin Farm',levels:4,ground:'#6A6237',ground2:'#433D20',pathCol:'#8a6a3e',decor:'pumpkin',
+  {id:'pumpkin',name:'Pumpkin Farm',levels:4,ground:'#8B611F',ground2:'#5E4114',pathCol:'#8a6a3e',decor:'pumpkin',
    density:26,tints:['#E07B24','#F08C2E','#C9661A'],
    poly:[IM,IQ2,IQ1,IR2,IR1,IS1,IK,IL],nodes:[[-330,465],[-455,440],[-440,610],[-300,600]]},
   {id:'ashen',name:'Ashen Wastes',levels:2,ground:'#4B4B4E',ground2:'#232326',pathCol:'#5a4a44',decor:'ashrock',
@@ -4508,13 +4508,15 @@ const PATH_COLORS=(()=>{ const out=[{name:'Classic road',c:'#8a7551'}];
 const GRASS_COLORS=(()=>{ const out=[{name:'Classic grass',c:'#3e5230'}];
   REGIONS.forEach(r=>{
     if(!out.some(o=>o.c===r.ground))out.push({name:r.name,c:r.ground});
-    if(!out.some(o=>o.c===r.ground2))out.push({name:r.name+' (deep)',c:r.ground2});
   }); return out; })();
 const BASE_PATH_N=PATH_COLORS.length, BASE_GRASS_N=GRASS_COLORS.length;
 ISLE_REGIONS.forEach(r=>{
   if(!PATH_COLORS.some(o=>o.c===r.pathCol))PATH_COLORS.push({name:r.name,c:r.pathCol});
   if(!GRASS_COLORS.some(o=>o.c===r.ground))GRASS_COLORS.push({name:r.name,c:r.ground});
-  if(!GRASS_COLORS.some(o=>o.c===r.ground2))GRASS_COLORS.push({name:r.name+' (deep)',c:r.ground2}); });
+  });
+// the "deep" grass colours were taken out of the sandbox: maps that still use one get that area's normal grass
+const DEEP_GROUND={}; REGIONS.concat(ISLE_REGIONS).forEach(r=>{ if(r.ground2)DEEP_GROUND[r.ground2.toLowerCase()]=r.ground; });
+const undeep=hex=>DEEP_GROUND[String(hex||'').toLowerCase()]||hex;
 const SBX_TOOLS=[['path','Path'],['spawn','Spawn'],['base','Base'],['tree','Tree'],['lake','Lake'],['lakespawn','Lake spawn'],
   ['bridge','Bridge'],['webpath','Web path'],['forest','Forest'],['webforest','Webbed forest'],['plainsforest','Plains forest'],
   ['spider','Spider den'],['nest','Spider nest'],['queen','Spider queen'],['web','Web'],['solidweb','Solid web'],['webwall','Web wall'],['cocoon','Cocoon'],['eggs','Egg sacs'],['silkbridge','Silk bridge'],
@@ -4549,6 +4551,9 @@ function sbxFix(d){                    // fill in anything an older save or code
   d.webPaths=d.webPaths.filter(w=>d.path.some(q=>q[0]===w[0]&&q[1]===w[1]));   // old grass-only web paths are dropped
   d.trees=d.trees.map(t=>[t[0],t[1],t[2]||sbxRandomTree(d.ground)]);
   d.bones=d.bones.map(b=>[b[0],b[1],b[2]!=null?b[2]:Math.floor(Math.random()*5)]);
+  d.ground=undeep(d.ground);                                   // slider positions moved when the deep grasses went, so find them again by colour
+  { const gi=GRASS_COLORS.findIndex(x=>x.c===d.ground); d.grassIdx=gi<0?0:gi; d.grassCustom=gi<0;
+    const pi=PATH_COLORS.findIndex(x=>x.c===d.pathCol); if(pi>=0){ d.pathIdx=pi; d.pathCustom=false; } }
   return d;
 }
 function sbxSave(){ try{localStorage.setItem('fireAtWill.sandbox',JSON.stringify(sbx));}catch(e){} }
@@ -5025,7 +5030,7 @@ function sbxParse(d){
       n.spawns=d.paths.map(wp=>wp[0]); n.bases=[]; d.paths.forEach(wp=>{ const e=wp[wp.length-1]; if(!sHas(n.bases,e[0],e[1]))n.bases.push(e); });
     }
     if(d.pathCol){ n.pathCol=d.pathCol; const i=PATH_COLORS.findIndex(x=>x.c===d.pathCol); n.pathIdx=i<0?0:i; n.pathCustom=i<0; }
-    if(d.ground){ n.ground=d.ground; const i=GRASS_COLORS.findIndex(x=>x.c===d.ground); n.grassIdx=i<0?0:i; n.grassCustom=i<0; }
+    if(d.ground){ d.ground=undeep(d.ground); n.ground=d.ground; const i=GRASS_COLORS.findIndex(x=>x.c===d.ground); n.grassIdx=i<0?0:i; n.grassCustom=i<0; }
     return n;
 }
 function sbxPlay(){
@@ -5962,8 +5967,8 @@ function endGame(won){
   if(won)confetti(); else document.getElementById('confetti').innerHTML='';
 }
 
-// the Pumpkin Farm grass colours draw as pixel farmland: 0 for the normal one, 1 for the deep one, -1 for any other ground
-function farmGround(hex){ const h=String(hex||'').toLowerCase(); return h==='#6a6237'?0:h==='#433d20'?1:-1; }
+// the Pumpkin Farm grass colours draw as the ochre pumpkin patch: 0 for the normal one, 1 for the deep one, -1 for any other ground
+function farmGround(hex){ const h=String(hex||'').toLowerCase(); return h==='#8b611f'||h==='#6a6237'?0:h==='#5e4114'||h==='#433d20'?1:-1; }   // the old olive colours still count
 function buildTerrain(){
   if(!CW||!CH)return;
   terrainCache=document.createElement('canvas');
@@ -5983,18 +5988,24 @@ function buildTerrain(){
     ctx.fillStyle=th?th.ground:'#3e5230';
     ctx.fillRect(c*CELL,r*CELL,CELL,CELL);
   }
-  // Pumpkin Farm ground: blocky pixel farmland, green grass squares broken by patches of tilled brown dirt
-  { const P=6, px=CELL/P, smooth=(a,b)=>{ const fa=Math.floor(a), fb=Math.floor(b), ta=a-fa, tb=b-fb, s1=ta*ta*(3-2*ta), s2=tb*tb*(3-2*tb);
-      const v=(x,y)=>hashAt(x*1.7+3.1,y*2.3+7.9); return (v(fa,fb)*(1-s1)+v(fa+1,fb)*s1)*(1-s2)+(v(fa,fb+1)*(1-s1)+v(fa+1,fb+1)*s1)*s2; };
-    for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
-      const f=farmAt(r,c); if(f<0)continue;
-      const greens=f?['#5d7a36','#66853b','#527030','#6f8f42']:['#7ea24a','#8ab255','#71953f','#95bb5e'];
-      const dirts=f?['#5e3d26','#6a452b','#543620']:['#8b5a38','#7b4e31','#996743'];
-      for(let i=0;i<P;i++)for(let j=0;j<P;j++){
-        const gx=c*P+j, gy=r*P+i, n=smooth(gx/3.2,gy/3.2)*0.7+hashAt(gx*0.91,gy*1.37)*0.3, k=hashAt(gx*2.3+1,gy*1.9+5);
-        ctx.fillStyle=n<0.42?dirts[Math.floor(k*dirts.length)]:greens[Math.floor(k*greens.length)];
-        ctx.fillRect(c*CELL+j*px,r*CELL+i*px,px+0.5,px+0.5);
-      } } }
+  // Pumpkin Farm ground: warm ochre earth with a fine dotted weave, darker blotches and wisps of dry straw
+  for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){ const f=farmAt(r,c); if(f<0)continue;   // all the earth first, so patches can spill over tile edges
+    ctx.fillStyle=f?'#5e4114':'#8b611f'; ctx.fillRect(c*CELL,r*CELL,CELL,CELL); }
+  for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
+    const f=farmAt(r,c); if(f<0)continue;
+    const x0=c*CELL, y0=r*CELL;
+    for(let k=0;k<3;k++){ const n1=hashAt(r*3.1+k,c*5.7), n2=hashAt(c*2.9+k,r*6.3);           // soft darker and lighter patches
+      ctx.fillStyle=k===2?'rgba(255,215,140,.07)':'rgba(40,22,4,.10)';
+      ctx.beginPath();ctx.ellipse(x0+n1*CELL,y0+n2*CELL,CELL*(0.3+n1*0.3),CELL*(0.2+n2*0.25),n1*3,0,Math.PI*2);ctx.fill(); }
+    ctx.fillStyle=f?'rgba(20,10,0,.28)':'rgba(60,34,6,.32)';                                    // the fine dot weave
+    const D=4; for(let yy=1;yy<CELL;yy+=D)for(let xx=((yy/D)%2?D/2:0)+1;xx<CELL;xx+=D)ctx.fillRect(x0+xx,y0+yy,1,1);
+    ctx.lineCap='round';
+    for(let k=0;k<4;k++){ const n1=hashAt(r*7.3+k*1.9,c*2.1), n2=hashAt(c*4.3+k*3.7,r*1.3), a=n1*Math.PI;   // dry straw
+      if(hashAt(k*9.1+r,c*0.7)<0.4)continue;
+      ctx.strokeStyle=k%2?'rgba(214,168,82,.55)':'rgba(70,42,10,.45)'; ctx.lineWidth=1.1;
+      const sx=x0+n1*CELL, sy=y0+n2*CELL, L=4+n2*4;
+      ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(sx+Math.cos(a)*L,sy+Math.sin(a)*L);ctx.stroke(); }
+  }
   // the pumpkin patch spreads: long vines with leaves and curling tendrils creep over it, little pumpkins sprout on them
   { const farmPt=(x,y)=>{ const r=Math.floor(y/CELL), c=Math.floor(x/CELL); return r>=0&&c>=0&&r<ROWS&&c<COLS&&!pathSet.has(r+','+c)&&farmAt(r,c)>=0; };
     const nV=Math.round(COLS*ROWS/5);
