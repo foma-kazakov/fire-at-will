@@ -210,6 +210,9 @@
   .colorLine input[type=color]{width:38px;height:28px;border:2px solid var(--ink);border-radius:6px;padding:0;background:none;cursor:pointer;}
   #sbxCode{width:100%;height:64px;font-family:monospace;font-size:.7rem;border:2px solid var(--ink);border-radius:8px;
     padding:6px;resize:vertical;background:#fbf7ea;color:var(--ink);}
+  #sbxInfo{display:none;margin:8px auto 0;max-width:640px;background:var(--ink);color:var(--paper);border-radius:10px;padding:9px 13px;font-size:.82rem;line-height:1.35;text-align:left;}
+  #sbxInfo h4{margin:0 0 4px;font-family:'Bungee','Russo One',sans-serif;font-size:.95rem;color:var(--brass);font-weight:400;}
+  #sbxInfo p{margin:3px 0;} #sbxInfo b{color:var(--brass);} #sbxInfo .sbxInfoHint{opacity:.8;font-style:italic;}
   #sbxStatus{font-size:.8rem;font-weight:600;text-align:center;min-height:1.2em;margin-top:4px;}
   #gameScreen.tester #towerbar,#gameScreen.tester #powerbar,#filterRow{flex-wrap:nowrap;overflow-x:auto;
     justify-content:safe center;max-width:100%;padding:2px 4px 5px;scrollbar-width:thin;}
@@ -499,10 +502,12 @@
           <button class="toolBtn" id="sbxSizeP" onclick="sbxSetOrient('phone')">Phone 10×18</button>
           <button class="toolBtn" id="sbxSizeL" onclick="sbxSetOrient('large')">Large 25×16</button>
           <button class="toolBtn" id="sbxSizeH" onclick="sbxSetOrient('huge')">Huge 31×20</button>
+          <button class="toolBtn" id="sbxDescBtn" onclick="sbxToggleDesc()">ℹ Description</button>
           <button class="toolBtn" onclick="goTo('testScreen')">Back</button>
         </div>
       </div>
       <div class="sbxRow" id="sbxTools" style="margin-top:8px"></div>
+      <div id="sbxInfo"></div>
       <canvas id="sbxCanvas"></canvas>
       <div id="sbxStatus"></div>
     </div>
@@ -769,7 +774,7 @@ new MutationObserver(ms=>{ for(const m of ms){
     else m.addedNodes.forEach(trNode); } })
   .observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['placeholder','title','aria-label']});
 Object.assign(I18N.ru,{"The Graveyard":"Кладбище","Pumpkin Farm":"Тыквенная ферма","Ashen Wastes":"Пепельные пустоши","Wretched Woodland":"Гиблая чаща","The Halloween island is coming soon.":"Остров Хэллоуина скоро откроется.","Adds the Halloween island to the campaign map":"Добавляет остров Хэллоуина на карту кампании","Adds the Halloween map pieces to the Sandbox":"Добавляет детали карты Хэллоуина в Песочницу","Testing is its own app now: Fire at Will Testing.":"Тестирование теперь отдельное приложение: Fire at Will Testing.","Try levels, maps and enemies. The game's own progress is never touched.":"Пробуйте уровни, карты и врагов. Прогресс самой игры не затрагивается.","Zombie":"Зомби","Skeleton":"Скелет","Skeleton Knight":"Скелет-рыцарь","Zombie Grunt":"Зомби-пехотинец","Abandoned house":"Заброшенный дом","the abandoned house breaks open on a random wave":"заброшенный дом вскрывается на случайной волне","The door bursts — zombie grunts pour out of the abandoned house!":"Дверь вылетает — из заброшенного дома валят зомби-пехотинцы!","Restless Dead":"Неупокоенный мертвец","120 health, walks like a grunt.":"120 здоровья, ходит как пехотинец.","A bite infects your soldiers: 2.5 seconds later they rise as zombies.":"Укус заражает ваших солдат: через 2,5 секунды они встают зомби.","Rises from graves and graveyards.":"Встаёт из могил и с кладбищ.","Keep Firework soldiers and Backup out of its reach.":"Держите солдат фейерверка и подкрепление подальше от него.","Kill it at range before it bites.":"Убивайте издалека, пока не укусил.","Splash damage on the road.":"Урон по площади на дороге.","Knife Thrower":"Метатель ножей","125 health and a knife on its belt.":"125 здоровья и нож на поясе.","Stops to throw a knife that stuns a tower for 1.5 seconds.":"Останавливается и метает нож, оглушая башню на 1,5 секунды.","Throws again every 2.5 seconds.":"Бросает снова каждые 2,5 секунды.","Menders and Farms are never targeted.":"Лекари и фермы не становятся целью.","Long-range towers that hit it before it gets close: Sniper.":"Дальнобойные башни, бьющие до сближения: Снайпер.","Kill it while it stands still to throw.":"Убивайте, пока он стоит и метает.","Undead Champion":"Чемпион нежити","250 health in rusted armour.":"250 здоровья в ржавых доспехах.","Hits your units twice as hard.":"Бьёт ваших юнитов вдвое сильнее.","Marches out of graveyards and crypts.":"Выходит с кладбищ и из склепов.","Slow — easy to focus with Snipers and Cannons.":"Медленный — его легко добить Снайперами и Пушками.","Keep your units away and let towers work.":"Держите юнитов подальше, пусть работают башни.","Infected Footsoldier":"Заражённый пехотинец","A grunt the plague got to: 100 health.":"Пехотинец, до которого добралась зараза: 100 здоровья.","Its bite infects your soldiers, just like a zombie.":"Его укус заражает солдат, как у зомби.","On a random wave the abandoned house door breaks and 3–7 pour out.":"На случайной волне дверь заброшенного дома ломается и вываливаются 3–7 штук.","Grunt-level health — any tower handles it.":"Здоровья как у пехотинца — справится любая башня.","Splash near the house door.":"Урон по площади у двери дома.","Keep soldiers away from it.":"Держите солдат подальше.","Grave":"Могила","Graveyard":"Кладбище","Crypt":"Склеп","Halloween":"Хэллоуин","Graves go on grass beside the road.":"Могилы ставятся на траву у дороги.","Something already stands here.":"Здесь уже что-то стоит.","Its gate can only face this road. Use the Eraser to remove it.":"Ворота могут смотреть только на эту дорогу. Убрать кладбище можно ластиком.","Not enough room here — it needs 2×2 tiles.":"Здесь мало места — нужно 2×2 клетки.","It needs 2×2 clear tiles off the road and water.":"Нужно 2×2 свободные клетки не на дороге и не в воде.","A graveyard must have one whole side against the road (2 road tiles).":"Кладбище должно стоять целой стороной к дороге (2 клетки дороги).","Tap the graveyard again to turn its gate.":"Нажмите на кладбище ещё раз, чтобы повернуть ворота.","Not enough room here — it needs 2 tiles side by side.":"Здесь мало места — нужно 2 клетки рядом.","It needs 2 clear tiles side by side, off the road and water.":"Нужно 2 свободные клетки рядом, не на дороге и не в воде.","A graveyard gate no longer opens onto the road.":"Ворота кладбища больше не выходят на дорогу.","zombies leave the graves on the last wave":"зомби встают из могил в последней волне","the dead never stop coming":"мертвецы идут без остановки","skeletons crawl from the bones on wave 3":"скелеты выползают из костей на 3-й волне","Skeletons crawl out of the bones!":"Из костей выползают скелеты!","The graves open!":"Могилы открываются!","Check for updates":"Проверить обновления","Restart to update":"Перезапустить и обновить","A new version is downloaded.":"Новая версия загружена.","You have the latest version.":"У вас последняя версия.","Could not check for updates. Are you online?":"Не удалось проверить обновления. Есть ли интернет?","Checking for updates…":"Проверка обновлений…","A new version of the game is ready.":"Новая версия игры готова.","Restart":"Перезапустить","This DLC needs a newer version of the game.":"Для этого DLC нужна более новая версия игры.","Something stirs in the Wretched Woodland…":"В Гиблой чаще что-то шевелится…","Pumpkin":"Тыква","Gravedigger":"Могильщик","Grave Digger":"Копатель могил","280 health, but very slow.":"280 здоровья, но очень медленный.","Every 6 seconds it digs a grave right on the road (3 at most).":"Каждые 6 секунд копает могилу прямо на дороге (не больше 3).","Each grave has 500 health and blocks your Backup and Heavy Force. On the last wave a zombie climbs out of it.":"У каждой могилы 500 здоровья, она преграждает путь Подкреплению и Тяжёлой технике. На последней волне из неё вылезает зомби.","Kill it early, before it has dug its graves.":"Убейте его пораньше, пока он не выкопал могилы.","Snipers and Cannons reach it from afar.":"Снайперы и Пушки достают его издалека.","The Heavy Force tank smashes graves fastest.":"Танк Тяжёлой техники разбивает могилы быстрее всех.","Pumpkin Bomber":"Тыква-бомба","Rolling Bomb":"Катящаяся бомба","A carved pumpkin packed with powder: 90 health, rolls fast.":"Резная тыква, набитая порохом: 90 здоровья, катится быстро.","When it rolls past a tower it veers off the road straight at it.":"Проезжая мимо башни, сворачивает с дороги прямо на неё.","It blows up on the tower and knocks it out for 10 seconds, and the towers next to it for 4.":"Взрывается на башне и выводит её из строя на 10 секунд, а соседние башни — на 4.","Low health: shoot it before it gets close.":"Мало здоровья: подстрелите её, пока она не подкатилась.","Snipers and Gunners pick it off before it reaches a tower.":"Снайперы и Стрелки снимут её, пока она не добралась до башни.","Towers placed away from the road are safe from it.":"Башням вдали от дороги она не страшна.","A pumpkin bomber blew up your @!":"Тыква-бомба взорвала вашу башню «@»!","A grave on the road has been smashed!":"Могила на дороге разбита!","Thorny path":"Тернистая дорога","thorny roots hurt your units on the road":"колючие корни ранят ваших юнитов на дороге","Jack o' lantern":"Тыква-фонарь","Barn":"Амбар","Jack o' Lantern":"Джек-фонарь","Pumpkins grow on grass off the road.":"Тыквы растут на траве, не на дороге.","Not enough room here — a barn needs 3 tiles across and 2 down.":"Здесь мало места — амбару нужно 3 клетки в ширину и 2 в высоту.","A barn needs 3×2 clear tiles off the road and water.":"Амбару нужно 3×2 свободные клетки не на дороге и не в воде.","jack o' lanterns rise on a random wave":"тыквы-фонари встают на случайной волне","A jack o' lantern climbs out of the ground!":"Тыква-фонарь выбирается из земли!","Pumpkin Horror":"Тыквенный ужас","200 health on a body of twisted roots.":"200 здоровья на теле из скрученных корней.","Sleeps in the field as a carved pumpkin.":"Спит в поле резной тыквой.","On a random wave it grows legs, climbs out and walks the road.":"На случайной волне отращивает ноги, выбирается и идёт по дороге.","Its face lights up the wave before it rises.":"Её лицо загорается за волну до того, как она встанет."});
-Object.assign(I18N.ru,{"Extra levels from DLC files.":"Дополнительные уровни из файлов DLC.","Drop a DLC file here":"Перетащите сюда файл DLC","or tap to choose one":"или нажмите, чтобы выбрать его","DLC folder":"Папка DLC","Open DLC folder":"Открыть папку DLC","No DLC yet. Put a DLC file in the DLC folder, or drop it above.":"DLC пока нет. Положите файл DLC в папку DLC или перетащите его выше.","No DLC yet. Drop a DLC file above.":"DLC пока нет. Перетащите файл DLC выше.","Remove":"Удалить","beaten #/#":"пройдено #/#","from the DLC folder":"из папки DLC"," · built into Testing":" · встроено в Тестирование","built into Testing":"встроено в Тестирование","Every DLC is built in. Play its levels, or drop in a new DLC file.":"Все DLC уже встроены. Играйте их уровни или добавьте новый файл DLC.","DLC removed.":"DLC удалено.","DLC added":"DLC добавлено","That file is too big for a DLC.":"Этот файл слишком большой для DLC.","This file is not a DLC (it is not JSON).":"Этот файл не DLC (это не JSON).","This file is not a Fire at Will DLC.":"Этот файл не DLC для Fire at Will.","This DLC has no id or name.":"У этого DLC нет id или названия.","This DLC has no levels.":"В этом DLC нет уровней.","Level # has no map (level code).":"У уровня # нет карты (кода уровня).","Level # has a wave with no known enemies.":"В уровне # есть волна без известных врагов.","Level # has no road from a spawn to a base.":"В уровне # нет дороги от точки появления до базы.","Campaign":"Кампания","◀ Back":"◀ Назад","Final wave":"Последняя волна","Lives left: #/#":"Осталось жизней: #/#","Lives left: #/# · 💎 +#":"Осталось жизней: #/# · 💎 +#"});
+Object.assign(I18N.ru,{"Extra levels from DLC files.":"Дополнительные уровни из файлов DLC.","Drop a DLC file here":"Перетащите сюда файл DLC","or tap to choose one":"или нажмите, чтобы выбрать его","DLC folder":"Папка DLC","Open DLC folder":"Открыть папку DLC","No DLC yet. Put a DLC file in the DLC folder, or drop it above.":"DLC пока нет. Положите файл DLC в папку DLC или перетащите его выше.","No DLC yet. Drop a DLC file above.":"DLC пока нет. Перетащите файл DLC выше.","Remove":"Удалить","beaten #/#":"пройдено #/#","from the DLC folder":"из папки DLC"," · built into Testing":" · встроено в Тестирование","built into Testing":"встроено в Тестирование","ℹ Description":"ℹ Описание","Every DLC is built in. Play its levels, or drop in a new DLC file.":"Все DLC уже встроены. Играйте их уровни или добавьте новый файл DLC.","DLC removed.":"DLC удалено.","DLC added":"DLC добавлено","That file is too big for a DLC.":"Этот файл слишком большой для DLC.","This file is not a DLC (it is not JSON).":"Этот файл не DLC (это не JSON).","This file is not a Fire at Will DLC.":"Этот файл не DLC для Fire at Will.","This DLC has no id or name.":"У этого DLC нет id или названия.","This DLC has no levels.":"В этом DLC нет уровней.","Level # has no map (level code).":"У уровня # нет карты (кода уровня).","Level # has a wave with no known enemies.":"В уровне # есть волна без известных врагов.","Level # has no road from a spawn to a base.":"В уровне # нет дороги от точки появления до базы.","Campaign":"Кампания","◀ Back":"◀ Назад","Final wave":"Последняя волна","Lives left: #/#":"Осталось жизней: #/#","Lives left: #/# · 💎 +#":"Осталось жизней: #/# · 💎 +#"});
 // words drawn straight onto the canvas go through the same table
 ['fillText','strokeText','measureText'].forEach(fn=>{ const orig=CanvasRenderingContext2D.prototype[fn];
   CanvasRenderingContext2D.prototype[fn]=function(t,...a){ return orig.call(this,currentLang==='en'?t:trText(String(t)),...a); }; });
@@ -4597,6 +4602,115 @@ function sbxSections(){
   const t=Object.assign({},SBX_SECTIONS.tabs); t.Spiders=t.Spiders.filter(k=>k!=='bones');
   t.Halloween=['grave','graveyard','crypt','bones','house']; t['Pumpkin Farm']=['pumpkin','jack','barn','thornpath']; return t;
 }
+/* ---------- block descriptions (the sandbox's Description button) ----------
+   One entry per sandbox block, in the order they are looked for on a tile: the topmost thing first.
+   arr = the sandbox list the block lives in (sbx[arr]); match = optional test on a list item.
+   Each text is [English, Russian]. A new block only needs a new entry here. */
+const BLOCK_INFO={
+  pumpkin:{arr:'pumpkins',size:['1 tile','1 клетка'],where:['On grass off the road.','На траве, не на дороге.'],
+    does:['A pumpkin patch: blocks building and can never be cleared in a game. Comes in 3 random looks.','Тыквенная грядка: мешает строить, и в игре её не убрать. 3 случайных вида.']},
+  jack:{arr:'jacks',size:['1 tile','1 клетка'],where:['On grass off the road.','На траве, не на дороге.'],
+    does:["Sleeps as a carved pumpkin and blocks building. Its face lights up the wave before a random wave (wave 2 to the last); then it climbs out and walks the road as a Jack o' Lantern enemy (200 health). The tile is free after that.",'Спит резной тыквой и мешает строить. Лицо загорается за волну до случайной волны (со 2-й до последней); тогда она выбирается и идёт по дороге врагом Джек-фонарь (200 здоровья). После этого клетка свободна.']},
+  grave:{arr:'graves',size:['1 tile','1 клетка'],where:['On grass beside the road.','На траве у дороги.'],
+    does:['Blocks building. When the last wave starts, one zombie climbs out, then it stays an open hole.','Мешает строить. В начале последней волны из неё вылезает один зомби, дальше остаётся открытая яма.']},
+  webwall:{arr:'webWalls',size:['1 tile','1 клетка'],where:['On the road or on grass, not on open water.','На дороге или траве, не на открытой воде.'],
+    does:['A thick curtain of silk with 1500 health. Enemies pass, but your units (Backup soldiers, the Heavy Force tank) must tear through it. Blocks building.','Плотная завеса паутины, 1500 здоровья. Враги проходят, а ваши юниты (подкрепление, танк Heavy Force) должны её прорвать. Мешает строить.']},
+  cocoon:{arr:'cocoons',size:['1 tile','1 клетка'],where:['On grass or in a forest.','На траве или в лесу.'],
+    does:['A silk cocoon with a half-hatched spider. Decoration that blocks building.','Шёлковый кокон с вылупляющимся пауком. Украшение, мешает строить.']},
+  eggs:{arr:'eggSacs',size:['1 tile','1 клетка'],where:['On grass or in a forest.','На траве или в лесу.'],
+    does:['Pearly egg sacs. When an enemy dies 1 to 3 tiles away (or splash damage hits them) they burst and 5 spiders crawl to the road. Blocks building.','Жемчужные яйца. Если враг погибает в 1–3 клетках (или их задевает урон по площади), они лопаются и 5 пауков ползут к дороге. Мешают строить.']},
+  bones:{arr:'bones',size:['1 tile','1 клетка'],where:['On grass or in a forest.','На траве или в лесу.'],
+    does:['A heap of bones with 5 random looks. Blocks building. With the Halloween DLC, 5 skeletons crawl out on wave 3, like rats from a sewer.','Куча костей, 5 случайных видов. Мешает строить. С DLC Хэллоуин на 3-й волне из неё выползают 5 скелетов, как крысы из канализации.']},
+  ruin:{arr:'ruins',size:['1 tile','1 клетка'],where:['On grass or in a forest.','На траве или в лесу.'],
+    does:['A webbed ruin. Blocks building until the player clears it for 75 gold.','Руины в паутине. Мешают строить, пока игрок не расчистит их за 75 золота.']},
+  tunnelin:{arr:'tunnelIns',size:['1 tile','1 клетка'],where:['On the road. Place Tunnel out 1 after Tunnel in 1, and so on.','На дороге. Ставьте «Выход из тоннеля 1» после «Входа 1» и т. д.'],
+    does:['A silk burrow in the road: whatever goes in comes up out of its partner Tunnel out. When the tunnel and the long way round both reach the base, enemies split 50/50. Your units can use it both ways.','Шёлковая нора в дороге: кто вошёл, выходит из парного выхода. Если до базы ведут и тоннель, и обход, враги делятся 50/50. Ваши юниты ходят по нему в обе стороны.']},
+  tunnelout:{arr:'tunnelOuts',size:['1 tile','1 клетка'],where:['On the road, as the partner of a Tunnel in.','На дороге, в пару ко входу в тоннель.'],
+    does:['Where things that went down the matching Tunnel in come back up.','Здесь выходит всё, что спустилось в парный вход в тоннель.']},
+  solidweb:{arr:'solidWebs',size:['1 tile','1 клетка'],where:['Anywhere except open water.','Где угодно, кроме открытой воды.'],
+    does:['A web that can never be removed. Blocks building, and Fire Brazier and Fire Rain cannot burn it.','Паутина, которую нельзя убрать. Мешает строить, Огненная жаровня и Огненный дождь её не сжигают.']},
+  web:{arr:'webs',size:['1 tile','1 клетка'],where:['On the road.','На дороге.'],
+    does:['Sticky web on the road that drags down your units walking through it. The player can clear it for 25 gold, and fire burns it.','Липкая паутина на дороге, замедляет ваших юнитов. Игрок может убрать её за 25 золота, огонь её сжигает.']},
+  spawn:{arr:'spawns',size:['1 tile','1 клетка'],where:['On the road, up to 4 per map. Usually at the map edge.','На дороге, до 4 на карту. Обычно у края карты.'],
+    does:['Where the waves of enemies come from. Every spawn needs a road to a base.','Отсюда выходят волны врагов. От каждого спавна нужна дорога к базе.']},
+  base:{arr:'bases',size:['1 tile','1 клетка'],where:['On the road, up to 4 per map.','На дороге, до 4 на карту.'],
+    does:['What the player defends. Every enemy that reaches a base costs a life.','То, что защищает игрок. Каждый враг, дошедший до базы, отнимает жизнь.']},
+  nest:{arr:'nests',size:['1 tile','1 клетка'],where:['Beside the road, not on it or in water.','У дороги, не на ней и не в воде.'],
+    does:['From the first wave on it never stops: a spider every 5–10 seconds crawls to the nearest road. These spiders do not hold up the win. Blocks building.','С первой волны не останавливается: каждые 5–10 секунд паук ползёт к ближайшей дороге. Эти пауки не мешают победе. Мешает строить.']},
+  spider:{arr:'spiderDens',size:['1 tile','1 клетка'],where:['On a forest tile.','На клетке леса.'],
+    does:['A spider den hidden in the forest. On one wave (wave 5 by default) a group of spiders runs out through the trees to the road, and a big spider can follow later.','Паучье логово в лесу. На одной волне (по умолчанию 5-й) группа пауков бежит через деревья к дороге, позже может выйти большой паук.']},
+  lakespawn:{arr:'lakeSpawns',size:['1 tile','1 клетка'],where:['On a lake tile.','На клетке озера.'],
+    does:['Bubbles in the water. Lake creatures (tumorlings, the Drowned) surface here and come ashore at the lake tile that meets the road.','Пузыри в воде. Озёрные существа (опухольки, Утопленники) всплывают здесь и выходят на берег там, где озеро касается дороги.']},
+  bush:{arr:'bushes',size:['1 tile','1 клетка'],where:['On grass beside the road.','На траве у дороги.'],
+    does:['Thieves hide in bushes and steal a tower. Blocks building. Maps with bushes get thieves in some waves.','В кустах прячутся воры и крадут башню. Мешает строить. На картах с кустами в некоторых волнах приходят воры.']},
+  tree:{arr:'trees',size:['1 tile','1 клетка'],where:['On grass, not on the road.','На траве, не на дороге.'],
+    does:['Blocks building until the player clears it for 100 gold. Light grass grows Fields trees, dark grass grows Dark Forest trees.','Мешает строить, пока игрок не срубит его за 100 золота. На светлой траве растут деревья Полей, на тёмной — Тёмного леса.']},
+  sewer:{arr:'sewers',size:['1 tile','1 клетка'],where:['Off the road.','Не на дороге.'],
+    does:['A sewer grate. Rats come out of it on one wave (wave 3 by default). Blocks building.','Канализационная решётка. На одной волне (по умолчанию 3-й) из неё выходят крысы. Мешает строить.']},
+  silkbridge:{arr:'silkBridges',size:['1 tile','1 клетка'],where:['Across a lake.','Через озеро.'],
+    does:['A bridge woven from silk that carries the road over water, like a normal bridge.','Мост из паутины, ведёт дорогу через воду, как обычный мост.']},
+  bridge:{arr:'bridges',size:['1 tile','1 клетка'],where:['Across a lake.','Через озеро.'],
+    does:['Carries the road over a lake.','Ведёт дорогу через озеро.']},
+  thornpath:{arr:'thornPaths',size:['1 tile','1 клетка'],where:['On the road (it lays road if there is none).','На дороге (если дороги нет, кладёт её).'],
+    does:['Road tangled in spiky roots. Your units standing on it (Firework soldiers, Backup, machines, tanks) lose 6 health a second. Enemies are not hurt.','Дорога в колючих корнях. Ваши юниты на ней (солдаты фейерверка, подкрепление, машины, танки) теряют 6 здоровья в секунду. Врагам не вредит.']},
+  webpath:{arr:'webPaths',size:['1 tile','1 клетка'],where:['On the road (it lays road if there is none).','На дороге (если дороги нет, кладёт её).'],
+    does:['Road draped in silk. Decoration only.','Дорога, укрытая паутиной. Только украшение.']},
+  path:{arr:'path',size:['1 tile','1 клетка'],where:['Anywhere. Drag to draw a road.','Где угодно. Тяните, чтобы рисовать дорогу.'],
+    does:['The road enemies walk from a spawn to a base. Towers are built on the grass beside it, never on it.','Дорога, по которой враги идут от спавна к базе. Башни строят на траве рядом, не на ней.']},
+  forest:{arr:'forest',match:f=>f[2]==='dark',size:['1 tile','1 клетка'],where:['Off the road. Drag to paint.','Не на дороге. Тяните, чтобы рисовать.'],
+    does:['Thick Dark Forest trees. Blocks building and cannot be cleared. Spider dens hide in it.','Густой Тёмный лес. Мешает строить, его не убрать. В нём прячутся паучьи логова.']},
+  webforest:{arr:'forest',match:f=>f[2]==='webbed',size:['1 tile','1 клетка'],where:['Off the road. Drag to paint.','Не на дороге. Тяните, чтобы рисовать.'],
+    does:['Forest wrapped in webs. Works like Forest: blocks building, and spider dens can hide in it.','Лес в паутине. Работает как Лес: мешает строить, в нём могут прятаться логова.']},
+  plainsforest:{arr:'forest',match:f=>f[2]!=='dark'&&f[2]!=='webbed',size:['1 tile','1 клетка'],where:['Off the road. Drag to paint.','Не на дороге. Тяните, чтобы рисовать.'],
+    does:['A leafy Fields forest. Works like Forest: blocks building, and spider dens can hide in it.','Лиственный лес Полей. Работает как Лес: мешает строить, в нём могут прятаться логова.']},
+  lake:{arr:'lake',size:['1 tile','1 клетка'],where:['Off the road. Drag to paint.','Не на дороге. Тяните, чтобы рисовать.'],
+    does:['Water: no building on it. Cross it with a Bridge. Without a lake spawn, tumorlings still leave a lake that touches the road (wave 4 by default).','Вода: строить нельзя. Перейти можно по мосту. Даже без озёрного спавна из озера у дороги выходят опухольки (по умолчанию на 4-й волне).']},
+  house:{arr:'houses',size:['2×2 tiles','2×2 клетки'],where:['Anywhere off the road and water. Its door is at the bottom.','Где угодно, не на дороге и не в воде. Дверь внизу.'],
+    does:['Stays boarded up until one random wave (wave 2 to the last); the door cracks the wave before. Then it bursts and 3–7 zombie grunts pour out. Breaks only once. Blocks building.','Заколочен до одной случайной волны (со 2-й до последней); за волну до этого дверь трескается. Потом она вылетает и выбегают 3–7 зомби-пехотинцев. Ломается один раз. Мешает строить.']},
+  barn:{arr:'barns',size:['2 tall × 3 long','2 в высоту × 3 в длину'],where:['Off the road and water. Its big door is on the right end.','Не на дороге и не в воде. Большая дверь на правом торце.'],
+    does:['Blocks building. Does nothing else yet: it is waiting for its own enemies.','Мешает строить. Больше пока ничего не делает: для него ещё будут свои враги.']},
+  graveyard:{arr:'graveyards',size:['2×2 tiles','2×2 клетки'],where:['Off the road, with one whole side against 2 road tiles. Tap it again to turn the gate.','Не на дороге, одной целой стороной к 2 клеткам дороги. Нажмите ещё раз, чтобы повернуть ворота.'],
+    does:['From the first wave on it never stops: a zombie, skeleton, skeleton knight or gravedigger every 5–11 seconds. They do not hold up the win. Blocks building.','С первой волны не останавливается: каждые 5–11 секунд зомби, скелет, скелет-рыцарь или могильщик. Они не мешают победе. Мешает строить.']},
+  crypt:{arr:'crypts',size:['1×2 tiles (2 long)','1×2 клетки (2 в длину)'],where:['On 2 clear tiles side by side, off the road and water.','На 2 свободных клетках рядом, не на дороге и не в воде.'],
+    does:['Skeletons (and some skeleton knights) walk out of the door on its right end every 9–18 seconds, never stopping. Blocks building.','Из двери на правом торце каждые 9–18 секунд выходят скелеты (иногда скелеты-рыцари), без остановки. Мешает строить.']},
+  queen:{arr:'queens',size:['3 wide × 4 tall','3 в ширину × 4 в высоту'],where:['On clear ground.','На свободном месте.'],
+    does:['The giant spider queen. Decoration for now (she will become a boss). Blocks building.','Гигантская паучиха-королева. Пока украшение (станет боссом). Мешает строить.']},
+  bigbush:{arr:'bigBushes',size:['2×2 tiles','2×2 клетки'],where:['On grass off the road.','На траве, не на дороге.'],
+    does:['A big bush that blocks building. It has no other use yet.','Большой куст, мешает строить. Другого применения пока нет.']},
+  erase:{size:['1 tile','1 клетка'],where:['Anywhere.','Где угодно.'],
+    does:['Removes the topmost thing on a tile: a web before its road, a bridge before its lake.','Убирает верхнюю вещь на клетке: сначала паутину, потом дорогу; сначала мост, потом озеро.']},
+};
+const GRASS_INFO={size:['1 tile','1 клетка'],where:['Every empty tile.','Любая пустая клетка.'],does:['Empty ground: this is where the player builds towers.','Пустая земля: здесь игрок строит башни.']};
+Object.values(BLOCK_INFO).concat([GRASS_INFO]).forEach(b=>['size','where','does'].forEach(k=>{ if(b[k])I18N.ru[b[k][0]]=b[k][1]; }));
+Object.assign(I18N.ru,{"Description":"Описание","Size":"Размер","Where":"Где ставить","What it does":"Что делает","Grass":"Трава",
+  "Tap any block on the map, or a tool button, to read about it.":"Нажмите на любой блок на карте или на кнопку инструмента, чтобы прочитать о нём.",
+  "No description for this block yet.":"Для этого блока пока нет описания."});
+let sbxDescOn=false;
+function sbxToggleDesc(){ sbxDescOn=!sbxDescOn; sbxPainting=false; sbxShowInfo(null); }
+// what a player would see on top of this tile
+function sbxBlockAt(r,c){
+  const cov=sbxCoverAt(r,c);
+  const keys=Object.keys(BLOCK_INFO).filter(k=>BLOCK_INFO[k].arr&&sbx[BLOCK_INFO[k].arr]);
+  if(cov){ const k=keys.find(k=>sbx[BLOCK_INFO[k].arr]===cov.arr); if(k)return k; }
+  return keys.find(k=>{ const b=BLOCK_INFO[k]; return sbx[b.arr].some(p=>p[0]===r&&p[1]===c&&(!b.match||b.match(p))); })||'grass';
+}
+function sbxShowInfo(k){
+  const box=document.getElementById('sbxInfo'), btn=document.getElementById('sbxDescBtn');
+  if(btn)btn.classList.toggle('on',sbxDescOn);
+  if(!box)return;
+  box.style.display=sbxDescOn?'block':'none';
+  if(!sbxDescOn)return;
+  box.innerHTML='';
+  const add=(tag,txt,cls)=>{ const e=document.createElement(tag); e.textContent=txt; if(cls)e.className=cls; box.appendChild(e); return e; };
+  if(!k){ add('p','Tap any block on the map, or a tool button, to read about it.','sbxInfoHint'); trNode(box); return; }
+  const name=k==='grass'?'Grass':(Object.fromEntries(SBX_TOOLS)[k]||k), b=k==='grass'?GRASS_INFO:BLOCK_INFO[k];
+  add('h4',name);
+  if(!b){ add('p','No description for this block yet.','sbxInfoHint'); trNode(box); return; }
+  [['Size',b.size],['Where',b.where],['What it does',b.does]].forEach(([lab,v])=>{ if(!v)return;
+    const p=document.createElement('p'); const s=document.createElement('b'); s.textContent=lab; p.appendChild(s);
+    p.appendChild(document.createTextNode(' ')); const t=document.createElement('span'); t.textContent=v[0]; p.appendChild(t); box.appendChild(p); });
+  trNode(box);
+}
 let sbxTab='Plains';
 let sbx=null, sbxTool='path', sbxPainting=false, sbxNote='', sbxShowRoutes=true, sbxTerrain=null, sbxTerrainKey='', sbxFrame=0, sbxAnimOn=false, sbxR=null;
 function sbxBlank(orient){
@@ -4636,7 +4750,7 @@ function openSandbox(){
   const tb=document.getElementById('sbxTools'); tb.innerHTML='';
   const name=Object.fromEntries(SBX_TOOLS);
   const mk=k=>{ const b=document.createElement('button'); b.className='toolBtn'; b.id='tool-'+k;
-    b.textContent=name[k]; b.onclick=()=>{sbxTool=k;sbxNote='';sbxRender();}; return b; };
+    b.textContent=name[k]; b.onclick=()=>{ if(sbxDescOn){ sbxShowInfo(k); return; } sbxTool=k;sbxNote='';sbxRender();}; return b; };
   // always-there basics, then a tab for each section
   const top=document.createElement('div'); top.className='sbxRow'; top.style.width='100%';
   SBX_SECTIONS.basics.forEach(k=>top.appendChild(mk(k)));
@@ -4649,7 +4763,7 @@ function openSandbox(){
   Object.entries(TABS).forEach(([t,keys])=>{ const row=document.createElement('div');
     row.className='sbxRow sbxSec'; row.dataset.tab=t; row.style.cssText='margin-top:6px;width:100%;padding-top:6px;border-top:2px dashed rgba(34,38,28,.18)';
     keys.forEach(k=>row.appendChild(mk(k))); tb.appendChild(row); });
-  goTo('sandboxScreen'); sbxRender();
+  goTo('sandboxScreen'); sbxRender(); sbxShowInfo(null);
   if(!sbxAnimOn){ sbxAnimOn=true; const tick=()=>{ requestAnimationFrame(tick);
       if(!document.getElementById('sandboxScreen').classList.contains('active'))return;
       sbxFrame++; if(sbxFrame%2===0)sbxDraw(); }; tick(); }
@@ -5026,7 +5140,9 @@ function sbxCell(ev){
   return [Math.floor((ev.clientY-R.top)/R.height*sbx.ROWS), Math.floor((ev.clientX-R.left)/R.width*sbx.COLS)];
 }
 (()=>{ const cv=document.getElementById('sbxCanvas');
-  cv.addEventListener('pointerdown',ev=>{ sbxPainting=true; sbxNote=''; try{cv.setPointerCapture(ev.pointerId);}catch(_){}
+  cv.addEventListener('pointerdown',ev=>{
+    if(sbxDescOn){ const [r,c]=sbxCell(ev); if(r>=0&&c>=0&&r<sbx.ROWS&&c<sbx.COLS)sbxShowInfo(sbxBlockAt(r,c)); ev.preventDefault(); return; }
+    sbxPainting=true; sbxNote=''; try{cv.setPointerCapture(ev.pointerId);}catch(_){}
     const [r,c]=sbxCell(ev); sbx.lastCell=sk(r,c); sbxApply(r,c,true); sbxRender(); ev.preventDefault(); });
   cv.addEventListener('pointermove',ev=>{ if(!sbxPainting)return; const [r,c]=sbxCell(ev), k=sk(r,c);
     if(k===sbx.lastCell)return;
