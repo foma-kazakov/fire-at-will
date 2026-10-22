@@ -8,6 +8,7 @@ on:
     paths:
       - fire-at-will.html
       - scripts/make-testing.js
+      - dlc/**
   workflow_dispatch:
 
 permissions:

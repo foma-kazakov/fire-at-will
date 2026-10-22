@@ -147,7 +147,7 @@ You start with 2 power slots, which can be raised to 3 with gems.
 ---
 
 ## Fire at Will Testing (separate app)
-A separate app with its own play link and desktop builds: `fire-at-will-testing.html`, made from `fire-at-will.html` by `scripts/make-testing.js` (it switches `TESTING_APP` on). Its home screen is the Testing screen plus Settings, and it saves under `fireAtWillTesting.progress`, so it never touches the game's progress.
+A separate app with its own play link and desktop builds: `fire-at-will-testing.html`, made from `fire-at-will.html` by `scripts/make-testing.js` (it switches `TESTING_APP` on). Its home screen is the Testing screen (Test a level, Sandbox, Enemy tester, DLC) plus Settings. Every DLC in `dlc/` is built into it (it can still take dropped DLC files), and it saves under `fireAtWillTesting.progress`, so it never touches the game's progress.
 - **Test a level:** pick any built level with a slider and play it. Nothing is saved.
 - **Sandbox:** a level editor.
   - **Map sizes:** Computer 19×12, Phone 10×18, Large 25×16 and Huge 31×20.

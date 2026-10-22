@@ -9,6 +9,7 @@ on:
       - fire-at-will.html
       - fire-at-will-testing.html
       - scripts/make-testing.js
+      - dlc/**
       - desktop/**
       - .github/workflows/desktop.yml
   workflow_dispatch:
