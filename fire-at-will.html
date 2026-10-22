@@ -738,6 +738,7 @@ new MutationObserver(ms=>{ for(const m of ms){
     else if(m.type==='attributes')trAttr(m.target,m.attributeName);
     else m.addedNodes.forEach(trNode); } })
   .observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['placeholder','title','aria-label']});
+Object.assign(I18N.ru,{"The Graveyard":"Кладбище","Pumpkin Farm":"Тыквенная ферма","Ashen Wastes":"Пепельные пустоши","Wretched Woodland":"Гиблая чаща","The Halloween island is coming soon.":"Остров Хэллоуина скоро откроется.","Something stirs in the Wretched Woodland…":"В Гиблой чаще что-то шевелится…"});
 Object.assign(I18N.ru,{"Extra levels from DLC files.":"Дополнительные уровни из файлов DLC.","Drop a DLC file here":"Перетащите сюда файл DLC","or tap to choose one":"или нажмите, чтобы выбрать его","DLC folder":"Папка DLC","Open DLC folder":"Открыть папку DLC","No DLC yet. Put a DLC file in the DLC folder, or drop it above.":"DLC пока нет. Положите файл DLC в папку DLC или перетащите его выше.","No DLC yet. Drop a DLC file above.":"DLC пока нет. Перетащите файл DLC выше.","Remove":"Удалить","beaten #/#":"пройдено #/#","from the DLC folder":"из папки DLC","DLC removed.":"DLC удалено.","DLC added":"DLC добавлено","That file is too big for a DLC.":"Этот файл слишком большой для DLC.","This file is not a DLC (it is not JSON).":"Этот файл не DLC (это не JSON).","This file is not a Fire at Will DLC.":"Этот файл не DLC для Fire at Will.","This DLC has no id or name.":"У этого DLC нет id или названия.","This DLC has no levels.":"В этом DLC нет уровней.","Level # has no map (level code).":"У уровня # нет карты (кода уровня).","Level # has a wave with no known enemies.":"В уровне # есть волна без известных врагов.","Level # has no road from a spawn to a base.":"В уровне # нет дороги от точки появления до базы.","Campaign":"Кампания","◀ Back":"◀ Назад","Final wave":"Последняя волна","Lives left: #/#":"Осталось жизней: #/#","Lives left: #/# · 💎 +#":"Осталось жизней: #/# · 💎 +#"});
 // words drawn straight onto the canvas go through the same table
 ['fillText','strokeText','measureText'].forEach(fn=>{ const orig=CanvasRenderingContext2D.prototype[fn];
@@ -1947,6 +1948,28 @@ function sprite(kind,v,tint){
     if(v===1)return `<polygon points="0,-30 -28,14 28,14" fill="#331915"/><polygon points="0,-30 0,14 28,14" fill="#241110"/><ellipse cy="-30" rx="8" ry="3" fill="#6b3a2a"/>`;
     return `<path d="M-30,14 q10,-8 22,-3 q12,5 26,-2 q10,-5 14,2 z" fill="#3a1d18"/><circle cx="-6" cy="6" r="4" fill="#FF6A3D" opacity=".9"/><circle cx="12" cy="9" r="3" fill="#FFB23D" opacity=".8"/>`;
   }
+  if(kind==='grave'){
+    if(v===0)return sh+`<path d="M-10,10 v-19 a10,10 0 0 1 20,0 v19 z" fill="${tint}" stroke="#3a3d40" stroke-width="1.6"/><path d="M2,10 v-28 a10,10 0 0 1 8,9 v19 z" fill="#000" opacity=".16"/><path d="M-5,-10 h10 M-5,-5 h8 M-5,0 h9" stroke="#55595d" stroke-width="1.4"/><path d="M-3,-17 l3,5 -2,4" stroke="#4a4d50" stroke-width="1" fill="none"/>`;
+    if(v===1)return sh+`<rect x="-3" y="-24" width="6" height="34" fill="${tint}" stroke="#3a3d40" stroke-width="1.4"/><rect x="-11" y="-17" width="22" height="6" fill="${tint}" stroke="#3a3d40" stroke-width="1.4"/><rect x="0" y="-24" width="3" height="34" fill="#000" opacity=".15"/><path d="M-8,10 q8,-5 16,0" stroke="#4a4535" stroke-width="3" fill="none"/>`;
+    return sh+`<path d="M0,10 L1,-14 M1,-6 L-12,-20 M-12,-20 L-16,-28 M-12,-20 L-20,-18 M1,-14 L12,-26 M12,-26 L18,-32 M12,-26 L20,-24 M1,-14 L0,-32 M0,-32 L-5,-38 M0,-32 L5,-40" stroke="#2c2622" stroke-width="3" stroke-linecap="round" fill="none"/><path d="M0,10 L1,-14" stroke="#2c2622" stroke-width="5" stroke-linecap="round"/>`;
+  }
+  if(kind==='pumpkin'){
+    const pk=(x,y,s,face)=>`<g transform="translate(${x},${y}) scale(${s})"><ellipse cy="2" rx="13" ry="10" fill="${tint}"/><ellipse cx="-6" cy="2" rx="6" ry="9.5" fill="#000" opacity=".12"/><ellipse cx="6" cy="2" rx="6" ry="9.5" fill="#000" opacity=".12"/><ellipse cy="2" rx="4" ry="10" fill="#fff" opacity=".08"/><path d="M0,-7 q1,-6 4,-8" stroke="#3f5a22" stroke-width="3" fill="none" stroke-linecap="round"/>`+
+      (face?`<path d="M-7,-1 l3,-4 3,4 z M1,-1 l3,-4 3,4 z M-7,4 q7,6 14,0 l-3,1 -2,-2 -2,2 -2,-2 -2,2 z" fill="#FFD166"><animate attributeName="opacity" values=".7;1;.8;1;.7" dur="2.4s" repeatCount="indefinite"/></path>`:'')+`</g>`;
+    if(v===0)return sh+pk(0,0,1,false)+`<path d="M4,-14 q8,-4 10,2" stroke="#4f7a2c" stroke-width="2" fill="none"/>`;
+    if(v===1)return sh+pk(-8,3,0.75,false)+pk(9,1,0.9,false);
+    return sh+pk(0,0,1.05,true);
+  }
+  if(kind==='ashrock'){
+    if(v===0)return sh+`<path d="M-17,10 L-13,-8 L-3,-15 L9,-12 L17,-2 L15,10 Z" fill="${tint}" stroke="#121214" stroke-width="1.6"/><path d="M-13,-8 L-3,-15 L-2,-4 Z" fill="#4a4a50" opacity=".7"/><path d="M-6,8 L-2,-2 L4,-6 L8,2" stroke="#ff7a2e" stroke-width="2" fill="none"><animate attributeName="opacity" values=".4;1;.4" dur="3s" repeatCount="indefinite"/></path>`;
+    if(v===1)return sh+`<path d="M-7,10 L-6,-12 L-2,-9 L0,-16 L3,-10 L7,-13 L7,10 Z" fill="#1a1716" stroke="#0c0b0a" stroke-width="1.4"/><path d="M-6,10 L-6,-12 M4,-10 L13,-20 M-5,-3 L-13,-10" stroke="#1a1716" stroke-width="3" stroke-linecap="round"/><circle cx="-1" cy="-12" r="1.6" fill="#ff8a3d"/><circle cx="3" cy="-4" r="1.2" fill="#ff6a3d"/>`;
+    return `<ellipse cy="6" rx="18" ry="7" fill="#1c1c1e"/><ellipse cy="5" rx="8" ry="3" fill="#ff6a3d" opacity=".8"/><ellipse cy="5" rx="4" ry="1.5" fill="#FFD166"/><circle cy="-6" r="6" fill="#8a8a8e" opacity=".25"><animate attributeName="cy" values="-2;-26" dur="4s" repeatCount="indefinite"/><animate attributeName="opacity" values=".35;0" dur="4s" repeatCount="indefinite"/></circle>`;
+  }
+  if(kind==='horror'){
+    if(v===0)return sh+`<path d="M-6,10 C-4,-4 -9,-14 -2,-30 C2,-38 -2,-44 1,-50 L4,-50 C2,-42 7,-36 4,-26 C1,-14 6,-4 6,10 Z" fill="${tint}"/><path d="M-4,-20 C-14,-24 -18,-34 -26,-36 M-26,-36 L-30,-30 M-26,-36 L-28,-44 M3,-30 C12,-32 16,-42 24,-44 M24,-44 L30,-40 M24,-44 L24,-52 M0,-44 C-6,-50 -12,-50 -14,-56" stroke="${tint}" stroke-width="3" stroke-linecap="round" fill="none"/><ellipse cx="-1" cy="-14" rx="2.2" ry="3" fill="#000" opacity=".7"/>`;
+    if(v===1)return sh+`<path d="M-3,10 C-2,-6 6,-18 14,-30 L17,-28 C10,-16 5,-4 5,10 Z" fill="${tint}"/><path d="M8,-20 C2,-30 -6,-30 -12,-40 M-12,-40 L-18,-38 M-12,-40 L-12,-48 M14,-29 C20,-36 18,-44 24,-48 M11,-24 C20,-22 26,-26 30,-22" stroke="${tint}" stroke-width="2.6" stroke-linecap="round" fill="none"/><path d="M-12,-40 v8 M24,-48 v6" stroke="#3d3a33" stroke-width="1" opacity=".7"/>`;
+    return sh+`<path d="M-8,10 C-6,-8 -12,-18 -10,-28 L-6,-28 C-6,-16 -1,-10 0,-4 C1,-12 6,-20 6,-34 L10,-34 C10,-18 6,-4 7,10 Z" fill="${tint}"/><path d="M-8,-26 C-16,-30 -18,-38 -24,-38 M8,-32 C14,-38 22,-36 26,-42 M-24,-38 L-26,-46 M26,-42 L32,-40" stroke="${tint}" stroke-width="2.6" stroke-linecap="round" fill="none"/>`;
+  }
   if(kind==='castle'){
     if(v===0)return sh+`<rect x="-17" y="-28" width="34" height="38" fill="#AEB6C0"/><rect x="-17" y="-28" width="17" height="38" fill="#C2C9D2"/><rect x="-26" y="-42" width="12" height="24" fill="#9AA2AD"/><rect x="14" y="-42" width="12" height="24" fill="#9AA2AD"/><polygon points="-20,-42 -14,-56 -8,-42" fill="#6C4A7A"/><polygon points="20,-42 26,-56 32,-42" fill="#6C4A7A" transform="translate(-12,0)"/><rect x="-4" y="-8" width="8" height="18" rx="4" fill="#5C6470"/>`;
     if(v===1)return sh+`<rect x="-11" y="-34" width="22" height="44" fill="#B6BDC6"/><rect x="-11" y="-34" width="11" height="44" fill="#C8CFD7"/><polygon points="-14,-34 0,-52 14,-34" fill="#6C4A7A"/>`;
@@ -2132,17 +2155,98 @@ function regionExtras(r,W,H){
         <ellipse cx="${(ex-10).toFixed(0)}" cy="${(ey-6).toFixed(0)}" rx="16" ry="5" fill="#bfe8f5" opacity=".55"/>`;
     }
   }
+  if(r.id==='graveyard'){
+    // a stone crypt, a few runs of rusty iron fence, and a cold ground fog
+    const cr=spot(3,70);
+    if(cr)o+=`<g transform="translate(${cr[0].toFixed(0)},${cr[1].toFixed(0)})">
+      <ellipse cy="14" rx="30" ry="7" fill="#000" opacity=".25"/>
+      <rect x="-22" y="-18" width="44" height="32" fill="#8d9196" stroke="#3a3d40" stroke-width="2"/><rect x="2" y="-18" width="20" height="32" fill="#000" opacity=".14"/>
+      <polygon points="-27,-18 0,-36 27,-18" fill="#6f7479" stroke="#3a3d40" stroke-width="2"/>
+      <path d="M-8,14 v-16 a8,8 0 0 1 16,0 v16 z" fill="#1d1f22"/><path d="M0,-34 v-10 M-5,-40 h10" stroke="#6f7479" stroke-width="3"/></g>`;
+    for(let k=0;k<4;k++){ const p=spot(k+10,48); if(!p)continue; const w=34+rr(seed+k*5)*30, a=(rr(seed+k*9)*24-12).toFixed(0);
+      let f=`<path d="M${(-w/2).toFixed(0)},-6 h${w.toFixed(0)} M${(-w/2).toFixed(0)},2 h${w.toFixed(0)}" stroke="#2b2622" stroke-width="2"/>`;
+      for(let x=-w/2;x<=w/2;x+=7)f+=`<path d="M${x.toFixed(0)},6 v-16 l2,-3 l2,3" stroke="#2b2622" stroke-width="1.8" fill="none"/>`;
+      o+=`<g transform="translate(${p[0].toFixed(0)},${p[1].toFixed(0)}) rotate(${a})" opacity=".85">${f}</g>`; }
+    for(let k=0;k<3;k++){ const p=spot(k+20,0); if(!p)continue;
+      o+=`<ellipse cx="${p[0].toFixed(0)}" cy="${p[1].toFixed(0)}" rx="${(60+rr(seed+k)*40).toFixed(0)}" ry="16" fill="#dfe8e4" opacity=".14" filter="url(#b2)">
+        <animate attributeName="cx" values="${(p[0]-18).toFixed(0)};${(p[0]+18).toFixed(0)};${(p[0]-18).toFixed(0)}" dur="${(16+k*4)}s" repeatCount="indefinite"/></ellipse>`; }
+  }
+  if(r.id==='pumpkin'){
+    // tilled patches with rows of pumpkins, and a scarecrow keeping watch
+    for(let k=0;k<4;k++){ const p=spot(k,52); if(!p)continue;
+      let rows=''; for(let j=-1;j<=1;j++){ rows+=`<path d="M-26,${j*8} h52" stroke="#3a2c18" stroke-width="3"/>`;
+        for(let x=-20;x<=20;x+=10)if(rr(seed+k*31+j*7+x)>0.35)rows+=`<circle cx="${x}" cy="${j*8-1}" r="2.8" fill="#E07B24"/>`; }
+      o+=`<g transform="translate(${p[0].toFixed(0)},${p[1].toFixed(0)}) rotate(${(rr(seed+k)*24-12).toFixed(0)})" opacity=".9">
+        <rect x="-30" y="-14" width="60" height="28" rx="4" fill="#4a3a22"/>${rows}</g>`; }
+    const sc=spot(9,60);
+    if(sc)o+=`<g transform="translate(${sc[0].toFixed(0)},${sc[1].toFixed(0)})">
+      <ellipse cy="14" rx="12" ry="4" fill="#000" opacity=".22"/><path d="M0,14 V-24 M-18,-12 H18" stroke="#5a3e24" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M-11,-14 L11,-14 L8,4 L-8,4 Z" fill="#6d5a8a" stroke="#3a2f4a" stroke-width="1.5"/><path d="M-18,-12 l-4,6 M18,-12 l4,6" stroke="#d6b45a" stroke-width="2"/>
+      <circle cy="-24" r="7" fill="#E07B24" stroke="#8a4a14" stroke-width="1.2"/><path d="M-3,-26 l1.5,-2 1.5,2 z M1,-26 l1.5,-2 1.5,2 z M-3,-21 h6" stroke="#2a1a0a" stroke-width="1" fill="#2a1a0a"/>
+      <path d="M-10,-29 L10,-29 L4,-37 L-4,-37 Z" fill="#3a2c18"/><ellipse cy="-29" rx="12" ry="2.5" fill="#3a2c18"/></g>`;
+  }
+  if(r.id==='ashen'){
+    // thin cracks of magma glowing through the ash (calmer than the Scorched Depths)
+    for(let k=0;k<5;k++){ const p=spot(k,40); if(!p)continue; let d=`M${p[0].toFixed(0)},${p[1].toFixed(0)}`, x=p[0], y=p[1];
+      for(let j=0;j<3;j++){ x+=(rr(seed+k*11+j)-0.5)*44; y+=8+rr(seed+k*7+j)*12; d+=` L${x.toFixed(0)},${y.toFixed(0)}`; }
+      o+=`<path d="${d}" fill="none" stroke="#ff5a1e" stroke-width="5" opacity=".18" stroke-linecap="round" stroke-linejoin="round" filter="url(#b2)"/>
+        <path d="${d}" fill="none" stroke="#ff8a3d" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <animate attributeName="opacity" values=".35;.85;.35" dur="${(3+rr(seed+k)*2).toFixed(1)}s" repeatCount="indefinite"/></path>`; }
+    for(let k=0;k<7;k++){ const p=spot(k+20,30); if(!p)continue;
+      o+=`<ellipse cx="${p[0].toFixed(0)}" cy="${p[1].toFixed(0)}" rx="${(18+rr(seed+k*3)*22).toFixed(0)}" ry="6" fill="#8a8a8e" opacity=".12"/>`; }
+  }
+  if(r.id==='wretched'){
+    // thick fog between the trees, and eyes blinking in the dark
+    for(let k=0;k<3;k++){ const p=spot(k,0); if(!p)continue;
+      o+=`<ellipse cx="${p[0].toFixed(0)}" cy="${p[1].toFixed(0)}" rx="${(50+rr(k)*30).toFixed(0)}" ry="18" fill="#b9c9bf" opacity=".14" filter="url(#b2)">
+        <animate attributeName="cx" values="${(p[0]-14).toFixed(0)};${(p[0]+14).toFixed(0)};${(p[0]-14).toFixed(0)}" dur="${(12+k*3)}s" repeatCount="indefinite"/></ellipse>`; }
+    for(let k=0;k<4;k++){ const p=spot(k+30,40); if(!p)continue; const dur=(4+rr(seed+k)*4).toFixed(1);
+      o+=`<g transform="translate(${p[0].toFixed(0)},${p[1].toFixed(0)})" fill="#E8E05A"><circle cx="-3" r="1.6"/><circle cx="3" r="1.6"/>
+        <animate attributeName="opacity" values="0;0;1;1;0;1;0" keyTimes="0;.5;.55;.8;.83;.86;1" dur="${dur}s" repeatCount="indefinite"/></g>`; }
+  }
   return o;
 }
-function seaExtras(coastPoly,W,H,tr){
+// lava waterfalls: where the Ashen Wastes meet a downward-facing shore, molten rock spills over into the sea
+function lavaFalls(r,coastRing){
+  const picks=[];
+  coastRing.forEach(q=>{
+    if(picks.length>=2)return;
+    if(!inPoly(q[0],q[1]-30,r.poly)||inPoly(q[0],q[1]+26,r.poly)||edgeMargin(q[0],q[1]-30,r.poly)<14)return;
+    if(r.nodes.some(n=>Math.hypot(n[0]-q[0],n[1]-q[1])<70))return;
+    if(picks.some(p=>Math.abs(p[0]-q[0])<110))return;
+    picks.push(q);
+  });
   let o='';
-  const inSea=(x,y,m)=>!inPoly(x,y,coastPoly)&&edgeMargin(x,y,coastPoly)>m&&x>30&&y>30&&x<W-30&&y<H-30;
+  picks.forEach((q,k)=>{
+    const x=q[0], y=q[1]-4, top=y-46, bot=y+44;
+    o+=`<g pointer-events="none">
+      <path d="M${x-8},${top} q-6,22 0,${y-top}" fill="none" stroke="#ff5a1e" stroke-width="10" opacity=".3" filter="url(#b2)"/>
+      <path d="M${x},${top} C${x-10},${top+16} ${x+8},${y-18} ${x},${y}" fill="none" stroke="#c43d12" stroke-width="9" stroke-linecap="round"/>
+      <path d="M${x},${top} C${x-10},${top+16} ${x+8},${y-18} ${x},${y}" fill="none" stroke="#ffb347" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="6 9">
+        <animate attributeName="stroke-dashoffset" values="0;-30" dur="1.4s" repeatCount="indefinite"/></path>
+      <rect x="${x-7}" y="${y}" width="14" height="${bot-y}" rx="5" fill="#d9481a"/>
+      <rect x="${x-3}" y="${y}" width="6" height="${bot-y}" fill="#FFD166" opacity=".8"/>
+      <path d="M${x},${y} V${bot}" stroke="#fff3c4" stroke-width="2" stroke-dasharray="4 10" opacity=".8">
+        <animate attributeName="stroke-dashoffset" values="0;-28" dur=".8s" repeatCount="indefinite"/></path>
+      <ellipse cx="${x}" cy="${bot+2}" rx="20" ry="6" fill="#ff7a2e" opacity=".55" filter="url(#b2)"/>
+      ${[0,1,2].map(j=>`<circle cx="${x-8+j*8}" cy="${bot}" r="7" fill="#e8ecef" opacity="0">
+        <animate attributeName="cy" values="${bot};${bot-34}" dur="2.6s" begin="${(j*0.8+k*0.4).toFixed(1)}s" repeatCount="indefinite"/>
+        <animate attributeName="r" values="5;13" dur="2.6s" begin="${(j*0.8+k*0.4).toFixed(1)}s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values=".55;0" dur="2.6s" begin="${(j*0.8+k*0.4).toFixed(1)}s" repeatCount="indefinite"/></circle>`).join('')}
+    </g>`;
+  });
+  return o;
+}
+function seaExtras(coasts,W,H,tr){
+  let o='';
+  const shoreDist=(x,y)=>Math.min(...coasts.map(c=>edgeMargin(x,y,c)));
+  const inSea=(x,y,m)=>coasts.every(c=>!inPoly(x,y,c))&&shoreDist(x,y)>m&&x>30&&y>30&&x<W-30&&y<H-30;
   // sparkles
   for(let k=0,n=0;k<400&&n<18;k++){ const x=rr(k*3+1)*W, y=rr(k*7+2)*H; if(!inSea(x,y,40))continue; n++;
     o+=`<path d="M${x.toFixed(0)},${(y-5).toFixed(0)} l1.4,3.6 3.6,1.4 -3.6,1.4 -1.4,3.6 -1.4,-3.6 -3.6,-1.4 3.6,-1.4z" fill="#eaf8ff" opacity="0">
       <animate attributeName="opacity" values="0;.9;0" dur="${(2.5+rr(k)*3).toFixed(1)}s" begin="${(rr(k*5)*4).toFixed(1)}s" repeatCount="indefinite"/></path>`; }
   // rocks
-  for(let k=0,n=0;k<400&&n<3;k++){ const x=rr(k*11+4)*W, y=rr(k*13+6)*H; if(!inSea(x,y,50)||edgeMargin(x,y,coastPoly)>150)continue; n++;
+  for(let k=0,n=0;k<400&&n<3;k++){ const x=rr(k*11+4)*W, y=rr(k*13+6)*H; if(!inSea(x,y,50)||shoreDist(x,y)>150)continue; n++;
     o+=`<g transform="translate(${x.toFixed(0)},${y.toFixed(0)})"><ellipse rx="22" ry="8" fill="#cfeefb" opacity=".25"/><path d="M-12,2 q2,-14 12,-14 q11,0 12,14 z" fill="#6f7c86"/><path d="M-12,2 q2,-14 12,-14 l-3,14z" fill="#94a1ab"/></g>`; }
   // boats
   for(let k=0,n=0;k<600&&n<3;k++){ const x=rr(k*19+8)*W, y=rr(k*23+9)*H; if(!inSea(x,y,70))continue; n++;
@@ -2206,8 +2310,8 @@ function edgeMargin(x,y,poly){
   return m;
 }
 // pull every level node safely inside its region so none can sit in the sea
-function fitNodes(){
-  REGIONS.forEach(r=>{
+function fitNodes(list){
+  (list||REGIONS).forEach(r=>{
     const c=centroid(r.poly);
     r.nodes=r.nodes.map(n=>{
       let x=n[0], y=n[1];
@@ -2232,6 +2336,34 @@ const FLOW_NODES={
 REGIONS.forEach(r=>{ if(FLOW_NODES[r.id])r.nodes=FLOW_NODES[r.id].map(q=>q.slice()); });
 fitNodes();
 
+/* ---------- the Halloween island: a dead land west of the Dark Forest (levels not built yet) ---------- */
+const HALLOWEEN_ISLE=true;                 // false hides the island and shrinks the map back
+const ISLE_OFF=HALLOWEEN_ISLE?650:0;       // the main island slides right this far to make room for it
+// shared corner points, so neighbouring areas meet on exactly the same wobbly seam
+const IA=[-340,150],IB=[-180,130],IC=[-60,190],ID=[-20,330],IE=[-40,480],IF=[-10,620],IG=[-50,760],IH=[-150,880],
+      II=[-310,910],IJ=[-450,850],IK=[-520,700],IL=[-530,520],IM=[-490,330],IN=[-430,210],
+      IQ1=[-150,370],IQ2=[-290,390],IR2=[-220,500],IR1=[-150,650],IS1=[-240,690];
+const ISLE_COAST=[IA,IB,IC,ID,IE,IF,IG,IH,II,IJ,IK,IL,IM,IN];
+const ISLE_REGIONS=[
+  {id:'graveyard',name:'The Graveyard',levels:3,ground:'#565C50',ground2:'#33382F',pathCol:'#7d7768',decor:'grave',
+   density:24,tints:['#8C9196','#7D8287','#9EA4A9'],
+   poly:[IN,IA,IB,IC,ID,IQ1,IQ2,IM],nodes:[[-430,290],[-290,235],[-160,280]]},
+  {id:'pumpkin',name:'Pumpkin Farm',levels:4,ground:'#6A6237',ground2:'#433D20',pathCol:'#8a6a3e',decor:'pumpkin',
+   density:26,tints:['#E07B24','#F08C2E','#C9661A'],
+   poly:[IM,IQ2,IQ1,IR2,IR1,IS1,IK,IL],nodes:[[-330,465],[-455,440],[-440,610],[-300,600]]},
+  {id:'ashen',name:'Ashen Wastes',levels:2,ground:'#4B4B4E',ground2:'#232326',pathCol:'#5a4a44',decor:'ashrock',
+   density:16,tints:['#2B2B2E','#353538','#222224'],
+   poly:[IK,IS1,IR1,IF,IG,IH,II,IJ],nodes:[[-400,785],[-190,770]]},
+  {id:'wretched',name:'Wretched Woodland',levels:0,ground:'#22382A',ground2:'#0F1C14',pathCol:'#4f4434',decor:'horror',
+   density:20,tints:['#3A3129','#30281F','#453A2F'],
+   poly:[IQ1,ID,IE,IF,IR1,IR2],nodes:[]},
+];
+// Wretched Woodland's two extra levels: they appear once a certain level is cleared (rule still to come),
+// so for now their spots are only kept free and marked
+const WRETCHED_SLOTS=[[-105,440],[-95,565]];
+function wretchedOpen(){ return false; }   // hook: return true once the unlock rule is met
+fitNodes(ISLE_REGIONS);
+
 // a winding trail from level a to level b: the straight line is bent side to side in a few smooth swings
 function twistPath(a,b,seed){
   const dx=b.x-a.x, dy=b.y-a.y, len=Math.hypot(dx,dy)||1, nx=-dy/len, ny=dx/len;
@@ -2249,13 +2381,18 @@ function buildMap(){
   const host=document.getElementById('mapScroll');
   const portrait=host?(host.clientHeight>host.clientWidth*1.05)
                      :(window.innerHeight>window.innerWidth);
-  const tr=pt=>portrait?[pt[1],pt[0]]:pt;
+  const tr=pt=>portrait?[pt[1],pt[0]+ISLE_OFF]:[pt[0]+ISLE_OFF,pt[1]];
   const COASTv=COAST.map(tr); COAST_V=COASTv;
   const REGv=REGIONS.map(r=>({...r,poly:r.poly.map(tr),nodes:r.nodes.map(tr)}));
-  const W=portrait?1080:1650, H=portrait?1650:1080;
-  const coastPts=ringPts(COASTv), coastD=smoothClosed(coastPts);
+  const W=(portrait?1080:1650)+(portrait?0:ISLE_OFF), H=(portrait?1650+ISLE_OFF:1080);
+  // the Halloween island to the west is drawn with the same land, coast and label code as the main one
+  const ISLEv=HALLOWEEN_ISLE?ISLE_COAST.map(tr):null;
+  const ISLE_REGv=HALLOWEEN_ISLE?ISLE_REGIONS.map(r=>({...r,poly:r.poly.map(tr),nodes:r.nodes.map(tr)})):[];
+  const ALLv=REGv.concat(ISLE_REGv), COASTS=ISLEv?[COASTv,ISLEv]:[COASTv];
+  const onLand=(x,y)=>COASTS.some(c=>inPoly(x,y,c));
+  const coastPts=ringPts(COASTv), coastD=smoothClosed(coastPts)+(ISLEv?smoothClosed(ringPts(ISLEv)):'');
   let defs='';
-  REGv.forEach((r,i)=>{
+  ALLv.forEach((r,i)=>{
     defs+=`<linearGradient id="gr${i}" x1="0.2" y1="0" x2="0.8" y2="1">
       <stop offset="0%" stop-color="${r.ground}"/><stop offset="100%" stop-color="${r.ground2}"/></linearGradient>`;
   });
@@ -2285,11 +2422,11 @@ function buildMap(){
     <path d="${coastD}" fill="none" stroke="#e6f8ff" stroke-width="34" stroke-linejoin="round" stroke-dasharray="26 18" opacity=".22">
       <animate attributeName="stroke-dashoffset" values="0;-88" dur="7s" repeatCount="indefinite"/>
       <animate attributeName="opacity" values=".12;.3;.12" dur="4s" repeatCount="indefinite"/></path>`;
-  svg+=seaExtras(COASTv,W,H,tr);
+  svg+=seaExtras(COASTS,W,H,tr);
   svg+=`<path d="${coastD}" fill="#0C2A3A" opacity=".45" filter="url(#b2)" transform="translate(14,20)"/>`;
   svg+=`<path d="${coastD}" fill="#E4D3A0" stroke="#D3BC83" stroke-width="16" stroke-linejoin="round"/>`;
   svg+=`<clipPath id="lc"><path d="${coastD}"/></clipPath><g clip-path="url(#lc)">`;
-  REGv.forEach((r,i)=>{
+  ALLv.forEach((r,i)=>{
     const d=smoothClosed(ringPts(r.poly));
     svg+=`<path d="${d}" fill="url(#gr${i})"/>`;
     svg+=`<path d="${d}" fill="#000" opacity=".13" filter="url(#b2)" transform="translate(0,9)"/>`;
@@ -2298,15 +2435,20 @@ function buildMap(){
     svg+=(r.id==='kingdom'?kingdomScenery(r):scatter(r));
   });
   svg+=`<rect width="${W}" height="${H}" fill="url(#landLight)"/>`;
-  REGv.forEach(r=>{ svg+=`<path d="${smoothClosed(ringPts(r.poly))}" fill="none" stroke="#1d2a1c" stroke-opacity=".2" stroke-width="3.5"/>`; });
+  ALLv.forEach(r=>{ svg+=`<path d="${smoothClosed(ringPts(r.poly))}" fill="none" stroke="#1d2a1c" stroke-opacity=".2" stroke-width="3.5"/>`; });
   svg+=`<rect width="${W}" height="${H}" filter="url(#grain)" opacity=".055"/></g>`;
   svg+=`<path d="${coastD}" fill="none" stroke="#2A2118" stroke-opacity=".5" stroke-width="5"/>`;
   svg+=`<path d="${coastD}" fill="none" stroke="#fff4d0" stroke-opacity=".35" stroke-width="2" transform="translate(-2,-3)"/>`;
+  ISLE_REGv.forEach(r=>{ if(r.id==='ashen')svg+=lavaFalls(r,ringPts(ISLEv)); });
 
   // trail: short link segments between consecutive levels only
   const trailStart=svg.length;
   let pts=[],li=0;
-  REGv.forEach(r=>r.nodes.forEach(n=>pts.push({x:n[0],y:n[1],li:li++})));
+  REGv.forEach(r=>r.nodes.forEach(n=>{ pts.push({x:n[0],y:n[1],li,boss:LEVELS[li].boss}); li++; }));
+  const islePts=[];                                        // the island's 9 levels: not built yet, never playable
+  ISLE_REGv.forEach(r=>r.nodes.forEach(n=>islePts.push({x:n[0],y:n[1],k:islePts.length})));
+  if(islePts.length)islePts[islePts.length-1].boss=true;
+  const slotPts=HALLOWEEN_ISLE?WRETCHED_SLOTS.map(tr).map((q,k)=>({x:q[0],y:q[1],k})):[];
   svg+=`<g opacity=".45">`;                                   // the trail stays see-through so the land shows under it
   for(let i=1;i<pts.length;i++){
     const a=pts[i-1],b=pts[i];
@@ -2315,26 +2457,31 @@ function buildMap(){
     svg+=`<path d="${dd}" fill="none" stroke="#3A2E1C" stroke-opacity=".38" stroke-width="11" stroke-linecap="round"/>`;
     svg+=`<path d="${dd}" fill="none" stroke="${walked?'#FFD24A':'#EFE2BD'}" stroke-opacity="${walked?1:.8}" stroke-width="${walked?7:6}" stroke-linecap="round" stroke-dasharray="0.5 15">${ahead?'<animate attributeName="stroke-dashoffset" values="0;-31" dur="1.2s" repeatCount="indefinite"/>':''}</path>`;
   }
+  for(let i=1;i<islePts.length;i++){
+    const dd=twistPath(islePts[i-1],islePts[i],i+50);
+    svg+=`<path d="${dd}" fill="none" stroke="#3A2E1C" stroke-opacity=".38" stroke-width="11" stroke-linecap="round"/>
+      <path d="${dd}" fill="none" stroke="#EFE2BD" stroke-opacity=".8" stroke-width="6" stroke-linecap="round" stroke-dasharray="0.5 15"/>`;
+  }
   svg+=`</g>`;
   svg+=mapClouds(W,H);
   const labels=[], placedLabels=[];
-  REGv.forEach((r,ri)=>{
+  ALLv.forEach((r,ri)=>{
     // centre of the part of the region you can actually see (later regions paint over earlier ones)
-    const later=REGv.slice(ri+1).map(q=>q.poly), xs=r.poly.map(q=>q[0]), ys=r.poly.map(q=>q[1]);
+    const later=ALLv.slice(ri+1).map(q=>q.poly), xs=r.poly.map(q=>q[0]), ys=r.poly.map(q=>q[1]);
     const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);
     let sx=0,sy=0,n=0;
     for(let gx=0;gx<=30;gx++)for(let gy=0;gy<=30;gy++){ const x=x0+(x1-x0)*gx/30, y=y0+(y1-y0)*gy/30;
-      if(inPoly(x,y,r.poly)&&inPoly(x,y,COASTv)&&!later.some(q=>inPoly(x,y,q))){sx+=x;sy+=y;n++;} }
+      if(inPoly(x,y,r.poly)&&onLand(x,y)&&!later.some(q=>inPoly(x,y,q))){sx+=x;sy+=y;n++;} }
     const cx=n?sx/n:centroid(r.poly)[0], cy=n?sy/n:centroid(r.poly)[1];
     // as wide as the visible land allows at that height
     let L=cx,R=cx; while(L>x0-10&&inPoly(L,cy,r.poly)&&!later.some(q=>inPoly(L,cy,q)))L-=6; while(R<x1+10&&inPoly(R,cy,r.poly)&&!later.some(q=>inPoly(R,cy,q)))R+=6;
     const shown=trText(r.name).toUpperCase(), room=Math.max(120,(R-L)*0.92);
     let fs=portrait?26:22; void room;                    // every region name in the same size
-    const vis=(x,y)=>inPoly(x,y,r.poly)&&inPoly(x,y,COASTv)&&!later.some(q=>inPoly(x,y,q));
-    const blockers=pts.map(q=>[q.x,q.y+6,(LEVELS[q.li].boss?40:33)]).concat(pts.map(q=>[q.x,q.y-(LEVELS[q.li].boss?42:36),14]));
+    const vis=(x,y)=>inPoly(x,y,r.poly)&&onLand(x,y)&&!later.some(q=>inPoly(x,y,q));
+    const allPts=pts.concat(islePts,slotPts), blockers=allPts.map(q=>[q.x,q.y+6,(q.boss?40:33)]).concat(allPts.map(q=>[q.x,q.y-(q.boss?42:36),14]));
     BONUS.forEach(bg=>{ if(completed[bg.after])bg.idx.forEach(i=>{ const q=tr(LEVELS[i].pt); blockers.push([q[0],q[1],32]); }); });
     placedLabels.forEach(b=>blockers.push(b));          // never on top of another region's name
-    const okAt=(x,y,sea)=>vis(x,y)||(sea&&!inPoly(x,y,COASTv));
+    const okAt=(x,y,sea)=>vis(x,y)||(sea&&!onLand(x,y));
     const fits=(x,y,f,sea)=>{ const hw=shown.length*f*0.5+4, hh=f*0.62;
       if(x-hw<12||x+hw>W-12||y<24||y>H-24)return false;
       if(!vis(x,y)&&!sea)return false;
@@ -2390,6 +2537,28 @@ function buildMap(){
       <path d="M${p.x},${p.y-rad-10} l-11,-14 h22 z" fill="#F6EFD8" stroke="#221E18" stroke-width="3" stroke-linejoin="round"/></g>`;
     svg+='</g>';
   });
+  // Halloween island levels: drawn like any level that isn't built yet (an X), but they can't be opened
+  islePts.forEach(p=>{
+    const rad=p.boss?26:20;
+    svg+=`<g class="lvNode locked" data-isle="${p.k}">
+      <circle cx="${p.x}" cy="${p.y}" r="${rad+8}" fill="none" stroke="#e07b24" stroke-width="3" stroke-dasharray="5 7" opacity=".75"/>
+      <ellipse cx="${p.x}" cy="${p.y+rad+7}" rx="${(rad*0.85).toFixed(0)}" ry="${(rad*0.3).toFixed(0)}" fill="#000" opacity=".3"/>
+      ${p.boss?Array.from({length:10},(_,k)=>{ const a=k/10*Math.PI*2; return `<path d="M${(p.x+Math.cos(a-0.16)*(rad+5)).toFixed(1)},${(p.y+Math.sin(a-0.16)*(rad+5)).toFixed(1)} L${(p.x+Math.cos(a)*(rad+14)).toFixed(1)},${(p.y+Math.sin(a)*(rad+14)).toFixed(1)} L${(p.x+Math.cos(a+0.16)*(rad+5)).toFixed(1)},${(p.y+Math.sin(a+0.16)*(rad+5)).toFixed(1)} Z" fill="#221E18"/>`; }).join(''):''}
+      <circle cx="${p.x}" cy="${p.y}" r="${rad+6}" fill="#221E18"/>
+      <circle cx="${p.x}" cy="${p.y}" r="${rad+3}" fill="#3c3f44"/>
+      <circle cx="${p.x}" cy="${p.y}" r="${rad+1}" fill="#5a4f4c"/>
+      <circle cx="${p.x}" cy="${p.y}" r="${rad-4}" fill="none" stroke="#000" stroke-opacity=".18" stroke-width="2"/>
+      <path d="M${(p.x-rad*0.55).toFixed(0)},${(p.y-rad*0.45).toFixed(0)} a${(rad*0.75).toFixed(0)},${(rad*0.75).toFixed(0)} 0 0 1 ${(rad*1.1).toFixed(0)},0" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="3" stroke-linecap="round"/>
+      <path d="M${p.x-7},${p.y-7} L${p.x+7},${p.y+7} M${p.x+7},${p.y-7} L${p.x-7},${p.y+7}" stroke="#E6E2D8" stroke-width="4" stroke-linecap="round"/></g>`;
+  });
+  // Wretched Woodland: two spots kept free for the extra levels; faint until they open
+  slotPts.forEach(p=>{
+    const rad=14, open=wretchedOpen();
+    svg+=`<g class="lvNode locked" data-slot="${p.k}" opacity="${open?1:.55}">
+      <circle cx="${p.x}" cy="${p.y}" r="${rad+5}" fill="#152030" opacity=".6"/>
+      <circle cx="${p.x}" cy="${p.y}" r="${rad+1.5}" fill="none" stroke="#9fb8a8" stroke-width="2.5" stroke-dasharray="4 5"/>
+      <text x="${p.x}" y="${p.y+5}" text-anchor="middle" font-family="Bungee,'Russo One',sans-serif" font-size="13" fill="#cfe0d4">?</text></g>`;
+  });
   // bonus chains: small blue nodes that pop up once the area's last level is beaten
   BONUS.forEach(bg=>{
     if(!completed[bg.after])return;
@@ -2422,6 +2591,8 @@ function buildMap(){
   inner.innerHTML=svg;
   inner.querySelectorAll('.lvNode').forEach(n=>{
     n.addEventListener('click',()=>{
+      if(n.hasAttribute('data-isle')){ document.getElementById('mapMsg').textContent='The Halloween island is coming soon.'; return; }
+      if(n.hasAttribute('data-slot')){ document.getElementById('mapMsg').textContent='Something stirs in the Wretched Woodland…'; return; }
       const i=+n.getAttribute('data-i');
       if(LEVELS[i].bonus&&!completed[LEVELS[i].prev]){ document.getElementById('mapMsg').textContent='Beat the bonus level above it first.'; return; }
       if(!LEVELS[i].def){ document.getElementById('mapMsg').textContent=LEVELS[i].bonus?'Bonus level '+LEVELS[i].bonusNo+' has not been built yet.':'That level has not been built yet.'; return; }
