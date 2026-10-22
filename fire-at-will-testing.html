@@ -213,6 +213,33 @@
   #sbxInfo{display:none;margin:8px auto 0;max-width:640px;background:var(--ink);color:var(--paper);border-radius:10px;padding:9px 13px;font-size:.82rem;line-height:1.35;text-align:left;}
   #sbxInfo h4{margin:0 0 4px;font-family:'Bungee','Russo One',sans-serif;font-size:.95rem;color:var(--brass);font-weight:400;}
   #sbxInfo p{margin:3px 0;} #sbxInfo b{color:var(--brass);} #sbxInfo .sbxInfoHint{opacity:.8;font-style:italic;}
+  .wvWrap{width:min(1000px,calc(100vw - 16px));height:calc(100dvh - 16px);display:flex;flex-direction:column;gap:8px;}
+  .wvHead{background:var(--paper);border:3px solid var(--ink);border-radius:12px;padding:8px 12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:space-between;}
+  #wvSummary{font-size:.78rem;font-weight:600;opacity:.75;}
+  .wvBody{flex:1;min-height:0;display:flex;gap:8px;}
+  #wvPalette{width:190px;flex:0 0 auto;background:var(--paper);border:3px solid var(--ink);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px;}
+  .wvPalTitle{font-family:'Bungee','Russo One',sans-serif;font-size:.85rem;}
+  .wvHelp{font-size:.72rem;opacity:.75;margin:4px 0 0;line-height:1.35;}
+  #wvArea{flex:1;min-width:0;overflow-y:auto;background:rgba(0,0,0,.18);border:3px solid var(--ink);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:12px;}
+  .wvStack{display:flex;flex-direction:column;align-items:flex-start;gap:0;}
+  .wvHat{background:#c98a1b;color:#fff;border:2px solid rgba(0,0,0,.35);border-radius:16px 16px 4px 4px;padding:6px 10px;display:flex;align-items:center;gap:10px;font-size:.8rem;min-width:260px;}
+  .wvHat b{font-family:'Bungee','Russo One',sans-serif;font-weight:400;}
+  .wvHatInfo{opacity:.9;font-weight:600;flex:1;}
+  .wvHatTools button{background:rgba(0,0,0,.2);color:#fff;border:0;border-radius:6px;padding:2px 7px;margin-left:3px;cursor:pointer;font-size:.8rem;}
+  .wvBlock{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:6px 10px;margin-top:-2px;margin-left:10px;border:2px solid rgba(0,0,0,.35);border-radius:4px;
+    color:#fff;font-size:.8rem;font-weight:600;cursor:grab;touch-action:none;user-select:none;box-shadow:0 2px 0 rgba(0,0,0,.25);}
+  .wvBlock.wvPal{margin:0;justify-content:center;padding:10px;font-family:'Bungee','Russo One',sans-serif;font-weight:400;font-size:.85rem;}
+  .wvEnemy{background:#c5482f;} .wvWait{background:#3f86c9;}
+  .wvBlock input{width:52px;border:0;border-radius:10px;padding:3px 6px;font:inherit;color:#22261c;text-align:center;}
+  .wvBlock select{border:0;border-radius:10px;padding:3px 6px;font:inherit;color:#22261c;max-width:150px;}
+  .wvIcon{width:26px;height:26px;background:rgba(255,255,255,.25);border-radius:6px;}
+  .wvTime{font-size:.72rem;opacity:.85;font-weight:600;margin-left:4px;background:rgba(0,0,0,.18);border-radius:8px;padding:1px 7px;}
+  .wvEmpty{font-size:.78rem;opacity:.75;padding:8px 12px;margin-left:10px;border:2px dashed rgba(255,255,255,.45);border-radius:6px;color:var(--paper);}
+  .wvGhost{position:fixed;z-index:50;pointer-events:none;opacity:.9;transform:rotate(-2deg);margin:0;}
+  .wvLifted{opacity:.35;}
+  .wvDrop{height:4px;width:240px;margin:3px 0 3px 10px;background:#ffe071;border-radius:3px;box-shadow:0 0 6px #ffe071;}
+  @media (max-width:620px){ .wvHead{padding-right:96px;} .wvBody{flex-direction:column;} #wvPalette{width:auto;flex-direction:row;flex-wrap:wrap;align-items:center;} #wvPalette .wvPal{flex:1;}
+    .wvHelp{flex-basis:100%;margin:0;} .wvHat{min-width:0;width:100%;} .wvBlock{margin-left:6px;} }
   #sbxStatus{font-size:.8rem;font-weight:600;text-align:center;min-height:1.2em;margin-top:4px;}
   #gameScreen.tester #towerbar,#gameScreen.tester #powerbar,#filterRow{flex-wrap:nowrap;overflow-x:auto;
     justify-content:safe center;max-width:100%;padding:2px 4px 5px;scrollbar-width:thin;}
@@ -520,6 +547,7 @@
     <div class="sbxPanel">
       <div class="sbxRow">
         <button class="toolBtn" style="background:var(--rust);color:var(--paper)" onclick="sbxPlay()">▶ Play this map</button>
+        <button class="toolBtn" id="sbxWavesBtn" onclick="openWaves()">🌊 Waves control</button>
         <button class="toolBtn" onclick="sbxCopy()">Copy level code</button>
         <button class="toolBtn" onclick="sbxLoad()">Load code</button>
         <button class="toolBtn" id="sbxRoutesBtn" onclick="sbxToggleRoutes()">Routes: shown</button>
@@ -528,6 +556,27 @@
       <textarea id="sbxCode" spellcheck="false" placeholder="Level code appears here. Paste one in and press Load code to open it."></textarea>
     </div>
   </div>
+
+  <div id="wavesScreen" class="screen"><div class="wvWrap">
+    <div class="wvHead">
+      <b style="font-family:'Bungee','Russo One',sans-serif">Waves control</b>
+      <span id="wvSummary"></span>
+      <div class="sbxRow">
+        <button class="toolBtn" onclick="wvAddWave()">+ New wave</button>
+        <button class="toolBtn" onclick="wvDefault()">Use default waves</button>
+        <button class="toolBtn" style="background:var(--rust);color:var(--paper)" onclick="wvDone()">Done</button>
+      </div>
+    </div>
+    <div class="wvBody">
+      <div id="wvPalette">
+        <b class="wvPalTitle">Blocks</b>
+        <div class="wvBlock wvEnemy wvPal" data-new="enemy">Enemy</div>
+        <div class="wvBlock wvWait wvPal" data-new="wait">Cooldown</div>
+        <p class="wvHelp">Drag a block into a wave, or tap it to add it to the last wave. Drag a block out of a wave to delete it.</p>
+      </div>
+      <div id="wvArea"></div>
+    </div>
+  </div></div>
 
   <div id="mapScreen" class="screen" style="justify-content:flex-start;padding-top:8px;">
     <div id="mapHead">
@@ -774,7 +823,7 @@ new MutationObserver(ms=>{ for(const m of ms){
     else m.addedNodes.forEach(trNode); } })
   .observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['placeholder','title','aria-label']});
 Object.assign(I18N.ru,{"The Graveyard":"Кладбище","Pumpkin Farm":"Тыквенная ферма","Ashen Wastes":"Пепельные пустоши","Wretched Woodland":"Гиблая чаща","The Halloween island is coming soon.":"Остров Хэллоуина скоро откроется.","Adds the Halloween island to the campaign map":"Добавляет остров Хэллоуина на карту кампании","Adds the Halloween map pieces to the Sandbox":"Добавляет детали карты Хэллоуина в Песочницу","Testing is its own app now: Fire at Will Testing.":"Тестирование теперь отдельное приложение: Fire at Will Testing.","Try levels, maps and enemies. The game's own progress is never touched.":"Пробуйте уровни, карты и врагов. Прогресс самой игры не затрагивается.","Zombie":"Зомби","Skeleton":"Скелет","Skeleton Knight":"Скелет-рыцарь","Zombie Grunt":"Зомби-пехотинец","Abandoned house":"Заброшенный дом","the abandoned house breaks open on a random wave":"заброшенный дом вскрывается на случайной волне","The door bursts — zombie grunts pour out of the abandoned house!":"Дверь вылетает — из заброшенного дома валят зомби-пехотинцы!","Restless Dead":"Неупокоенный мертвец","120 health, walks like a grunt.":"120 здоровья, ходит как пехотинец.","A bite infects your soldiers: 2.5 seconds later they rise as zombies.":"Укус заражает ваших солдат: через 2,5 секунды они встают зомби.","Rises from graves and graveyards.":"Встаёт из могил и с кладбищ.","Keep Firework soldiers and Backup out of its reach.":"Держите солдат фейерверка и подкрепление подальше от него.","Kill it at range before it bites.":"Убивайте издалека, пока не укусил.","Splash damage on the road.":"Урон по площади на дороге.","Knife Thrower":"Метатель ножей","125 health and a knife on its belt.":"125 здоровья и нож на поясе.","Stops to throw a knife that stuns a tower for 1.5 seconds.":"Останавливается и метает нож, оглушая башню на 1,5 секунды.","Throws again every 2.5 seconds.":"Бросает снова каждые 2,5 секунды.","Menders and Farms are never targeted.":"Лекари и фермы не становятся целью.","Long-range towers that hit it before it gets close: Sniper.":"Дальнобойные башни, бьющие до сближения: Снайпер.","Kill it while it stands still to throw.":"Убивайте, пока он стоит и метает.","Undead Champion":"Чемпион нежити","250 health in rusted armour.":"250 здоровья в ржавых доспехах.","Hits your units twice as hard.":"Бьёт ваших юнитов вдвое сильнее.","Marches out of graveyards and crypts.":"Выходит с кладбищ и из склепов.","Slow — easy to focus with Snipers and Cannons.":"Медленный — его легко добить Снайперами и Пушками.","Keep your units away and let towers work.":"Держите юнитов подальше, пусть работают башни.","Infected Footsoldier":"Заражённый пехотинец","A grunt the plague got to: 100 health.":"Пехотинец, до которого добралась зараза: 100 здоровья.","Its bite infects your soldiers, just like a zombie.":"Его укус заражает солдат, как у зомби.","On a random wave the abandoned house door breaks and 3–7 pour out.":"На случайной волне дверь заброшенного дома ломается и вываливаются 3–7 штук.","Grunt-level health — any tower handles it.":"Здоровья как у пехотинца — справится любая башня.","Splash near the house door.":"Урон по площади у двери дома.","Keep soldiers away from it.":"Держите солдат подальше.","Grave":"Могила","Graveyard":"Кладбище","Crypt":"Склеп","Halloween":"Хэллоуин","Graves go on grass beside the road.":"Могилы ставятся на траву у дороги.","Something already stands here.":"Здесь уже что-то стоит.","Its gate can only face this road. Use the Eraser to remove it.":"Ворота могут смотреть только на эту дорогу. Убрать кладбище можно ластиком.","Not enough room here — it needs 2×2 tiles.":"Здесь мало места — нужно 2×2 клетки.","It needs 2×2 clear tiles off the road and water.":"Нужно 2×2 свободные клетки не на дороге и не в воде.","A graveyard must have one whole side against the road (2 road tiles).":"Кладбище должно стоять целой стороной к дороге (2 клетки дороги).","Tap the graveyard again to turn its gate.":"Нажмите на кладбище ещё раз, чтобы повернуть ворота.","Not enough room here — it needs 2 tiles side by side.":"Здесь мало места — нужно 2 клетки рядом.","It needs 2 clear tiles side by side, off the road and water.":"Нужно 2 свободные клетки рядом, не на дороге и не в воде.","A graveyard gate no longer opens onto the road.":"Ворота кладбища больше не выходят на дорогу.","zombies leave the graves on the last wave":"зомби встают из могил в последней волне","the dead never stop coming":"мертвецы идут без остановки","skeletons crawl from the bones on wave 3":"скелеты выползают из костей на 3-й волне","Skeletons crawl out of the bones!":"Из костей выползают скелеты!","The graves open!":"Могилы открываются!","Check for updates":"Проверить обновления","Restart to update":"Перезапустить и обновить","A new version is downloaded.":"Новая версия загружена.","You have the latest version.":"У вас последняя версия.","Could not check for updates. Are you online?":"Не удалось проверить обновления. Есть ли интернет?","Checking for updates…":"Проверка обновлений…","A new version of the game is ready.":"Новая версия игры готова.","Restart":"Перезапустить","This DLC needs a newer version of the game.":"Для этого DLC нужна более новая версия игры.","Something stirs in the Wretched Woodland…":"В Гиблой чаще что-то шевелится…","Pumpkin":"Тыква","Corn rows":"Кукурузные ряды","Well":"Колодец","Candle shrine":"Алтарь со свечами","Open grave":"Открытая могила","Corn does not grow in water.":"Кукуруза не растёт в воде.","That goes on grass beside the road.":"Это ставится на траву у дороги.","A well has no road to a Base nearby.":"У колодца нет рядом дороги к базе.","enemies hide in the corn":"враги прячутся в кукурузе","tumorlings climb out of the well":"из колодца вылезают опухольки","candles make the towers next to them shoot faster":"свечи ускоряют стрельбу соседних башен","a zombie climbs out of each open grave mid-wave":"посреди волны из каждой открытой могилы вылезает зомби","Gravedigger":"Могильщик","Grave Digger":"Копатель могил","280 health, but very slow.":"280 здоровья, но очень медленный.","Every 6 seconds it digs a grave right on the road (3 at most).":"Каждые 6 секунд копает могилу прямо на дороге (не больше 3).","Each grave has 500 health and blocks your Backup and Heavy Force. On the last wave a zombie climbs out of it.":"У каждой могилы 500 здоровья, она преграждает путь Подкреплению и Тяжёлой технике. На последней волне из неё вылезает зомби.","Kill it early, before it has dug its graves.":"Убейте его пораньше, пока он не выкопал могилы.","Snipers and Cannons reach it from afar.":"Снайперы и Пушки достают его издалека.","The Heavy Force tank smashes graves fastest.":"Танк Тяжёлой техники разбивает могилы быстрее всех.","Pumpkin Bomber":"Тыква-бомба","Rolling Bomb":"Катящаяся бомба","A carved pumpkin packed with powder: 90 health, rolls fast.":"Резная тыква, набитая порохом: 90 здоровья, катится быстро.","When it rolls past a tower it veers off the road straight at it.":"Проезжая мимо башни, сворачивает с дороги прямо на неё.","It blows up on the tower and knocks it out for 10 seconds, and the towers next to it for 4.":"Взрывается на башне и выводит её из строя на 10 секунд, а соседние башни — на 4.","Low health: shoot it before it gets close.":"Мало здоровья: подстрелите её, пока она не подкатилась.","Snipers and Gunners pick it off before it reaches a tower.":"Снайперы и Стрелки снимут её, пока она не добралась до башни.","Towers placed away from the road are safe from it.":"Башням вдали от дороги она не страшна.","A pumpkin bomber blew up your @!":"Тыква-бомба взорвала вашу башню «@»!","A grave on the road has been smashed!":"Могила на дороге разбита!","Thorny path":"Тернистая дорога","thorny roots hurt your units on the road":"колючие корни ранят ваших юнитов на дороге","Jack o' lantern":"Тыква-фонарь","Barn":"Амбар","Jack o' Lantern":"Джек-фонарь","Pumpkins grow on grass off the road.":"Тыквы растут на траве, не на дороге.","Not enough room here — a barn needs 3 tiles across and 2 down.":"Здесь мало места — амбару нужно 3 клетки в ширину и 2 в высоту.","A barn needs 3×2 clear tiles off the road and water.":"Амбару нужно 3×2 свободные клетки не на дороге и не в воде.","jack o' lanterns rise on a random wave":"тыквы-фонари встают на случайной волне","A jack o' lantern climbs out of the ground!":"Тыква-фонарь выбирается из земли!","Pumpkin Horror":"Тыквенный ужас","200 health on a body of twisted roots.":"200 здоровья на теле из скрученных корней.","Sleeps in the field as a carved pumpkin.":"Спит в поле резной тыквой.","On a random wave it grows legs, climbs out and walks the road.":"На случайной волне отращивает ноги, выбирается и идёт по дороге.","Its face lights up the wave before it rises.":"Её лицо загорается за волну до того, как она встанет."});
-Object.assign(I18N.ru,{"Extra levels from DLC files.":"Дополнительные уровни из файлов DLC.","Drop a DLC file here":"Перетащите сюда файл DLC","or tap to choose one":"или нажмите, чтобы выбрать его","DLC folder":"Папка DLC","Open DLC folder":"Открыть папку DLC","No DLC yet. Put a DLC file in the DLC folder, or drop it above.":"DLC пока нет. Положите файл DLC в папку DLC или перетащите его выше.","No DLC yet. Drop a DLC file above.":"DLC пока нет. Перетащите файл DLC выше.","Remove":"Удалить","beaten #/#":"пройдено #/#","from the DLC folder":"из папки DLC"," · built into Testing":" · встроено в Тестирование","built into Testing":"встроено в Тестирование","ℹ Description":"ℹ Описание","Every DLC is built in. Play its levels, or drop in a new DLC file.":"Все DLC уже встроены. Играйте их уровни или добавьте новый файл DLC.","DLC removed.":"DLC удалено.","DLC added":"DLC добавлено","That file is too big for a DLC.":"Этот файл слишком большой для DLC.","This file is not a DLC (it is not JSON).":"Этот файл не DLC (это не JSON).","This file is not a Fire at Will DLC.":"Этот файл не DLC для Fire at Will.","This DLC has no id or name.":"У этого DLC нет id или названия.","This DLC has no levels.":"В этом DLC нет уровней.","Level # has no map (level code).":"У уровня # нет карты (кода уровня).","Level # has a wave with no known enemies.":"В уровне # есть волна без известных врагов.","Level # has no road from a spawn to a base.":"В уровне # нет дороги от точки появления до базы.","Campaign":"Кампания","◀ Back":"◀ Назад","Final wave":"Последняя волна","Lives left: #/#":"Осталось жизней: #/#","Lives left: #/# · 💎 +#":"Осталось жизней: #/# · 💎 +#"});
+Object.assign(I18N.ru,{"Extra levels from DLC files.":"Дополнительные уровни из файлов DLC.","Drop a DLC file here":"Перетащите сюда файл DLC","or tap to choose one":"или нажмите, чтобы выбрать его","DLC folder":"Папка DLC","Open DLC folder":"Открыть папку DLC","No DLC yet. Put a DLC file in the DLC folder, or drop it above.":"DLC пока нет. Положите файл DLC в папку DLC или перетащите его выше.","No DLC yet. Drop a DLC file above.":"DLC пока нет. Перетащите файл DLC выше.","Remove":"Удалить","beaten #/#":"пройдено #/#","from the DLC folder":"из папки DLC"," · built into Testing":" · встроено в Тестирование","built into Testing":"встроено в Тестирование","ℹ Description":"ℹ Описание","🌊 Waves control":"🌊 Управление волнами","🌊 Your waves (#)":"🌊 Ваши волны (#)","🌊 Default waves (#)":"🌊 Обычные волны (#)","Every DLC is built in. Play its levels, or drop in a new DLC file.":"Все DLC уже встроены. Играйте их уровни или добавьте новый файл DLC.","DLC removed.":"DLC удалено.","DLC added":"DLC добавлено","That file is too big for a DLC.":"Этот файл слишком большой для DLC.","This file is not a DLC (it is not JSON).":"Этот файл не DLC (это не JSON).","This file is not a Fire at Will DLC.":"Этот файл не DLC для Fire at Will.","This DLC has no id or name.":"У этого DLC нет id или названия.","This DLC has no levels.":"В этом DLC нет уровней.","Level # has no map (level code).":"У уровня # нет карты (кода уровня).","Level # has a wave with no known enemies.":"В уровне # есть волна без известных врагов.","Level # has no road from a spawn to a base.":"В уровне # нет дороги от точки появления до базы.","Campaign":"Кампания","◀ Back":"◀ Назад","Final wave":"Последняя волна","Lives left: #/#":"Осталось жизней: #/#","Lives left: #/# · 💎 +#":"Осталось жизней: #/# · 💎 +#"});
 // words drawn straight onto the canvas go through the same table
 ['fillText','strokeText','measureText'].forEach(fn=>{ const orig=CanvasRenderingContext2D.prototype[fn];
   CanvasRenderingContext2D.prototype[fn]=function(t,...a){ return orig.call(this,currentLang==='en'?t:trText(String(t)),...a); }; });
@@ -4743,7 +4792,7 @@ let sbxTab='Plains';
 let sbx=null, sbxTool='path', sbxPainting=false, sbxNote='', sbxShowRoutes=true, sbxTerrain=null, sbxTerrainKey='', sbxFrame=0, sbxAnimOn=false, sbxR=null;
 function sbxBlank(orient){
   const C=SBX_SIZES[orient]||SBX_SIZES.computer;
-  return {orient,COLS:C.COLS,ROWS:C.ROWS,path:[],spawns:[],bases:[],trees:[],lake:[],lakeSpawns:[],forest:[],spiderDens:[],nests:[],webs:[],solidWebs:[],bridges:[],webPaths:[],bushes:[],bigBushes:[],queens:[],webWalls:[],cocoons:[],eggSacs:[],bones:[],ruins:[],silkBridges:[],tunnelIns:[],tunnelOuts:[],sewers:[],graves:[],graveyards:[],crypts:[],houses:[],pumpkins:[],jacks:[],barns:[],thornPaths:[],corns:[],wells:[],candles:[],openGraves:[],
+  return {orient,COLS:C.COLS,ROWS:C.ROWS,path:[],spawns:[],bases:[],trees:[],lake:[],lakeSpawns:[],forest:[],spiderDens:[],nests:[],webs:[],solidWebs:[],bridges:[],webPaths:[],bushes:[],bigBushes:[],queens:[],webWalls:[],cocoons:[],eggSacs:[],bones:[],ruins:[],silkBridges:[],tunnelIns:[],tunnelOuts:[],sewers:[],graves:[],graveyards:[],crypts:[],houses:[],pumpkins:[],jacks:[],barns:[],thornPaths:[],corns:[],wells:[],candles:[],openGraves:[],waveScript:null,
     pathIdx:1,grassIdx:1,pathCol:PATH_COLORS[1].c,ground:GRASS_COLORS[1].c,pathCustom:false,grassCustom:false};
 }
 function sbxFix(d){                    // fill in anything an older save or code is missing
@@ -5059,13 +5108,148 @@ function sbxRoutes(){
   });
   return out;
 }
+/* ---------- Waves control (Testing app): build a sandbox map's waves from snap-together blocks ----------
+   An Enemy block sends Count enemies of one kind, one every Every seconds; a Cooldown block waits before
+   the next group. Saved in sbx.waveScript and in the level code; played with exact timing (waveTimeline). */
+let wvWaves=[], wvDirty=false, wvDrag=null;
+const WV_MAX_WAVES=60;
+Object.assign(I18N.ru,{"Waves control":"Управление волнами","Blocks":"Блоки","Enemy":"Враг","Cooldown":"Пауза","seconds":"секунд","every":"каждые","s":"с",
+  "+ New wave":"+ Новая волна","Use default waves":"Обычные волны","Done":"Готово","Wave #":"Волна #","# s":"# с","# enemies":"врагов: #",
+  "at # s":"на # с","# s – # s":"# с – # с","waits # s":"ждёт # с","Duplicate":"Копировать","Delete":"Удалить",
+  "Drag a block into a wave, or tap it to add it to the last wave. Drag a block out of a wave to delete it.":"Перетащите блок в волну или нажмите на него, чтобы добавить в последнюю волну. Вытащите блок из волны, чтобы удалить его.",
+  "Empty wave: drop blocks here.":"Пустая волна: перетащите сюда блоки.","No waves yet. Add one with + New wave.":"Волн пока нет. Добавьте её кнопкой «+ Новая волна».",
+  "Default waves (#)":"Обычные волны (#)","Your waves (#)":"Ваши волны (#)","# waves · # enemies · longest wave # s":"волн: # · врагов: # · самая длинная волна # с",
+  "Back to the default waves.":"Снова обычные волны.","Waves saved.":"Волны сохранены."});
+// the sandbox's built-in waves as blocks, so there is something to start from
+function wvFromDefault(){ return SBX_WAVES.map(w=>w.map(g=>({type:g.type,count:g.count,every:Math.round(g.gap/100)/10}))); }
+function openWaves(){
+  wvWaves=JSON.parse(JSON.stringify(cleanWaveScript(sbx.waveScript)||wvFromDefault())); wvDirty=false;
+  const pal=document.getElementById('wvPalette');
+  if(!pal.dataset.ready){ pal.dataset.ready='1';
+    pal.querySelectorAll('[data-new]').forEach(el=>el.addEventListener('pointerdown',ev=>wvStartDrag(ev,{kind:el.dataset.new},el))); }
+  goTo('wavesScreen'); wvRender();
+}
+function wvDone(){
+  if(wvDirty){ sbx.waveScript=cleanWaveScript(wvWaves); sbxSave(); sbxNote=sbx.waveScript?'Waves saved.':''; }
+  openSandbox();
+}
+function wvDefault(){ wvWaves=wvFromDefault(); sbx.waveScript=null; sbxSave(); wvDirty=false; wvRender(); wvToast('Back to the default waves.'); }
+function wvToast(m){ const e=document.getElementById('wvSummary'); if(e){ e.textContent=m; setTimeout(wvRefresh,1600); } }
+function wvAddWave(copyOf){
+  if(wvWaves.length>=WV_MAX_WAVES)return;
+  if(copyOf!=null)wvWaves.splice(copyOf+1,0,JSON.parse(JSON.stringify(wvWaves[copyOf])));
+  else wvWaves.push([]);
+  wvDirty=true; wvRender();
+  if(copyOf==null){ const a=document.getElementById('wvArea'); a.scrollTop=a.scrollHeight; }
+}
+function wvNewBlock(kind){ return kind==='wait'?{wait:3}:{type:'grunt',count:5,every:0.5}; }
+function wvEnemyName(k){ return trText(ENEMIES[k].name); }
+function wvRender(){
+  const area=document.getElementById('wvArea'); area.innerHTML='';
+  if(!wvWaves.length){ const e=document.createElement('div'); e.className='wvEmpty'; e.textContent='No waves yet. Add one with + New wave.'; area.appendChild(e); }
+  wvWaves.forEach((w,wi)=>{
+    const st=document.createElement('div'); st.className='wvStack'; st.dataset.w=wi;
+    const hat=document.createElement('div'); hat.className='wvHat';
+    const ttl=document.createElement('b'); ttl.textContent='Wave '+(wi+1); hat.appendChild(ttl);
+    const info=document.createElement('span'); info.className='wvHatInfo'; hat.appendChild(info);
+    const tools=document.createElement('span'); tools.className='wvHatTools';
+    const dup=document.createElement('button'); dup.textContent='⧉'; dup.title='Duplicate'; dup.onclick=()=>wvAddWave(wi);
+    const del=document.createElement('button'); del.textContent='✕'; del.title='Delete'; del.onclick=()=>{ wvWaves.splice(wi,1); wvDirty=true; wvRender(); };
+    tools.appendChild(dup); tools.appendChild(del); hat.appendChild(tools); st.appendChild(hat);
+    if(!w.length){ const e=document.createElement('div'); e.className='wvEmpty'; e.textContent='Empty wave: drop blocks here.'; st.appendChild(e); }
+    w.forEach((b,bi)=>st.appendChild(wvBlockEl(b,wi,bi)));
+    area.appendChild(st);
+  });
+  wvRefresh();
+}
+function wvBlockEl(b,wi,bi){
+  const el=document.createElement('div'); el.className='wvBlock '+(b.wait!=null?'wvWait':'wvEnemy'); el.dataset.w=wi; el.dataset.b=bi;
+  const num=(val,min,max,step,set,cls)=>{ const i=document.createElement('input'); i.type='number'; i.min=min; i.max=max; i.step=step; i.value=val; i.className=cls||'';
+    i.oninput=()=>{ const v=parseFloat(i.value); if(isFinite(v)){ set(Math.min(max,Math.max(min,v))); wvDirty=true; wvRefresh(); } }; return i; };
+  const txt=s=>{ const e=document.createElement('span'); e.textContent=s; return e; };
+  if(b.wait!=null){
+    el.appendChild(txt('Cooldown')); el.appendChild(num(b.wait,0,120,0.5,v=>b.wait=Math.round(v*10)/10)); el.appendChild(txt('seconds'));
+  } else {
+    const cv=document.createElement('canvas'); cv.className='wvIcon'; el.appendChild(cv);
+    const sel=document.createElement('select');
+    Object.keys(ENEMIES).forEach(k=>{ const o=document.createElement('option'); o.value=k; o.textContent=wvEnemyName(k); sel.appendChild(o); });
+    sel.value=b.type; sel.onchange=()=>{ b.type=sel.value; wvDirty=true; drawEnemyIcon(cv,b.type,false); wvRefresh(); };
+    el.appendChild(sel);
+    el.appendChild(txt('×')); el.appendChild(num(b.count,1,200,1,v=>b.count=Math.round(v),'wvCount'));
+    el.appendChild(txt('every')); el.appendChild(num(b.every,0.1,10,0.1,v=>b.every=Math.round(v*10)/10)); el.appendChild(txt('s'));
+    try{ drawEnemyIcon(cv,b.type,false); }catch(e){}
+  }
+  const tm=document.createElement('span'); tm.className='wvTime'; el.appendChild(tm);
+  el.addEventListener('pointerdown',ev=>{ if(ev.target.closest('input,select,button'))return; wvStartDrag(ev,{w:wi,b:bi},el); });
+  return el;
+}
+// timings on every block and wave, without rebuilding (so typing keeps its focus)
+function wvRefresh(){
+  let all=0, longest=0;
+  document.querySelectorAll('#wvArea .wvStack').forEach(st=>{
+    const wi=+st.dataset.w, T=waveTimeline(wvWaves[wi]);
+    all+=T.events.length; longest=Math.max(longest,T.total);
+    st.querySelector('.wvHatInfo').textContent=T.events.length+' enemies · '+T.total.toFixed(1)+' s';
+    st.querySelectorAll('.wvBlock').forEach(el=>{ const m=T.marks[+el.dataset.b], tm=el.querySelector('.wvTime'), b=wvWaves[wi][+el.dataset.b];
+      tm.textContent=!m?'':b.wait!=null?'waits '+(+b.wait).toFixed(1)+' s':(m.end>m.start?m.start.toFixed(1)+' s – '+m.end.toFixed(1)+' s':'at '+m.start.toFixed(1)+' s'); });
+  });
+  const sm=document.getElementById('wvSummary');
+  if(sm)sm.textContent=wvWaves.length+' waves · '+all+' enemies · longest wave '+longest.toFixed(1)+' s';
+}
+// dragging: from the palette (a new block) or out of a wave (move it, or drop it outside to delete)
+function wvStartDrag(ev,src,el){
+  ev.preventDefault();
+  wvDrag={src,el,x0:ev.clientX,y0:ev.clientY,moved:false,ghost:null,target:null};
+  window.addEventListener('pointermove',wvMove); window.addEventListener('pointerup',wvUp,{once:true});
+}
+function wvMove(ev){
+  const d=wvDrag; if(!d)return;
+  if(!d.moved){ if(Math.hypot(ev.clientX-d.x0,ev.clientY-d.y0)<6)return;
+    d.moved=true; const r=d.el.getBoundingClientRect();
+    d.ghost=d.el.cloneNode(true); d.ghost.classList.add('wvGhost'); d.ghost.style.width=r.width+'px';
+    d.dx=d.x0-r.left; d.dy=d.y0-r.top; document.body.appendChild(d.ghost);
+    if(d.src.kind==null)d.el.classList.add('wvLifted'); }
+  d.ghost.style.left=(ev.clientX-d.dx)+'px'; d.ghost.style.top=(ev.clientY-d.dy)+'px';
+  document.querySelectorAll('.wvDrop').forEach(e=>e.remove()); d.target=null;
+  for(const st of document.querySelectorAll('#wvArea .wvStack')){
+    const r=st.getBoundingClientRect();
+    if(ev.clientX<r.left-30||ev.clientX>r.right+30||ev.clientY<r.top-10||ev.clientY>r.bottom+24)continue;
+    const blocks=[...st.querySelectorAll('.wvBlock')].filter(b=>!b.classList.contains('wvLifted'));
+    let idx=blocks.length, before=null;
+    for(let i=0;i<blocks.length;i++){ const br=blocks[i].getBoundingClientRect(); if(ev.clientY<br.top+br.height/2){ idx=+blocks[i].dataset.b; before=blocks[i]; break; } }
+    if(before==null&&blocks.length)idx=+blocks[blocks.length-1].dataset.b+1;
+    if(!blocks.length)idx=0;
+    const line=document.createElement('div'); line.className='wvDrop';
+    if(before)st.insertBefore(line,before); else st.appendChild(line);
+    d.target={w:+st.dataset.w,b:idx}; break;
+  }
+  // keep the wave list scrolling while dragging near its edges
+  const a=document.getElementById('wvArea'), ar=a.getBoundingClientRect();
+  if(ev.clientY>ar.bottom-30)a.scrollTop+=12; else if(ev.clientY<ar.top+30)a.scrollTop-=12;
+}
+function wvUp(){
+  const d=wvDrag; wvDrag=null; window.removeEventListener('pointermove',wvMove);
+  if(!d)return;
+  if(d.ghost)d.ghost.remove(); document.querySelectorAll('.wvDrop').forEach(e=>e.remove());
+  if(!d.moved){                                  // a tap on a palette block adds it to the last wave
+    if(d.src.kind){ if(!wvWaves.length)wvWaves.push([]); wvWaves[wvWaves.length-1].push(wvNewBlock(d.src.kind)); wvDirty=true; wvRender();
+      const a=document.getElementById('wvArea'); a.scrollTop=a.scrollHeight; }
+    return;
+  }
+  let block;
+  if(d.src.kind)block=wvNewBlock(d.src.kind);
+  else { block=wvWaves[d.src.w].splice(d.src.b,1)[0];
+    if(d.target&&d.target.w===d.src.w&&d.target.b>d.src.b)d.target.b--; }
+  if(d.target)wvWaves[d.target.w].splice(d.target.b,0,block);
+  wvDirty=true; wvRender();
+}
 function sbxCode(){
   const R=sbxR||sbxRoutes();
   return JSON.stringify({v:3,orient:sbx.orient,COLS:sbx.COLS,ROWS:sbx.ROWS,ground:sbx.ground,pathCol:sbx.pathCol,
     routeGroups:R.groups,lakeExits:R.lakeExits,spiderRoutes:R.spiderRoutes,
     nests:R.nests,trees:sbx.trees,lake:sbx.lake,lakeSpawns:sbx.lakeSpawns,forest:sbx.forest,spiderDens:sbx.spiderDens,
     spiderNests:sbx.nests,webs:sbx.webs,solidWebs:sbx.solidWebs,bridges:sbx.bridges,webPaths:sbx.webPaths,bushes:sbx.bushes,bigBushes:sbx.bigBushes,queens:sbx.queens,webWalls:sbx.webWalls,cocoons:sbx.cocoons,eggSacs:sbx.eggSacs,bones:sbx.bones,ruins:sbx.ruins,silkBridges:sbx.silkBridges,tunnelIns:sbx.tunnelIns,tunnelOuts:sbx.tunnelOuts,sewers:sbx.sewers,graves:sbx.graves,graveyards:sbx.graveyards,crypts:sbx.crypts,houses:sbx.houses,pumpkins:sbx.pumpkins,jacks:sbx.jacks,barns:sbx.barns,thornPaths:sbx.thornPaths,corns:sbx.corns,wells:sbx.wells,candles:sbx.candles,openGraves:sbx.openGraves,
-    road:sbx.path,spawns:sbx.spawns,bases:sbx.bases});
+    road:sbx.path,spawns:sbx.spawns,bases:sbx.bases,waveScript:sbx.waveScript||undefined});
 }
 function sbxRender(){
   if(!sbx)return;
@@ -5074,6 +5258,8 @@ function sbxRender(){
   document.querySelectorAll('.sbxTab').forEach(c=>c.classList.toggle('on',c.dataset.tab===sbxTab));
   document.getElementById('sandboxScreen').classList.toggle('big',sbx.COLS>19||sbx.ROWS>18);
   [['C','computer'],['P','phone'],['L','large'],['H','huge']].forEach(([id,o])=>document.getElementById('sbxSize'+id).classList.toggle('on',sbx.orient===o));
+  { const wb=document.getElementById('sbxWavesBtn'); if(wb){ const ws=cleanWaveScript(sbx.waveScript);
+      wb.textContent=ws?'🌊 Your waves ('+ws.length+')':'🌊 Default waves ('+SBX_WAVES.length+')'; wb.classList.toggle('on',!!ws); } }
   const rb=document.getElementById('sbxRoutesBtn'); if(rb){ rb.classList.toggle('on',sbxShowRoutes); rb.textContent=sbxShowRoutes?'Routes: shown':'Routes: hidden'; }
   const pc=PATH_COLORS[sbx.pathIdx], gc=GRASS_COLORS[sbx.grassIdx];
   document.getElementById('sbxPathSw').style.background=sbx.pathCol;
@@ -5261,6 +5447,7 @@ function sbxParse(d){
         for(let k=0;k<=m;k++){ const p=[r1+Math.sign(r2-r1)*k,c1+Math.sign(c2-c1)*k]; if(!sHas(n.path,p[0],p[1]))n.path.push(p);} } });
       n.spawns=d.paths.map(wp=>wp[0]); n.bases=[]; d.paths.forEach(wp=>{ const e=wp[wp.length-1]; if(!sHas(n.bases,e[0],e[1]))n.bases.push(e); });
     }
+    n.waveScript=cleanWaveScript(d.waveScript);
     if(d.pathCol){ n.pathCol=d.pathCol; const i=PATH_COLORS.findIndex(x=>x.c===d.pathCol); n.pathIdx=i<0?0:i; n.pathCustom=i<0; }
     if(d.ground){ d.ground=undeep(d.ground); n.ground=d.ground; const i=GRASS_COLORS.findIndex(x=>x.c===d.ground); n.grassIdx=i<0?0:i; n.grassCustom=i<0; }
     return n;
@@ -5269,8 +5456,9 @@ function sbxPlay(){
   const R=sbxRoutes();
   if(R.errs.length){ sbxRender(); return; }
   const L=sbxLayout(R);
-  const waves=sbx.bushes.length?SBX_WAVES.map((w,i)=>(i===3||i===5||i===7)?w.concat([W('thief',2+Math.floor(i/3),760)]):w):SBX_WAVES;
-  const def={name:'Sandbox',startGold:400,lives:20,waves,
+  const ws=cleanWaveScript(sbx.waveScript);
+  const waves=ws||(sbx.bushes.length?SBX_WAVES.map((w,i)=>(i===3||i===5||i===7)?w.concat([W('thief',2+Math.floor(i/3),760)]):w):SBX_WAVES);
+  const def={name:'Sandbox',startGold:400,lives:20,waves,exactWaves:!!ws,
     sewerWave:sbx.sewers.length?3:0,bonesWave:sbx.bones.length?3:0,lakeWave:R.lakeExits.length?4:0,layout:{computer:L,phone:L}};
   if(R.spiderRoutes.length){ def.spiders={wave:5,count:9}; def.bigSpiderWave=8; }
   configureTestSlot(def,Object.assign({},REGIONS[0],{name:'Sandbox',ground:sbx.ground,pathCol:sbx.pathCol}));
@@ -5354,6 +5542,7 @@ function dlcParse(text){
       if(def.lakeWave==null&&L.computer.lakeExits.length)def.lakeWave=4;
       if(!def.spiders&&L.computer.forestPaths){ def.spiders={wave:5,count:9}; if(def.bigSpiderWave==null)def.bigSpiderWave=8; }
     }
+    if(!lv.waves){ const ws=cleanWaveScript(lv.waveScript||code.waveScript); if(ws){ def.waves=ws; def.exactWaves=true; } }   // waves built in Waves control
     pack.levels.push(def);
   });
   return pack;
@@ -5794,6 +5983,30 @@ function makeEnemy(type,pathIdx){
     shield:E.shield||0, maxShield:E.shield||0, shieldCdMax:E.shieldCd||0, shieldCd:0,
     shotCd:E.shoots?300:0, flash:0, webs:E.webs||0, cellKey:null, poisonHit:E.poisonHit||0};
 }
+// exact waves (made in the Testing app's Waves control): a list of enemy blocks {type,count,every}
+// and cooldown blocks {wait}; returns every enemy with the second it appears, plus each block's start and end
+function waveTimeline(blocks){
+  const events=[], marks=[]; let t=0, pend=0;
+  (blocks||[]).forEach(b=>{
+    if(b&&b.wait!=null){ pend=Math.max(0,+b.wait||0); marks.push({start:t,end:t+pend}); return; }
+    const n=Math.max(0,Math.round(+(b&&b.count)||0)), ev=Math.max(0.1,+(b&&b.every)||0.5);
+    if(!b||!ENEMIES[b.type]||!n){ marks.push(null); return; }
+    t+=pend; for(let i=0;i<n;i++)events.push({t:t+i*ev,type:b.type});
+    marks.push({start:t,end:t+(n-1)*ev}); t+=(n-1)*ev; pend=ev;
+  });
+  return {events,marks,total:events.length?events[events.length-1].t:0};
+}
+// any wave list read from level code or a DLC: keeps only blocks the game understands
+function cleanWaveScript(ws){
+  if(!Array.isArray(ws))return null;
+  const out=ws.slice(0,60).map(w=>(Array.isArray(w)?w:[]).slice(0,80).map(b=>{
+    if(!b||typeof b!=='object')return null;
+    if(b.wait!=null)return {wait:Math.min(120,Math.max(0,Math.round((+b.wait||0)*10)/10))};
+    const type=b.type||b.enemy; if(!ENEMIES[type])return null;
+    return {type,count:Math.min(200,Math.max(1,Math.round(+b.count||1))),every:Math.min(10,Math.max(0.1,Math.round((+b.every||0.5)*10)/10))};
+  }).filter(Boolean)).filter(w=>w.some(b=>b.type));
+  return out.length?out:null;
+}
 function spawnWave(){
   if(gameOver||wave>=totalWaves)return;
   if(waveActive&&!earlyReady())return;
@@ -5804,6 +6017,33 @@ function spawnWave(){
   towers.forEach(x=>{ if(x.isFarm)gold+=x.factory?15:10; });
   updateHud();
   const lv=LEVELS[currentLevel];
+  // which road the k-th enemy of a wave takes, spreading them over every spawn
+  const roadFor=k=>{
+    const nMain=forestPathIdx>=0?forestPathIdx:paths.length;
+    let pi=k%nMain;
+    if(routeGroups&&routeGroups.length){
+      const gi=k%routeGroups.length, grp=routeGroups[gi];
+      groupTurn[gi]=(groupTurn[gi]||0)+1; pi=grp[groupTurn[gi]%grp.length];
+    }
+    return pi;
+  };
+  if(lv.def&&lv.def.exactWaves){                     // to the tenth of a second, exactly as built
+    const evs=waveTimeline(lv.def.waves[wave-1]).events;
+    const wi=waveInfo[myWave]={total:evs.length,spawned:0,spawnDone:false,done:false};
+    let k=0, el=0, last=performance.now(), myIv=null;
+    const tick=()=>{
+      const now=performance.now(), dt=now-last; last=now;
+      if(paused||gameOver)return;
+      el+=dt/1000;
+      while(k<evs.length&&evs[k].t<=el){ const e=makeEnemy(evs[k].type,roadFor(k)); e.waveNo=myWave; wi.spawned++; enemies.push(e); k++; }
+      if(k>=evs.length){ clearInterval(myIv); spawnIvs=spawnIvs.filter(x=>x!==myIv); wi.spawnDone=true; waveSpawnDone=spawnIvs.length===0; }
+    };
+    myIv=setInterval(tick,50); spawnIvs.push(myIv); spawnIv=myIv;
+    tick();
+    document.getElementById('startWave').disabled=true;
+    if(lv.def.bushes&&bushes.length===0)placeBushes();
+    return;
+  }
   let queue=[];
   if(lv.def){
     (lv.def.waves[wave-1]||[]).forEach(g=>{ for(let i=0;i<g.count;i++)queue.push({type:g.type,gap:g.gap}); });

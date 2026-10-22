@@ -161,6 +161,7 @@ A separate app with its own play link and desktop builds: `fire-at-will-testing.
 - **Test a level:** pick any built level with a slider and play it. Nothing is saved.
 - **Sandbox:** a level editor.
   - **Description button** (added 22 Oct 2026): turn it on, then tap any block on the map or any tool button to see its size, where it can go and what it does (English and Russian). The texts live in `BLOCK_INFO` in `fire-at-will.html`, one entry per block in top-first order; every new sandbox block needs an entry there.
+  - **Waves control** (added 22 Oct 2026): a Scratch-style screen for the sandbox map's waves. Each wave is a stack of **Enemy** blocks (enemy, count, one every N seconds) and **Cooldown** blocks (wait N seconds before the next group); drag to add, reorder or delete (drop outside), tap a palette block to add it to the last wave, duplicate or delete whole waves. Every block shows its exact start and end second. Saved with the sandbox map and in the level code as `waveScript` (a list of waves, each a list of `{"type","count","every"}` or `{"wait"}`); levels and DLC levels built from that code play those waves with exact timing (`exactWaves`, `waveTimeline`). Without it the sandbox uses its 8 default waves.
   - **Map sizes:** Computer 19×12, Phone 10×18, Large 25×16 and Huge 31×20.
   - **Colours:** sliders for path and grass colour.
   - **Tools:** Path, Spawn, Base and Eraser, plus three tabs:
