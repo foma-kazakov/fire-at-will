@@ -1,0 +1,10 @@
+{
+ "fireAtWillDLC": 1,
+ "id": "shroomed",
+ "name": "Shroomed",
+ "author": "foma",
+ "version": "0.1",
+ "description": "The Glowshroom Valley: a night island off the bottom-right corner of the map, with dark blue grass and big glowing mushrooms. 5 levels and 1 extra are coming soon.",
+ "map": "shroomed",
+ "levels": []
+}
