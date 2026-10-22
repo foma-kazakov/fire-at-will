@@ -768,7 +768,7 @@ new MutationObserver(ms=>{ for(const m of ms){
     else if(m.type==='attributes')trAttr(m.target,m.attributeName);
     else m.addedNodes.forEach(trNode); } })
   .observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['placeholder','title','aria-label']});
-Object.assign(I18N.ru,{"The Graveyard":"Кладбище","Pumpkin Farm":"Тыквенная ферма","Ashen Wastes":"Пепельные пустоши","Wretched Woodland":"Гиблая чаща","The Halloween island is coming soon.":"Остров Хэллоуина скоро откроется.","Adds the Halloween island to the campaign map":"Добавляет остров Хэллоуина на карту кампании","Adds the Halloween map pieces to the Sandbox":"Добавляет детали карты Хэллоуина в Песочницу","Testing is its own app now: Fire at Will Testing.":"Тестирование теперь отдельное приложение: Fire at Will Testing.","Try levels, maps and enemies. The game's own progress is never touched.":"Пробуйте уровни, карты и врагов. Прогресс самой игры не затрагивается.","Zombie":"Зомби","Skeleton":"Скелет","Skeleton Knight":"Скелет-рыцарь","Zombie Grunt":"Зомби-пехотинец","Abandoned house":"Заброшенный дом","the abandoned house breaks open on a random wave":"заброшенный дом вскрывается на случайной волне","The door bursts — zombie grunts pour out of the abandoned house!":"Дверь вылетает — из заброшенного дома валят зомби-пехотинцы!","Restless Dead":"Неупокоенный мертвец","120 health, walks like a grunt.":"120 здоровья, ходит как пехотинец.","A bite infects your soldiers: 2.5 seconds later they rise as zombies.":"Укус заражает ваших солдат: через 2,5 секунды они встают зомби.","Rises from graves and graveyards.":"Встаёт из могил и с кладбищ.","Keep Firework soldiers and Backup out of its reach.":"Держите солдат фейерверка и подкрепление подальше от него.","Kill it at range before it bites.":"Убивайте издалека, пока не укусил.","Splash damage on the road.":"Урон по площади на дороге.","Knife Thrower":"Метатель ножей","125 health and a knife on its belt.":"125 здоровья и нож на поясе.","Stops to throw a knife that stuns a tower for 1.5 seconds.":"Останавливается и метает нож, оглушая башню на 1,5 секунды.","Throws again every 2.5 seconds.":"Бросает снова каждые 2,5 секунды.","Menders and Farms are never targeted.":"Лекари и фермы не становятся целью.","Long-range towers that hit it before it gets close: Sniper.":"Дальнобойные башни, бьющие до сближения: Снайпер.","Kill it while it stands still to throw.":"Убивайте, пока он стоит и метает.","Undead Champion":"Чемпион нежити","250 health in rusted armour.":"250 здоровья в ржавых доспехах.","Hits your units twice as hard.":"Бьёт ваших юнитов вдвое сильнее.","Marches out of graveyards and crypts.":"Выходит с кладбищ и из склепов.","Slow — easy to focus with Snipers and Cannons.":"Медленный — его легко добить Снайперами и Пушками.","Keep your units away and let towers work.":"Держите юнитов подальше, пусть работают башни.","Infected Footsoldier":"Заражённый пехотинец","A grunt the plague got to: 100 health.":"Пехотинец, до которого добралась зараза: 100 здоровья.","Its bite infects your soldiers, just like a zombie.":"Его укус заражает солдат, как у зомби.","On a random wave the abandoned house door breaks and 3–7 pour out.":"На случайной волне дверь заброшенного дома ломается и вываливаются 3–7 штук.","Grunt-level health — any tower handles it.":"Здоровья как у пехотинца — справится любая башня.","Splash near the house door.":"Урон по площади у двери дома.","Keep soldiers away from it.":"Держите солдат подальше.","Grave":"Могила","Graveyard":"Кладбище","Crypt":"Склеп","Halloween":"Хэллоуин","Graves go on grass beside the road.":"Могилы ставятся на траву у дороги.","Something already stands here.":"Здесь уже что-то стоит.","Its gate can only face this road. Use the Eraser to remove it.":"Ворота могут смотреть только на эту дорогу. Убрать кладбище можно ластиком.","Not enough room here — it needs 2×2 tiles.":"Здесь мало места — нужно 2×2 клетки.","It needs 2×2 clear tiles off the road and water.":"Нужно 2×2 свободные клетки не на дороге и не в воде.","A graveyard must have one whole side against the road (2 road tiles).":"Кладбище должно стоять целой стороной к дороге (2 клетки дороги).","Tap the graveyard again to turn its gate.":"Нажмите на кладбище ещё раз, чтобы повернуть ворота.","Not enough room here — it needs 2 tiles side by side.":"Здесь мало места — нужно 2 клетки рядом.","It needs 2 clear tiles side by side, off the road and water.":"Нужно 2 свободные клетки рядом, не на дороге и не в воде.","A graveyard gate no longer opens onto the road.":"Ворота кладбища больше не выходят на дорогу.","zombies leave the graves on the last wave":"зомби встают из могил в последней волне","the dead never stop coming":"мертвецы идут без остановки","skeletons crawl from the bones on wave 3":"скелеты выползают из костей на 3-й волне","Skeletons crawl out of the bones!":"Из костей выползают скелеты!","The graves open!":"Могилы открываются!","Check for updates":"Проверить обновления","Restart to update":"Перезапустить и обновить","A new version is downloaded.":"Новая версия загружена.","You have the latest version.":"У вас последняя версия.","Could not check for updates. Are you online?":"Не удалось проверить обновления. Есть ли интернет?","Checking for updates…":"Проверка обновлений…","A new version of the game is ready.":"Новая версия игры готова.","Restart":"Перезапустить","This DLC needs a newer version of the game.":"Для этого DLC нужна более новая версия игры.","Something stirs in the Wretched Woodland…":"В Гиблой чаще что-то шевелится…","Pumpkin":"Тыква","Thorny path":"Тернистая дорога","thorny roots hurt your units on the road":"колючие корни ранят ваших юнитов на дороге","Jack o' lantern":"Тыква-фонарь","Barn":"Амбар","Jack o' Lantern":"Джек-фонарь","Pumpkins grow on grass off the road.":"Тыквы растут на траве, не на дороге.","Not enough room here — a barn needs 3 tiles across and 2 down.":"Здесь мало места — амбару нужно 3 клетки в ширину и 2 в высоту.","A barn needs 3×2 clear tiles off the road and water.":"Амбару нужно 3×2 свободные клетки не на дороге и не в воде.","jack o' lanterns rise on a random wave":"тыквы-фонари встают на случайной волне","A jack o' lantern climbs out of the ground!":"Тыква-фонарь выбирается из земли!","Pumpkin Horror":"Тыквенный ужас","200 health on a body of twisted roots.":"200 здоровья на теле из скрученных корней.","Sleeps in the field as a carved pumpkin.":"Спит в поле резной тыквой.","On a random wave it grows legs, climbs out and walks the road.":"На случайной волне отращивает ноги, выбирается и идёт по дороге.","Its face lights up the wave before it rises.":"Её лицо загорается за волну до того, как она встанет."});
+Object.assign(I18N.ru,{"The Graveyard":"Кладбище","Pumpkin Farm":"Тыквенная ферма","Ashen Wastes":"Пепельные пустоши","Wretched Woodland":"Гиблая чаща","The Halloween island is coming soon.":"Остров Хэллоуина скоро откроется.","Adds the Halloween island to the campaign map":"Добавляет остров Хэллоуина на карту кампании","Adds the Halloween map pieces to the Sandbox":"Добавляет детали карты Хэллоуина в Песочницу","Testing is its own app now: Fire at Will Testing.":"Тестирование теперь отдельное приложение: Fire at Will Testing.","Try levels, maps and enemies. The game's own progress is never touched.":"Пробуйте уровни, карты и врагов. Прогресс самой игры не затрагивается.","Zombie":"Зомби","Skeleton":"Скелет","Skeleton Knight":"Скелет-рыцарь","Zombie Grunt":"Зомби-пехотинец","Abandoned house":"Заброшенный дом","the abandoned house breaks open on a random wave":"заброшенный дом вскрывается на случайной волне","The door bursts — zombie grunts pour out of the abandoned house!":"Дверь вылетает — из заброшенного дома валят зомби-пехотинцы!","Restless Dead":"Неупокоенный мертвец","120 health, walks like a grunt.":"120 здоровья, ходит как пехотинец.","A bite infects your soldiers: 2.5 seconds later they rise as zombies.":"Укус заражает ваших солдат: через 2,5 секунды они встают зомби.","Rises from graves and graveyards.":"Встаёт из могил и с кладбищ.","Keep Firework soldiers and Backup out of its reach.":"Держите солдат фейерверка и подкрепление подальше от него.","Kill it at range before it bites.":"Убивайте издалека, пока не укусил.","Splash damage on the road.":"Урон по площади на дороге.","Knife Thrower":"Метатель ножей","125 health and a knife on its belt.":"125 здоровья и нож на поясе.","Stops to throw a knife that stuns a tower for 1.5 seconds.":"Останавливается и метает нож, оглушая башню на 1,5 секунды.","Throws again every 2.5 seconds.":"Бросает снова каждые 2,5 секунды.","Menders and Farms are never targeted.":"Лекари и фермы не становятся целью.","Long-range towers that hit it before it gets close: Sniper.":"Дальнобойные башни, бьющие до сближения: Снайпер.","Kill it while it stands still to throw.":"Убивайте, пока он стоит и метает.","Undead Champion":"Чемпион нежити","250 health in rusted armour.":"250 здоровья в ржавых доспехах.","Hits your units twice as hard.":"Бьёт ваших юнитов вдвое сильнее.","Marches out of graveyards and crypts.":"Выходит с кладбищ и из склепов.","Slow — easy to focus with Snipers and Cannons.":"Медленный — его легко добить Снайперами и Пушками.","Keep your units away and let towers work.":"Держите юнитов подальше, пусть работают башни.","Infected Footsoldier":"Заражённый пехотинец","A grunt the plague got to: 100 health.":"Пехотинец, до которого добралась зараза: 100 здоровья.","Its bite infects your soldiers, just like a zombie.":"Его укус заражает солдат, как у зомби.","On a random wave the abandoned house door breaks and 3–7 pour out.":"На случайной волне дверь заброшенного дома ломается и вываливаются 3–7 штук.","Grunt-level health — any tower handles it.":"Здоровья как у пехотинца — справится любая башня.","Splash near the house door.":"Урон по площади у двери дома.","Keep soldiers away from it.":"Держите солдат подальше.","Grave":"Могила","Graveyard":"Кладбище","Crypt":"Склеп","Halloween":"Хэллоуин","Graves go on grass beside the road.":"Могилы ставятся на траву у дороги.","Something already stands here.":"Здесь уже что-то стоит.","Its gate can only face this road. Use the Eraser to remove it.":"Ворота могут смотреть только на эту дорогу. Убрать кладбище можно ластиком.","Not enough room here — it needs 2×2 tiles.":"Здесь мало места — нужно 2×2 клетки.","It needs 2×2 clear tiles off the road and water.":"Нужно 2×2 свободные клетки не на дороге и не в воде.","A graveyard must have one whole side against the road (2 road tiles).":"Кладбище должно стоять целой стороной к дороге (2 клетки дороги).","Tap the graveyard again to turn its gate.":"Нажмите на кладбище ещё раз, чтобы повернуть ворота.","Not enough room here — it needs 2 tiles side by side.":"Здесь мало места — нужно 2 клетки рядом.","It needs 2 clear tiles side by side, off the road and water.":"Нужно 2 свободные клетки рядом, не на дороге и не в воде.","A graveyard gate no longer opens onto the road.":"Ворота кладбища больше не выходят на дорогу.","zombies leave the graves on the last wave":"зомби встают из могил в последней волне","the dead never stop coming":"мертвецы идут без остановки","skeletons crawl from the bones on wave 3":"скелеты выползают из костей на 3-й волне","Skeletons crawl out of the bones!":"Из костей выползают скелеты!","The graves open!":"Могилы открываются!","Check for updates":"Проверить обновления","Restart to update":"Перезапустить и обновить","A new version is downloaded.":"Новая версия загружена.","You have the latest version.":"У вас последняя версия.","Could not check for updates. Are you online?":"Не удалось проверить обновления. Есть ли интернет?","Checking for updates…":"Проверка обновлений…","A new version of the game is ready.":"Новая версия игры готова.","Restart":"Перезапустить","This DLC needs a newer version of the game.":"Для этого DLC нужна более новая версия игры.","Something stirs in the Wretched Woodland…":"В Гиблой чаще что-то шевелится…","Pumpkin":"Тыква","Gravedigger":"Могильщик","Grave Digger":"Копатель могил","280 health, but very slow.":"280 здоровья, но очень медленный.","Every 6 seconds it digs a grave right on the road (3 at most).":"Каждые 6 секунд копает могилу прямо на дороге (не больше 3).","Each grave has 500 health and blocks your Backup and Heavy Force. On the last wave a zombie climbs out of it.":"У каждой могилы 500 здоровья, она преграждает путь Подкреплению и Тяжёлой технике. На последней волне из неё вылезает зомби.","Kill it early, before it has dug its graves.":"Убейте его пораньше, пока он не выкопал могилы.","Snipers and Cannons reach it from afar.":"Снайперы и Пушки достают его издалека.","The Heavy Force tank smashes graves fastest.":"Танк Тяжёлой техники разбивает могилы быстрее всех.","Pumpkin Bomber":"Тыква-бомба","Rolling Bomb":"Катящаяся бомба","A carved pumpkin packed with powder: 90 health, rolls fast.":"Резная тыква, набитая порохом: 90 здоровья, катится быстро.","When it rolls past a tower it veers off the road straight at it.":"Проезжая мимо башни, сворачивает с дороги прямо на неё.","It blows up on the tower and knocks it out for 10 seconds, and the towers next to it for 4.":"Взрывается на башне и выводит её из строя на 10 секунд, а соседние башни — на 4.","Low health: shoot it before it gets close.":"Мало здоровья: подстрелите её, пока она не подкатилась.","Snipers and Gunners pick it off before it reaches a tower.":"Снайперы и Стрелки снимут её, пока она не добралась до башни.","Towers placed away from the road are safe from it.":"Башням вдали от дороги она не страшна.","A pumpkin bomber blew up your @!":"Тыква-бомба взорвала вашу башню «@»!","A grave on the road has been smashed!":"Могила на дороге разбита!","Thorny path":"Тернистая дорога","thorny roots hurt your units on the road":"колючие корни ранят ваших юнитов на дороге","Jack o' lantern":"Тыква-фонарь","Barn":"Амбар","Jack o' Lantern":"Джек-фонарь","Pumpkins grow on grass off the road.":"Тыквы растут на траве, не на дороге.","Not enough room here — a barn needs 3 tiles across and 2 down.":"Здесь мало места — амбару нужно 3 клетки в ширину и 2 в высоту.","A barn needs 3×2 clear tiles off the road and water.":"Амбару нужно 3×2 свободные клетки не на дороге и не в воде.","jack o' lanterns rise on a random wave":"тыквы-фонари встают на случайной волне","A jack o' lantern climbs out of the ground!":"Тыква-фонарь выбирается из земли!","Pumpkin Horror":"Тыквенный ужас","200 health on a body of twisted roots.":"200 здоровья на теле из скрученных корней.","Sleeps in the field as a carved pumpkin.":"Спит в поле резной тыквой.","On a random wave it grows legs, climbs out and walks the road.":"На случайной волне отращивает ноги, выбирается и идёт по дороге.","Its face lights up the wave before it rises.":"Её лицо загорается за волну до того, как она встанет."});
 Object.assign(I18N.ru,{"Extra levels from DLC files.":"Дополнительные уровни из файлов DLC.","Drop a DLC file here":"Перетащите сюда файл DLC","or tap to choose one":"или нажмите, чтобы выбрать его","DLC folder":"Папка DLC","Open DLC folder":"Открыть папку DLC","No DLC yet. Put a DLC file in the DLC folder, or drop it above.":"DLC пока нет. Положите файл DLC в папку DLC или перетащите его выше.","No DLC yet. Drop a DLC file above.":"DLC пока нет. Перетащите файл DLC выше.","Remove":"Удалить","beaten #/#":"пройдено #/#","from the DLC folder":"из папки DLC"," · built into Testing":" · встроено в Тестирование","built into Testing":"встроено в Тестирование","Every DLC is built in. Play its levels, or drop in a new DLC file.":"Все DLC уже встроены. Играйте их уровни или добавьте новый файл DLC.","DLC removed.":"DLC удалено.","DLC added":"DLC добавлено","That file is too big for a DLC.":"Этот файл слишком большой для DLC.","This file is not a DLC (it is not JSON).":"Этот файл не DLC (это не JSON).","This file is not a Fire at Will DLC.":"Этот файл не DLC для Fire at Will.","This DLC has no id or name.":"У этого DLC нет id или названия.","This DLC has no levels.":"В этом DLC нет уровней.","Level # has no map (level code).":"У уровня # нет карты (кода уровня).","Level # has a wave with no known enemies.":"В уровне # есть волна без известных врагов.","Level # has no road from a spawn to a base.":"В уровне # нет дороги от точки появления до базы.","Campaign":"Кампания","◀ Back":"◀ Назад","Final wave":"Последняя волна","Lives left: #/#":"Осталось жизней: #/#","Lives left: #/# · 💎 +#":"Осталось жизней: #/# · 💎 +#"});
 // words drawn straight onto the canvas go through the same table
 ['fillText','strokeText','measureText'].forEach(fn=>{ const orig=CanvasRenderingContext2D.prototype[fn];
@@ -1361,6 +1361,12 @@ const ENCY=[
  {type:'zombiegrunt',role:'Infected Footsoldier',
   skills:['A grunt the plague got to: 100 health.','Its bite infects your soldiers, just like a zombie.','On a random wave the abandoned house door breaks and 3–7 pour out.'],
   weak:['Grunt-level health — any tower handles it.','Splash near the house door.','Keep soldiers away from it.']},
+ {type:'gravedigger',role:'Grave Digger',
+  skills:['280 health, but very slow.','Every 6 seconds it digs a grave right on the road (3 at most).','Each grave has 500 health and blocks your Backup and Heavy Force. On the last wave a zombie climbs out of it.'],
+  weak:['Kill it early, before it has dug its graves.','Snipers and Cannons reach it from afar.','The Heavy Force tank smashes graves fastest.']},
+ {type:'pumpkinbomber',role:'Rolling Bomb',
+  skills:['A carved pumpkin packed with powder: 90 health, rolls fast.','When it rolls past a tower it veers off the road straight at it.','It blows up on the tower and knocks it out for 10 seconds, and the towers next to it for 4.'],
+  weak:['Low health: shoot it before it gets close.','Snipers and Gunners pick it off before it reaches a tower.','Towers placed away from the road are safe from it.']},
  {type:'jack',role:'Pumpkin Horror',
   skills:['200 health on a body of twisted roots.','Sleeps in the field as a carved pumpkin.','On a random wave it grows legs, climbs out and walks the road.'],
   weak:['Its face lights up the wave before it rises.','Slow — easy to focus with Snipers and Cannons.','Splash damage on the road.']},
@@ -1646,6 +1652,8 @@ const ENEMIES={
   zombie:{name:'Zombie',hp:120,speed:1.0,reward:12,r:10,col:'#5d6b4a',bites:true,region:'halloween'},
   skeleton:{name:'Skeleton',hp:125,speed:1.0,reward:13,r:10,col:'#e3dcc4',knives:true,region:'halloween'},
   skeletonknight:{name:'Skeleton Knight',hp:250,speed:0.85,reward:24,r:12,col:'#e3dcc4',dmg:2,region:'halloween'},
+  gravedigger:{name:'Gravedigger',hp:280,speed:0.55,reward:26,r:11,col:'#5b4a3a',digs:true,region:'halloween'},
+  pumpkinbomber:{name:'Pumpkin Bomber',hp:90,speed:1.5,reward:14,r:10,col:'#e07b22',rolls:true,region:'halloween'},
   jack:{name:"Jack o' Lantern",hp:200,speed:0.9,reward:18,r:11,col:'#e07b22',region:'halloween'},
   zombiegrunt:{name:'Zombie Grunt',hp:100,speed:1.0,reward:11,r:10,col:null,bites:true,looksInfected:true,region:'halloween'},
   grassmer:{name:'Grassmer',hp:2600,speed:0.55,reward:90,r:20,col:'#3f7d3a',boss:true,region:'fields'},
@@ -3753,7 +3761,14 @@ function updateTheDead(){
     graves.forEach(g=>{ if(g.done)return; g.done=true; any=true;
       const e=spawnDead('zombie',g.col*CELL+CELL/2,g.row*CELL+CELL/2); e.waveNo=wave;
       const wi=waveInfo[wave]; if(wi){ wi.total++; wi.spawned++; } });
-    if(any)setMsg('The graves open!'); }
+    if(any)setMsg('The graves open!');
+    // graves the gravediggers dug on the road open too, a moment after the wave starts (or after they are dug)
+    roadGraves.forEach(g=>{ if(g.done)return; const wi=waveInfo[wave];
+      if(!g.counted){ g.counted=true; if(wi)wi.total++; }
+      if(g.wait>0){ g.wait--; return; }
+      g.done=true; if(wi)wi.spawned++;
+      const e=spawnDead('zombie',g.x,g.y); e.waveNo=wave; fxSmoke(g.x,g.y,6,'110,84,52',5); });
+    roadGraves=roadGraves.filter(g=>!g.done); }
   // graveyards and crypts never stop once the first wave is called
   if(wave<1)return;
   graveyards.forEach(g=>{
@@ -3761,7 +3776,7 @@ function updateTheDead(){
     g.cd=150+Math.floor(Math.random()*150);
     const o={d:[0,1.2],u:[0,-1.2],l:[-1.2,0],r:[1.2,0]}[g.dir]||[0,1.2];
     const roll=Math.random();
-    spawnDead(roll<0.45?'zombie':roll<0.85?'skeleton':'skeletonknight',(g.col+1+o[0])*CELL,(g.row+1+o[1])*CELL,{nestborn:true});
+    spawnDead(roll<0.42?'zombie':roll<0.8?'skeleton':roll<0.95?'skeletonknight':'gravedigger',(g.col+1+o[0])*CELL,(g.row+1+o[1])*CELL,{nestborn:true});
   });
   crypts.forEach(k=>{
     if(k.cd>0){ k.cd--; return; }
@@ -3990,6 +4005,44 @@ function updateSpecials(){
     const tw=best; knivesFx.push({x1:e.x,y1:e.y-10,x2:tw.x,y2:tw.y,life:12,max:12});
     setTimeout(()=>{ if(towers.includes(tw))tw.disabled=Math.max(tw.disabled,Math.round(90*(e.dmgMul||1))); },200);
   });
+  // gravediggers stop every 6 seconds and dig a grave right on the road (3 at most each); it blocks your units and opens on the last wave
+  enemies.forEach(e=>{
+    if(!e.digs)return;
+    if(e.digFx>0)e.digFx--;
+    if(e.dug>=GRAVEDIGGER_MAX||e.frozen>0||e.dragging)return;
+    if(--e.digCd>0)return;
+    if(roadGraves.some(g=>Math.hypot(g.x-e.x,g.y-e.y)<CELL*1.2)){ e.digCd=30; return; }   // not right next to another one
+    e.digCd=360; e.dug++; e.held=Math.max(e.held||0,45); e.digFx=45;
+    const x=e.x, y=e.y;
+    setTimeout(()=>{ if(gameOver)return; fxSmoke(x,y,6,'110,84,52',5);
+      roadGraves.push({x,y,hp:ROAD_GRAVE_HP,seed:Math.floor(x*7+y*3),wait:120,counted:false,done:false}); },700);
+  });
+  // pumpkin bombers roll down the road, and when a tower is close they roll off at it and blow up, knocking it out
+  for(let i=enemies.length-1;i>=0;i--){
+    const e=enemies[i];
+    if(!e.rolls)continue;
+    e.roll+=e.speed*0.18;
+    if(e.frozen>0||e.dragging)continue;
+    if(!e.bombing){
+      if(!e.target||towers.indexOf(e.target)<0){
+        let best=null, bd=CELL*2.2;
+        towers.forEach(t=>{ const d=Math.hypot(t.x-e.x,t.y-e.y); if(d<bd){ bd=d; best=t; } });
+        if(best){ e.target=best; e.bombing=true; }
+      }
+      continue;
+    }
+    if(towers.indexOf(e.target)<0){ e.bombing=false; e.target=null; continue; }   // its tower was sold: back to the road
+    const dx=e.target.x-e.x, dy=e.target.y-e.y, d=Math.hypot(dx,dy)||1;
+    if(d>14){ const sp=e.speed*1.2; e.x+=dx/d*sp; e.y+=dy/d*sp; continue; }
+    const tw=e.target;
+    tw.disabled=Math.max(tw.disabled,Math.round(600*(e.dmgMul||1)));
+    towers.forEach(t=>{ if(t!==tw&&Math.hypot(t.x-tw.x,t.y-tw.y)<CELL*1.3)t.disabled=Math.max(t.disabled,240); });
+    bolts.push({x:tw.x,y:tw.y,boom:true,life:20}); fxSmoke(tw.x,tw.y,8,'230,120,40',6);
+    for(let k=0;k<16;k++)sparks.push({x:tw.x,y:tw.y,vx:(Math.random()-0.5)*4,vy:-Math.random()*3,life:24,col:k%2?'#ff9a2e':'#ffd25a'});
+    shake=Math.max(shake,4); setMsg('A pumpkin bomber blew up your '+TOWER_TYPES[tw.type].name+'!');
+    if(selectedTower===tw)showTowerInfo(tw);
+    enemies.splice(i,1);
+  }
   for(let i=knivesFx.length-1;i>=0;i--){ if(--knivesFx[i].life<=0)knivesFx.splice(i,1); }
   towers.forEach(t=>{ if(t.disabled>0)t.disabled--; });
 
@@ -4182,6 +4235,9 @@ function updatePowers(){
       const pr=Math.floor(py/CELL), pc=Math.floor(px/CELL);
       if(pr!==Math.floor(a.y/CELL)||pc!==Math.floor(a.x/CELL))wallBlock=wallAt(pr,pc);
     }
+    const roadBlock=wallBlock?null:roadGraves.find(g=>{ if(a.wp<0)return false; const P=a.pth||path, tg=P[a.wp];
+      const d=Math.hypot(g.x-a.x,g.y-a.y); if(d>(a.r||11)+12)return false;
+      return (tg.x-a.x)*(g.x-a.x)+(tg.y-a.y)*(g.y-a.y)>=0; });       // only graves ahead of the unit
     if(silkBridges.some(b=>b.row===Math.floor(a.y/CELL)&&b.col===Math.floor(a.x/CELL))){
       a.hp=0;
       for(let k=0;k<10;k++)sparks.push({x:a.x,y:a.y,vx:(Math.random()-0.5)*2.4,vy:-Math.random()*2.4,life:20,col:'#bfe3ef'});
@@ -4192,6 +4248,12 @@ function updatePowers(){
       for(let k=0;k<8;k++)sparks.push({x:a.x+(wallBlock.col*CELL+CELL/2-a.x)*0.6,y:a.y+(wallBlock.row*CELL+CELL/2-a.y)*0.6,vx:(Math.random()-0.5)*2.5,vy:-Math.random()*2,life:18,col:'#f0f2f5'});
       if(wallBlock.hp<=0){ setMsg('A web wall has been torn down!');
         for(let k=0;k<14;k++)sparks.push({x:wallBlock.col*CELL+CELL/2,y:wallBlock.row*CELL+CELL/2,vx:(Math.random()-0.5)*3,vy:-Math.random()*2.5,life:24,col:'#f0f2f5'}); }
+    } else if(roadBlock){
+      // a gravedigger's grave stops the unit just like a web wall: each loses what the other had
+      const uh=a.hp; a.hp-=roadBlock.hp; roadBlock.hp-=uh;
+      for(let k=0;k<8;k++)sparks.push({x:(a.x+roadBlock.x)/2,y:(a.y+roadBlock.y)/2,vx:(Math.random()-0.5)*2.5,vy:-Math.random()*2,life:18,col:'#a89c86'});
+      if(roadBlock.hp<=0){ setMsg('A grave on the road has been smashed!'); fxSmoke(roadBlock.x,roadBlock.y,8,'140,130,115',6);
+        roadGraves.splice(roadGraves.indexOf(roadBlock),1); }
     } else if(webTrap(a)){
       if(a.hp<=0){ allies.splice(i,1); setMsg('A unit was dragged into the web.'); continue; }
     } else if(moveAllyBack(a)){allies.splice(i,1);continue;}
@@ -5264,7 +5326,7 @@ function startGame(){
   graves=(L.graves||[]).map(([r,c])=>({row:r,col:c,done:false}));
   graveyards=(L.graveyards||[]).map(([r,c,d])=>({row:r,col:c,dir:d||'d',cd:60+Math.floor(Math.random()*120)}));
   crypts=(L.crypts||[]).map(([r,c,d])=>({row:r,col:c,dir:d||'r',cd:120+Math.floor(Math.random()*180)}));
-  houses=(L.houses||[]).map(([r,c])=>({row:r,col:c,broken:false,crack:0,breakWave:0})); houseWave=0; jackWave=0; knivesFx=[];
+  houses=(L.houses||[]).map(([r,c])=>({row:r,col:c,broken:false,crack:0,breakWave:0})); houseWave=0; jackWave=0; knivesFx=[]; roadGraves=[];
   pumpkins=(L.pumpkins||[]).map(([r,c,v])=>({row:r,col:c,v:v||0})); barns=(L.barns||[]).map(([r,c,d])=>({row:r,col:c,dir:d||'r'})); thornPaths=(L.thornPaths||[]).map(([r,c])=>({row:r,col:c}));
   jacks=(L.jacks||[]).map(([r,c])=>({row:r,col:c,risen:false,rise:0,wait:0,breakWave:0}));
   ruins=(L.ruins||[]).map(([r,c])=>({row:r,col:c})); silkBridges=(L.silkBridges||[]).map(([r,c])=>({row:r,col:c}));
@@ -5553,7 +5615,7 @@ function makeEnemy(type,pathIdx){
     speed:E.speed*diffCfg.speedMul, reward:E.reward, r:E.r, col:E.col,
     boss:!!E.boss, shoots:!!E.shoots, steals:!!E.steals, poisons:!!E.poisons,
     infects:(E.infects===undefined?-1:E.infects), mindless:!!E.mindless, dmgMul:E.dmg||1,
-    bites:!!E.bites, knives:!!E.knives, knifeCd:E.knives?90:0, throwFx:0, infected:!!E.looksInfected,
+    bites:!!E.bites, knives:!!E.knives, knifeCd:E.knives?90:0, throwFx:0, digs:!!E.digs, digCd:E.digs?180:0, dug:0, digFx:0, rolls:!!E.rolls, bombing:false, roll:0, infected:!!E.looksInfected,
     shield:E.shield||0, maxShield:E.shield||0, shieldCdMax:E.shieldCd||0, shieldCd:0,
     shotCd:E.shoots?300:0, flash:0, webs:E.webs||0, cellKey:null, poisonHit:E.poisonHit||0};
 }
@@ -5763,6 +5825,7 @@ function update(){
     }
     if(e.dragging)continue;
     if(e.steals&&e.state&&e.state!=='walk')continue;
+    if(e.bombing)continue;
     const done=moveEnemy(e);
     if(e.webs)layWebs(e);
     if(done&&testMode==='enemy'){ enemies.splice(i,1); continue; }
@@ -6380,13 +6443,46 @@ function drawBones(cx,cy,seed,v){
   ctx.restore();
 }
 /* ---------- Halloween ground pieces: graves, graveyards, crypts, abandoned houses ---------- */
-const UNDEAD=['zombie','skeleton','skeletonknight','jack'];
-let graves=[], graveyards=[], crypts=[], houses=[], houseWave=0, bonesWave=0, knivesFx=[];
+const UNDEAD=['zombie','skeleton','skeletonknight','jack','gravedigger','pumpkinbomber'];
+let graves=[], graveyards=[], crypts=[], houses=[], houseWave=0, bonesWave=0, knivesFx=[], roadGraves=[]; const GRAVEDIGGER_MAX=3, ROAD_GRAVE_HP=500;
 let pumpkins=[], jacks=[], barns=[], thornPaths=[], jackWave=0; const JACK_RISE=70, THORN_DPS=6;
 // the Halloween undead, drawn facing right around their feet like the other walkers
-function drawUndeadShape(g,type,rad,base,step,throwing){
+function drawUndeadShape(g,type,rad,base,step,throwing,roll){
   const bone='#e8e1c9', boneDk='#6a6352';
   g.lineWidth=2; g.strokeStyle='#22261c';
+  if(type==='pumpkinbomber'){                                      // a carved pumpkin packed with powder, rolling along with its fuse fizzing
+    const R=rad*0.95, fl=(Math.sin((roll||0)*9)+1)/2;
+    g.save(); g.translate(0,rad*0.2); g.rotate(roll||0);
+    g.fillStyle='#e07b22'; g.beginPath();g.arc(0,0,R,0,Math.PI*2);g.fill();g.stroke();
+    g.strokeStyle='#a4520f'; g.lineWidth=1.4;
+    [-0.5,0,0.5].forEach(k=>{ g.beginPath();g.ellipse(k*R*0.9,0,R*0.32,R*0.96,0,0,Math.PI*2);g.stroke(); });
+    g.fillStyle='rgba(255,'+(170+Math.round(fl*60))+',60,1)';                              // the angry face glows from the powder inside
+    g.beginPath();g.moveTo(-R*0.55,-R*0.25);g.lineTo(-R*0.15,-R*0.1);g.lineTo(-R*0.45,R*0.05);g.closePath();g.fill();
+    g.beginPath();g.moveTo(R*0.55,-R*0.25);g.lineTo(R*0.15,-R*0.1);g.lineTo(R*0.45,R*0.05);g.closePath();g.fill();
+    g.beginPath();g.moveTo(-R*0.55,R*0.3);g.lineTo(-R*0.25,R*0.45);g.lineTo(0,R*0.32);g.lineTo(R*0.25,R*0.45);g.lineTo(R*0.55,R*0.3);g.lineTo(R*0.3,R*0.62);g.lineTo(-R*0.3,R*0.62);g.closePath();g.fill();
+    g.fillStyle='#4b5a2a'; g.strokeStyle='#22261c'; g.lineWidth=1.2; g.fillRect(-2,-R-3,4,4); g.strokeRect(-2,-R-3,4,4);
+    g.strokeStyle='#2a2018'; g.lineWidth=1.6; g.beginPath();g.moveTo(0,-R-3);g.quadraticCurveTo(4,-R-7,2,-R-10);g.stroke();   // the fuse
+    g.fillStyle='rgba(255,'+(200+Math.round(fl*55))+',90,'+(0.6+fl*0.4).toFixed(2)+')'; g.beginPath();g.arc(2,-R-10,2+fl*1.6,0,Math.PI*2);g.fill();
+    g.restore();
+    return;
+  }
+  if(type==='gravedigger'){                                        // a hunched old digger in a long coat and floppy hat, shovel in hand
+    g.fillStyle='#2e2620'; g.fillRect(-4.6,rad*0.75,4,rad*0.45+step*0.4); g.fillRect(0.6,rad*0.75,4,rad*0.45-step*0.4);
+    g.fillStyle=base; g.beginPath();g.moveTo(-rad*0.62,-rad*0.45);g.lineTo(rad*0.5,-rad*0.55);g.lineTo(rad*0.7,rad*0.85);g.lineTo(-rad*0.75,rad*0.85);g.closePath();g.fill();g.stroke();
+    g.fillStyle='rgba(0,0,0,.22)'; g.fillRect(-rad*0.1,-rad*0.4,2,rad*1.2);
+    // the shovel: swung down into the earth while digging, carried over the shoulder while walking
+    g.save(); g.translate(rad*0.35,-rad*0.1); g.rotate(throwing?0.9:-0.5);
+    g.strokeStyle='#5a3e24'; g.lineWidth=2.4; g.beginPath();g.moveTo(0,-rad*0.7);g.lineTo(0,rad*1.1);g.stroke();
+    g.fillStyle='#9aa0a6'; g.strokeStyle='#22261c'; g.lineWidth=1.2; g.beginPath();g.moveTo(-3.5,rad*1.0);g.lineTo(3.5,rad*1.0);g.lineTo(2.5,rad*1.55);g.lineTo(0,rad*1.7);g.lineTo(-2.5,rad*1.55);g.closePath();g.fill();g.stroke();
+    g.restore(); g.strokeStyle='#22261c'; g.lineWidth=2;
+    g.fillStyle='#b9a98e'; g.beginPath();g.arc(rad*0.12,-rad*0.88,rad*0.42,0,Math.PI*2);g.fill();g.stroke();   // pale grey face
+    g.fillStyle='#1a1612'; g.beginPath();g.arc(rad*0.3,-rad*0.9,1.4,0,Math.PI*2);g.fill();
+    g.strokeStyle='#e9e4d8'; g.lineWidth=1.4; g.beginPath();g.moveTo(rad*0.05,-rad*0.62);g.quadraticCurveTo(rad*0.25,-rad*0.45,rad*0.45,-rad*0.66);g.stroke();  // straggly beard
+    g.fillStyle='#3a3029'; g.strokeStyle='#22261c'; g.lineWidth=1.6;                       // floppy hat
+    g.beginPath();g.ellipse(rad*0.1,-rad*1.18,rad*0.75,rad*0.2,-0.1,0,Math.PI*2);g.fill();g.stroke();
+    g.beginPath();g.moveTo(-rad*0.3,-rad*1.2);g.quadraticCurveTo(-rad*0.15,-rad*1.75,rad*0.45,-rad*1.6);g.lineTo(rad*0.5,-rad*1.2);g.closePath();g.fill();g.stroke();
+    return;
+  }
   if(type==='jack'){                                               // a body of twisted roots under a lit pumpkin head
     g.lineCap='round';
     [[-1,step],[1,-step]].forEach(([sd,st])=>{ g.strokeStyle='#3a2716'; g.lineWidth=4.2; g.beginPath();g.moveTo(sd*2,rad*0.2);g.quadraticCurveTo(sd*rad*0.6,rad*0.7,sd*3+st*0.6,rad*1.25);g.stroke();
@@ -6740,6 +6836,9 @@ function drawHalloweenPieces(t){
   barns.forEach(b=>drawBarn(b,t));
   pumpkins.forEach(k=>drawPumpkin(k.col*CELL+CELL/2,k.row*CELL+CELL/2+3,CELL*(k.v===2?0.3:0.34),k.v,false,false,t));
   jacks.forEach(j=>drawJack(j,t));
+  roadGraves.forEach(g=>{ drawGrave(g.x,g.y,g.seed,false);
+    if(g.hp<ROAD_GRAVE_HP){ const w=24; ctx.fillStyle='rgba(0,0,0,.6)'; ctx.fillRect(g.x-w/2,g.y-CELL*0.5,w,4);
+      ctx.fillStyle='#c9bfa8'; ctx.fillRect(g.x-w/2,g.y-CELL*0.5,w*Math.max(0,g.hp)/ROAD_GRAVE_HP,4); } });
 }
 // thrown knives spin through the air; a bitten unit glows sick green until it turns
 function drawUndeadFx(){
@@ -7428,7 +7527,7 @@ function draw(){
       ctx.beginPath();ctx.arc(-rad*0.25,-rad*0.2,rad*0.16,0,Math.PI*2);ctx.fill();
       ctx.beginPath();ctx.arc(rad*0.2,-rad*0.3,rad*0.12,0,Math.PI*2);ctx.fill();
     } else if(UNDEAD.includes(e.type)){
-      drawUndeadShape(ctx,e.type,rad,base,(e.frozen>0||e.held>0)?0:step,e.throwFx>0);
+      drawUndeadShape(ctx,e.type,rad,base,(e.frozen>0||e.held>0)?0:step,e.throwFx>0||e.digFx>0,e.roll);
     } else if(e.type==='drowned'){
       drawDrownedShape(ctx,rad,base,step,(e.frozen>0||e.held>0)?0:frameCount+idx*9);
     } else if(e.webs){
