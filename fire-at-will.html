@@ -583,6 +583,10 @@
     <div style="margin:6px 0 2px">
       <button class="actBtn" onclick="resetProgress()" style="background:var(--rust);color:var(--paper)">Reset all progress</button>
     </div>
+    <div id="updBox" style="display:none;margin:6px 0 2px">
+      <button class="actBtn" id="updBtn" onclick="checkForUpdates()">Check for updates</button>
+      <div id="updMsg" style="color:var(--ink);font-size:13px;margin-top:4px"></div>
+    </div>
     <div id="redeemBox">
       <input type="text" id="redeemInput" placeholder="Enter code" data-i18n-ph="redeemPlaceholder">
       <button onclick="redeemCode()" data-i18n="redeemBtn">Redeem</button>
@@ -738,7 +742,7 @@ new MutationObserver(ms=>{ for(const m of ms){
     else if(m.type==='attributes')trAttr(m.target,m.attributeName);
     else m.addedNodes.forEach(trNode); } })
   .observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['placeholder','title','aria-label']});
-Object.assign(I18N.ru,{"The Graveyard":"Кладбище","Pumpkin Farm":"Тыквенная ферма","Ashen Wastes":"Пепельные пустоши","Wretched Woodland":"Гиблая чаща","The Halloween island is coming soon.":"Остров Хэллоуина скоро откроется.","Adds the Halloween island to the campaign map":"Добавляет остров Хэллоуина на карту кампании","This DLC needs a newer version of the game.":"Для этого DLC нужна более новая версия игры.","Something stirs in the Wretched Woodland…":"В Гиблой чаще что-то шевелится…"});
+Object.assign(I18N.ru,{"The Graveyard":"Кладбище","Pumpkin Farm":"Тыквенная ферма","Ashen Wastes":"Пепельные пустоши","Wretched Woodland":"Гиблая чаща","The Halloween island is coming soon.":"Остров Хэллоуина скоро откроется.","Adds the Halloween island to the campaign map":"Добавляет остров Хэллоуина на карту кампании","Check for updates":"Проверить обновления","Restart to update":"Перезапустить и обновить","A new version is downloaded.":"Новая версия загружена.","You have the latest version.":"У вас последняя версия.","Could not check for updates. Are you online?":"Не удалось проверить обновления. Есть ли интернет?","Checking for updates…":"Проверка обновлений…","A new version of the game is ready.":"Новая версия игры готова.","Restart":"Перезапустить","This DLC needs a newer version of the game.":"Для этого DLC нужна более новая версия игры.","Something stirs in the Wretched Woodland…":"В Гиблой чаще что-то шевелится…"});
 Object.assign(I18N.ru,{"Extra levels from DLC files.":"Дополнительные уровни из файлов DLC.","Drop a DLC file here":"Перетащите сюда файл DLC","or tap to choose one":"или нажмите, чтобы выбрать его","DLC folder":"Папка DLC","Open DLC folder":"Открыть папку DLC","No DLC yet. Put a DLC file in the DLC folder, or drop it above.":"DLC пока нет. Положите файл DLC в папку DLC или перетащите его выше.","No DLC yet. Drop a DLC file above.":"DLC пока нет. Перетащите файл DLC выше.","Remove":"Удалить","beaten #/#":"пройдено #/#","from the DLC folder":"из папки DLC","DLC removed.":"DLC удалено.","DLC added":"DLC добавлено","That file is too big for a DLC.":"Этот файл слишком большой для DLC.","This file is not a DLC (it is not JSON).":"Этот файл не DLC (это не JSON).","This file is not a Fire at Will DLC.":"Этот файл не DLC для Fire at Will.","This DLC has no id or name.":"У этого DLC нет id или названия.","This DLC has no levels.":"В этом DLC нет уровней.","Level # has no map (level code).":"У уровня # нет карты (кода уровня).","Level # has a wave with no known enemies.":"В уровне # есть волна без известных врагов.","Level # has no road from a spawn to a base.":"В уровне # нет дороги от точки появления до базы.","Campaign":"Кампания","◀ Back":"◀ Назад","Final wave":"Последняя волна","Lives left: #/#":"Осталось жизней: #/#","Lives left: #/# · 💎 +#":"Осталось жизней: #/# · 💎 +#"});
 // words drawn straight onto the canvas go through the same table
 ['fillText','strokeText','measureText'].forEach(fn=>{ const orig=CanvasRenderingContext2D.prototype[fn];
@@ -4938,6 +4942,34 @@ async function dlcAdd(file){
 }
 async function dlcPickFiles(inp){ for(const f of [...inp.files])await dlcAdd(f); inp.value=''; }
 function dlcOpenFolder(){ if(DESK)DESK.openFolder(); }
+
+/* ---------- self-update (desktop app only) ----------
+   The app checks for a newer game file when it opens and keeps it for the next launch; Settings has a button too. */
+const UPD=DESK&&DESK.checkUpdate?DESK:null;
+function showUpd(r){
+  const msg=document.getElementById('updMsg'), btn=document.getElementById('updBtn');
+  if(r==='ready'){ msg.textContent='A new version is downloaded.'; btn.textContent='Restart to update'; btn.onclick=()=>UPD.restart(); }
+  else if(r==='latest'){ msg.textContent='You have the latest version.'; }
+  else msg.textContent='Could not check for updates. Are you online?';
+}
+async function checkForUpdates(){
+  if(!UPD)return;
+  document.getElementById('updMsg').textContent='Checking for updates…';
+  showUpd(await UPD.checkUpdate());
+}
+if(UPD){
+  document.getElementById('updBox').style.display='';
+  UPD.autoUpdate().then(r=>{
+    if(r!=='ready')return;
+    showUpd(r);
+    const t=document.createElement('div'); t.id='updToast';
+    t.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:9999;display:flex;gap:10px;align-items:center;'+
+      'background:var(--paper);color:var(--ink);border:3px solid var(--ink);border-radius:12px;padding:8px 12px;box-shadow:0 4px 0 rgba(0,0,0,.3);font-weight:600;width:max-content;max-width:calc(100vw - 32px);box-sizing:border-box';
+    t.innerHTML='<span style="flex:1">A new version of the game is ready.</span><button class="actBtn" style="margin:0;width:auto;padding:6px 12px">Restart</button><button style="background:none;border:0;font-size:18px;cursor:pointer;color:var(--ink)" aria-label="Close">×</button>';
+    t.children[1].onclick=()=>UPD.restart(); t.children[2].onclick=()=>t.remove();
+    document.body.appendChild(t);
+  }).catch(()=>{});
+}
 (()=>{
   const scr=document.getElementById('dlcScreen');
   scr.addEventListener('dragover',e=>{ e.preventDefault(); scr.classList.add('over'); });

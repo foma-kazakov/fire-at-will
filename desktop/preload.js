@@ -1,4 +1,4 @@
-// Gives the game (fire-at-will.html) access to the DLC folder. In a browser this is missing,
+// Gives the game (fire-at-will.html) access to the DLC folder and the self-updater. In a browser this is missing,
 // and the game falls back to DLC files dropped on its DLC screen.
 const { contextBridge, ipcRenderer } = require('electron');
 
@@ -8,4 +8,8 @@ contextBridge.exposeInMainWorld('fireAtWillDesktop', {
   saveDLC: (name, text) => ipcRenderer.invoke('dlc:save', name, text),
   openFolder: () => ipcRenderer.invoke('dlc:open'),
   onChange: (fn) => ipcRenderer.on('dlc:changed', () => fn()),
+  // self-update: 'latest', 'ready' (restart to play the new version) or 'offline'
+  checkUpdate: () => ipcRenderer.invoke('update:check'),
+  autoUpdate: () => ipcRenderer.invoke('update:auto'),
+  restart: () => ipcRenderer.invoke('update:restart'),
 });
