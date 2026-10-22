@@ -738,7 +738,7 @@ new MutationObserver(ms=>{ for(const m of ms){
     else if(m.type==='attributes')trAttr(m.target,m.attributeName);
     else m.addedNodes.forEach(trNode); } })
   .observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['placeholder','title','aria-label']});
-Object.assign(I18N.ru,{"The Graveyard":"Кладбище","Pumpkin Farm":"Тыквенная ферма","Ashen Wastes":"Пепельные пустоши","Wretched Woodland":"Гиблая чаща","The Halloween island is coming soon.":"Остров Хэллоуина скоро откроется.","Something stirs in the Wretched Woodland…":"В Гиблой чаще что-то шевелится…"});
+Object.assign(I18N.ru,{"The Graveyard":"Кладбище","Pumpkin Farm":"Тыквенная ферма","Ashen Wastes":"Пепельные пустоши","Wretched Woodland":"Гиблая чаща","The Halloween island is coming soon.":"Остров Хэллоуина скоро откроется.","Adds the Halloween island to the campaign map":"Добавляет остров Хэллоуина на карту кампании","This DLC needs a newer version of the game.":"Для этого DLC нужна более новая версия игры.","Something stirs in the Wretched Woodland…":"В Гиблой чаще что-то шевелится…"});
 Object.assign(I18N.ru,{"Extra levels from DLC files.":"Дополнительные уровни из файлов DLC.","Drop a DLC file here":"Перетащите сюда файл DLC","or tap to choose one":"или нажмите, чтобы выбрать его","DLC folder":"Папка DLC","Open DLC folder":"Открыть папку DLC","No DLC yet. Put a DLC file in the DLC folder, or drop it above.":"DLC пока нет. Положите файл DLC в папку DLC или перетащите его выше.","No DLC yet. Drop a DLC file above.":"DLC пока нет. Перетащите файл DLC выше.","Remove":"Удалить","beaten #/#":"пройдено #/#","from the DLC folder":"из папки DLC","DLC removed.":"DLC удалено.","DLC added":"DLC добавлено","That file is too big for a DLC.":"Этот файл слишком большой для DLC.","This file is not a DLC (it is not JSON).":"Этот файл не DLC (это не JSON).","This file is not a Fire at Will DLC.":"Этот файл не DLC для Fire at Will.","This DLC has no id or name.":"У этого DLC нет id или названия.","This DLC has no levels.":"В этом DLC нет уровней.","Level # has no map (level code).":"У уровня # нет карты (кода уровня).","Level # has a wave with no known enemies.":"В уровне # есть волна без известных врагов.","Level # has no road from a spawn to a base.":"В уровне # нет дороги от точки появления до базы.","Campaign":"Кампания","◀ Back":"◀ Назад","Final wave":"Последняя волна","Lives left: #/#":"Осталось жизней: #/#","Lives left: #/# · 💎 +#":"Осталось жизней: #/# · 💎 +#"});
 // words drawn straight onto the canvas go through the same table
 ['fillText','strokeText','measureText'].forEach(fn=>{ const orig=CanvasRenderingContext2D.prototype[fn];
@@ -2337,8 +2337,8 @@ REGIONS.forEach(r=>{ if(FLOW_NODES[r.id])r.nodes=FLOW_NODES[r.id].map(q=>q.slice
 fitNodes();
 
 /* ---------- the Halloween island: a dead land west of the Dark Forest (levels not built yet) ---------- */
-const HALLOWEEN_ISLE=true;                 // false hides the island and shrinks the map back
-const ISLE_OFF=HALLOWEEN_ISLE?650:0;       // the main island slides right this far to make room for it
+// the island only shows up once the Halloween DLC file (dlc/halloween.json, "map": "halloween") is installed
+function halloweenOn(){ try{ return dlcAll().some(p=>p.map==='halloween'); }catch(e){ return false; } }
 // shared corner points, so neighbouring areas meet on exactly the same wobbly seam
 const IA=[-340,150],IB=[-180,130],IC=[-60,190],ID=[-20,330],IE=[-40,480],IF=[-10,620],IG=[-50,760],IH=[-150,880],
       II=[-310,910],IJ=[-450,850],IK=[-520,700],IL=[-530,520],IM=[-490,330],IN=[-430,210],
@@ -2381,6 +2381,7 @@ function buildMap(){
   const host=document.getElementById('mapScroll');
   const portrait=host?(host.clientHeight>host.clientWidth*1.05)
                      :(window.innerHeight>window.innerWidth);
+  const HALLOWEEN_ISLE=halloweenOn(), ISLE_OFF=HALLOWEEN_ISLE?650:0;   // the main island slides right to make room
   const tr=pt=>portrait?[pt[1],pt[0]+ISLE_OFF]:[pt[0]+ISLE_OFF,pt[1]];
   const COASTv=COAST.map(tr); COAST_V=COASTv;
   const REGv=REGIONS.map(r=>({...r,poly:r.poly.map(tr),nodes:r.nodes.map(tr)}));
@@ -4849,9 +4850,12 @@ function dlcParse(text){
   let d; try{ d=JSON.parse(text); }catch(e){ throw 'This file is not a DLC (it is not JSON).'; }
   if(!d||typeof d!=='object'||!d.fireAtWillDLC)throw 'This file is not a Fire at Will DLC.';
   if(!d.id||!d.name)throw 'This DLC has no id or name.';
-  if(!Array.isArray(d.levels)||!d.levels.length)throw 'This DLC has no levels.';
+  const map=d.map==='halloween'?'halloween':null;          // a pack can switch on extra land on the campaign map
+  if(d.map&&!map)throw 'This DLC needs a newer version of the game.';
+  if(!Array.isArray(d.levels))d.levels=[];
+  if(!d.levels.length&&!map)throw 'This DLC has no levels.';
   const pack={id:String(d.id).slice(0,60),name:String(d.name).slice(0,60),author:d.author?String(d.author).slice(0,40):'',
-    version:d.version?String(d.version).slice(0,20):'',description:d.description?String(d.description).slice(0,300):'',levels:[]};
+    version:d.version?String(d.version).slice(0,20):'',description:d.description?String(d.description).slice(0,300):'',levels:[],map};
   d.levels.forEach((lv,i)=>{
     const code=lv&&(typeof lv.code==='string'?(()=>{ try{return JSON.parse(lv.code);}catch(e){return null;} })():lv.code);
     if(!code||!code.COLS||!code.ROWS)throw 'Level '+(i+1)+' has no map (level code).';
@@ -4888,6 +4892,7 @@ async function dlcRefreshFolder(){
   if(!DESK)return;
   try{ dlcFolder=await DESK.listDLC(); }catch(e){ dlcFolder=[]; }
   if(document.getElementById('dlcScreen').classList.contains('active'))renderDLC();
+  if(document.getElementById('mapScreen').classList.contains('active'))buildMap();
 }
 function openDLC(){ goTo('dlcScreen'); dlcMsg(''); renderDLC(); dlcRefreshFolder(); }
 function renderDLC(){
@@ -4907,7 +4912,7 @@ function renderDLC(){
     const h=document.createElement('h3'); h.textContent=p.name; h.setAttribute('data-notr',''); c.appendChild(h);
     const done=p.levels.filter((_,i)=>dlcStore.beaten[p.id+'/'+i]).length;
     const meta=document.createElement('div'); meta.className='dlcMeta';
-    const mt=document.createElement('span'); mt.textContent='beaten '+done+'/'+p.levels.length; meta.appendChild(mt);
+    const mt=document.createElement('span'); mt.textContent=p.levels.length?'beaten '+done+'/'+p.levels.length:(p.map==='halloween'?'Adds the Halloween island to the campaign map':''); meta.appendChild(mt);
     if(p.author){ const au=document.createElement('span'); au.textContent=' · ✎ '+p.author; au.setAttribute('data-notr',''); meta.appendChild(au); }
     if(p.file){ const fl=document.createElement('span'); fl.textContent=' · from the DLC folder'; meta.appendChild(fl); }
     c.appendChild(meta);

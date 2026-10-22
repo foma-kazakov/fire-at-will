@@ -1,0 +1,10 @@
+{
+ "fireAtWillDLC": 1,
+ "id": "halloween",
+ "name": "Halloween",
+ "author": "foma",
+ "version": "0.1",
+ "description": "A dead-land island west of the Dark Forest: The Graveyard, Pumpkin Farm, Ashen Wastes and the Wretched Woodland. Levels are coming soon.",
+ "map": "halloween",
+ "levels": []
+}
