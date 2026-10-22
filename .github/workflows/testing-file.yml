@@ -1,0 +1,37 @@
+name: Testing app file
+
+# Keeps fire-at-will-testing.html (the Fire at Will Testing app) in step with fire-at-will.html:
+# after every change to the game on main it is made again with scripts/make-testing.js and committed.
+on:
+  push:
+    branches: [main]
+    paths:
+      - fire-at-will.html
+      - scripts/make-testing.js
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: testing-file
+  cancel-in-progress: false
+
+jobs:
+  make:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/make-testing.js
+      - name: Commit it if it changed
+        run: |
+          git diff --quiet -- fire-at-will-testing.html && exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add fire-at-will-testing.html
+          git commit -m "Remake fire-at-will-testing.html from fire-at-will.html"
+          for i in 1 2 3 4; do git pull --rebase origin main && git push origin HEAD:main && exit 0; sleep $((i*5)); done
+          exit 1

@@ -4,13 +4,16 @@ Game design, content tables and history live in [docs/game-design.md](docs/game-
 
 **Play the latest version:** https://claude.ai/artifact/8ZMpPXyeUvv2EYFnQmjZVX (always mirrors `fire-at-will.html` on `main`).
 
+**Play Fire at Will Testing** (the separate testing app: Test a level, Sandbox, Enemy tester): https://claude.ai/artifact/CymSBSmPp8Sz4eRDmekVBV (always mirrors `fire-at-will-testing.html` on `main`).
+
 Older online version, made in a separate claude.ai chat: https://claude.ai/artifact/9wd3etuB5Yn7EexjCooeJg (version 82 as of 19 Oct 2026; no longer updated from this repo).
 
 ## How to work on this project
 
 - **One file.** The whole game is the single file `fire-at-will.html`: HTML, CSS and JavaScript, with no external code except Google Fonts (Bungee, Russo One, Rubik). Always edit that file and hand back the full updated file, or update the published artifact.
 - **Refresh the play link.** After every change to `fire-at-will.html` lands on `main`, republish it to https://claude.ai/artifact/8ZMpPXyeUvv2EYFnQmjZVX: read that artifact first (Artifact tool, `action: "read"`), then publish the repo file with `url` set to that link. Never publish without `url`, which would make a new link.
-- **Desktop apps rebuild themselves.** `desktop/` wraps `fire-at-will.html` with Electron, and `.github/workflows/desktop.yml` rebuilds the Windows, Mac and Linux apps onto the `desktop` release whenever the HTML changes on `main`. Don't copy the game into `desktop/`; the build takes it from the repo root. The apps also **update themselves**: on launch they download the newest `fire-at-will.html` from `UPDATE_URL` in `desktop/main.js` (raw file on `main`) and play it from the next start; Settings has "Check for updates". Only the game file updates this way, so changes to `desktop/` itself still need a fresh download.
+- **Testing is a separate app.** `fire-at-will-testing.html` is generated from `fire-at-will.html` (same code with `TESTING_APP` on); never edit it by hand. After changing the game, run `node scripts/make-testing.js` and commit both files (the `testing-file.yml` workflow also remakes it on `main` if you forget). After it lands, republish it to the testing play link above the same way as the game (read first, then publish with `url`).
+- **Desktop apps rebuild themselves.** `desktop/` wraps `fire-at-will.html` with Electron, and `.github/workflows/desktop.yml` rebuilds the Windows, Mac and Linux apps (Fire at Will and Fire at Will Testing, via `desktop/testing.config.js`) onto the `desktop` release whenever the HTML changes on `main`. Don't copy the game into `desktop/`; the build takes it from the repo root. The apps also **update themselves**: on launch they download the newest `fire-at-will.html` from `UPDATE_URL` in `desktop/main.js` (raw file on `main`) and play it from the next start; Settings has "Check for updates". Only the game file updates this way, so changes to `desktop/` itself still need a fresh download.
 - **DLC.** Level packs are JSON files described in [docs/dlc.md](docs/dlc.md). The desktop app's `preload.js` gives the game its DLC folder; in a browser the game falls back to files dropped on the DLC screen.
 - **Send the link.** Share the play link with every update.
 - **Don't mention conversation limits.**

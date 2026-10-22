@@ -1,21 +1,26 @@
 // Desktop wrapper for Fire at Will. The game itself is ../fire-at-will.html,
 // copied into the app at build time, so the HTML stays the single source.
+// The same wrapper builds Fire at Will Testing (testing.config.js), which plays ../fire-at-will-testing.html instead.
 const { app, BrowserWindow, shell, ipcMain, net } = require('electron');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
+const TESTING = !!require('./package.json').testing;
+const GAME = TESTING ? 'fire-at-will-testing.html' : 'fire-at-will.html';
+const TITLE = TESTING ? 'Fire at Will Testing' : 'Fire at Will';
+
 function bundledFile() {
-  const packed = path.join(__dirname, 'fire-at-will.html');
-  return fs.existsSync(packed) ? packed : path.join(__dirname, '..', 'fire-at-will.html');
+  const packed = path.join(__dirname, GAME);
+  return fs.existsSync(packed) ? packed : path.join(__dirname, '..', GAME);
 }
 
 // Self-update: the app downloads the newest fire-at-will.html from UPDATE_URL into its own data folder and plays
 // that copy from then on. Only the game file is replaced (the app around it stays), so no reinstall is needed,
 // and progress is kept because every file:// page shares the same saved data.
-const UPDATE_URL = 'https://raw.githubusercontent.com/foma-kazakov/fire-at-will/main/fire-at-will.html';
+const UPDATE_URL = 'https://raw.githubusercontent.com/foma-kazakov/fire-at-will/main/' + GAME;
 const updDir = path.join(app.getPath('userData'), 'update');
-const updFile = path.join(updDir, 'fire-at-will.html');
+const updFile = path.join(updDir, GAME);
 const updInfo = path.join(updDir, 'info.json');
 const sha = (text) => crypto.createHash('sha256').update(text).digest('hex');
 const readText = (f) => { try { return fs.readFileSync(f, 'utf8'); } catch (e) { return null; } };
@@ -39,7 +44,7 @@ async function checkUpdate() {
     clearTimeout(t);
     if (!res.ok) return 'offline';
     const text = await res.text();
-    if (text.length < 100000 || !text.includes('<title>Fire at Will</title>')) return 'offline';
+    if (text.length < 100000 || !text.includes('<title>' + TITLE + '</title>')) return 'offline';
     const s = sha(text);
     if (s === runningSha) return 'latest';
     if (s === readySha) return 'ready';
@@ -110,7 +115,7 @@ function createWindow() {
     height: 800,
     minWidth: 480,
     minHeight: 480,
-    title: 'Fire at Will',
+    title: TITLE,
     backgroundColor: '#22261c',
     autoHideMenuBar: true,
     icon: path.join(__dirname, 'build', 'icon.png'),

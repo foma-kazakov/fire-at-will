@@ -1,12 +1,14 @@
 name: Desktop apps
 
-# Builds Fire at Will as a Windows, Mac and Linux app from fire-at-will.html
-# and puts the installers on the "desktop" release, replacing the old ones.
+# Builds Fire at Will (fire-at-will.html) and Fire at Will Testing (fire-at-will-testing.html) as Windows, Mac
+# and Linux apps and puts the installers on the "desktop" release, replacing the old ones.
 on:
   push:
     branches: [main]
     paths:
       - fire-at-will.html
+      - fire-at-will-testing.html
+      - scripts/make-testing.js
       - desktop/**
       - .github/workflows/desktop.yml
   workflow_dispatch:
@@ -42,7 +44,11 @@ jobs:
           cache: npm
           cache-dependency-path: desktop/package-lock.json
       - run: npm ci
+      - run: node ../scripts/make-testing.js
       - run: npx electron-builder ${{ matrix.target }} --publish never
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: false
+      - run: npx electron-builder ${{ matrix.target }} --publish never --config testing.config.js
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: false
       - uses: actions/upload-artifact@v4
@@ -72,4 +78,4 @@ jobs:
           gh release create desktop out/* \
             --target "$GITHUB_SHA" \
             --title "Fire at Will desktop apps" \
-            --notes "Built from fire-at-will.html at ${GITHUB_SHA::7}. Windows: Fire-at-Will-Setup.exe (installer) or Fire-at-Will-Portable.exe (no install). Mac: Fire-at-Will-Mac.dmg (Intel and Apple Silicon). Linux: Fire-at-Will-Linux.AppImage or Fire-at-Will-Linux.deb."
+            --notes "Built from fire-at-will.html at ${GITHUB_SHA::7}. Windows: Fire-at-Will-Setup.exe (installer) or Fire-at-Will-Portable.exe (no install). Mac: Fire-at-Will-Mac.dmg (Intel and Apple Silicon). Linux: Fire-at-Will-Linux.AppImage or Fire-at-Will-Linux.deb. The Fire at Will Testing app (Test a level, Sandbox, Enemy tester) has the same files with Testing in the name, for example Fire-at-Will-Testing-Mac.dmg."

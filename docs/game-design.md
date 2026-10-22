@@ -7,7 +7,7 @@ Knowledge base for the game, extracted from the original design conversation (19
 A tower defense game. You place towers on grass tiles beside the road, and enemies walk the road toward your base. Each enemy that reaches the base costs a life.
 
 - **Device choice:** at the start the player picks Computer (horizontal map) or Phone (vertical map). Every level has both layouts.
-- **Main menu:** Play, Settings, Units, Powers, Encyclopedia, Achievements and DLC, plus a gem counter. A hidden **Testing** button appears while the Testing DLC ([dlc/testing.json](../dlc/testing.json)) is installed, or after redeeming the code `TEST`.
+- **Main menu:** Play, Settings, Units, Powers, Encyclopedia, Achievements and DLC, plus a gem counter. Testing is not in the game: it is the separate **Fire at Will Testing** app (see below).
 - **Campaign map:** an island with 7 regions of 6 levels each. Only the levels listed below are built so far; unbuilt levels show an X.
 - **Gems:** earned the first time you win a level (+5). Spent on units and slots.
 - **No stars:** a level is simply beaten or not (beaten levels show a ✓ on the map). Star ratings were removed on 20 Oct 2026. Beating a level unlocks the next one.
@@ -142,12 +142,12 @@ You start with 2 power slots, which can be raised to 3 with gems.
 | `LUSS` | +5000 gold at the start of every level |
 | `BUSS` | Remove the LUSS bonus |
 | `RESET` | Wipe all progress |
-| `TEST` | Show the Testing menu |
+| `TEST` | Says Testing is its own app now |
 
 ---
 
-## Testing menu
-Its own DLC pack, `dlc/testing.json` (`"testing": true`); removing the pack hides the menu again unless the `TEST` code was redeemed.
+## Fire at Will Testing (separate app)
+A separate app with its own play link and desktop builds: `fire-at-will-testing.html`, made from `fire-at-will.html` by `scripts/make-testing.js` (it switches `TESTING_APP` on). Its home screen is the Testing screen plus Settings, and it saves under `fireAtWillTesting.progress`, so it never touches the game's progress.
 - **Test a level:** pick any built level with a slider and play it. Nothing is saved.
 - **Sandbox:** a level editor.
   - **Map sizes:** Computer 19×12, Phone 10×18, Large 25×16 and Huge 31×20.
