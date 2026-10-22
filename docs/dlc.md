@@ -55,7 +55,7 @@ Each level:
 | `startGold` | 400 | Gold at the start. |
 | `lives` | 20 | Lives. |
 | `hpMul`, `speedMul` | 1 | Enemy health and speed multipliers (campaign Dark Forest levels are about 1.6–2.2 health). |
-| `waves` | sandbox waves | A list of waves; each wave is a list of `[enemy, count, gap in ms]` groups (or `{"type","count","gap"}`). Enemies: `grunt`, `runner`, `gunner`, `thief`, `husker`, `brute`, `rat`, `tumor`, `tumorling`, `drowned`, `spider`, `bigspider`, `grassmer`, `zombie`, `skeleton`, `skeletonknight`, `zombiegrunt`. |
+| `waves` | sandbox waves | A list of waves; each wave is a list of `[enemy, count, gap in ms]` groups (or `{"type","count","gap"}`). Enemies: `grunt`, `runner`, `gunner`, `thief`, `husker`, `brute`, `rat`, `tumor`, `tumorling`, `drowned`, `spider`, `bigspider`, `grassmer`, `zombie`, `skeleton`, `skeletonknight`, `zombiegrunt`, `jack`. |
 | `sewerWave`, `lakeWave` | auto | Wave when rats leave sewers / tumorlings leave lakes (0 = never). Only filled in by themselves when `waves` is left out. |
 | `bonesWave` | 3 if the map has bones | Wave when skeletons crawl out of bones (0 = never). |
 | `spiders`, `bigSpiderWave` | auto | `{"wave": 5, "count": 9}` for spiders from dens, and the wave of the big spider. |

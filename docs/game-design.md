@@ -19,11 +19,17 @@ A tower defense game. You place towers on grass tiles beside the road, and enemi
   - **Crypt** (1×2): skeletons only, from the dark door on its right end (bottom end in the phone layout), one every 9–18 s, never stopping.
   - **Bones** (changed from decor): work like a sewer, 5 skeletons once on wave 3 (`bonesWave`); 5 random looks like trees. They move from the Spiders tab to the Halloween tab when the DLC is installed.
   - **Abandoned house** (2×2, anywhere off the road, door at the bottom): stays shut (boarded door, which cracks the wave before) until one random wave between wave 2 and the last; 1.5–6 s into that wave the door bursts and 3–7 zombie grunts pour out, counting toward that wave. Each house breaks only once; the break wave is kept when a run is saved.
+  - **Crypt door** (fixed 22 Oct 2026): the doorway sits in the crypt's right end wall, drawn at an angle, not on the right of its front. Stood upright in the phone layout, that end faces down.
+- **Pumpkin Farm pieces (sandbox "Pumpkin Farm" tab, Halloween DLC only; added 22 Oct 2026):**
+  - **Pumpkin** (1 tile, 3 random looks): blocks building and can't be cleared in a game (the sandbox eraser removes it).
+  - **Jack o' lantern** (1 tile): blocks building while asleep. Its face lights up the wave before its random wave (wave 2 to the last); 1.5–6 s into that wave roots push it out of the ground (about 1 s) and it walks to the road as a Jack o' Lantern enemy, counting toward that wave. The tile is free afterwards. The wave is kept when a run is saved.
+  - **Barn** (2 tall × 3 long, the user's "2x3"): its big door is on its right gable end wall, seen at an angle. Stood upright in the phone layout, the door end faces down. Does nothing yet; it is for upcoming enemies.
   - Graveyard mix: zombie 45%, skeleton 40%, skeleton knight 15%. Crypt mix: skeleton 80%, skeleton knight 20%.
 - **Halloween enemies (designed by the user, 22 Oct 2026; balance by Claude):**
   - **Zombie**: 120 hp, grunt speed (1.0), 12 gold. Its bite infects a standing unit (firework-station soldiers, Backup soldiers; not machines or tanks): the unit turns green and rises as a zombie 2.5 s later.
   - **Skeleton**: 125 hp, speed 1.0, 13 gold, knife on its belt. Stops for about 0.4 s to throw a knife at a tower within 150 px (not farms or menders), stunning it for 1.5 s; 2.5 s recharge.
   - **Skeleton knight**: 250 hp, speed 0.85, 24 gold, deals double damage to units.
+  - **Jack o' Lantern** (enemy, Claude's stats): 200 hp, speed 0.9, 18 gold, a pumpkin head on a body of roots; no special ability yet.
   - **Zombie grunt**: pours out of an abandoned house when its door breaks; a grunt (100 hp, 1.0, 11 gold) that looks infected and bites like a zombie.
 - **Map obstacles:** trees and webbed ruins block building and can be cleared for gold: trees 100, ruins 75, webs 25. Solid webs can't be removed.
 - **Pause menu:** Resume, Settings, Shop ("coming soon"), and Save & Exit, which saves the run so you can continue it later from the main menu.
