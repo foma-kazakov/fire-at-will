@@ -3060,8 +3060,8 @@ const SHROOM_REGIONS=[
   {id:'glowshroom',name:'The Glowshroom Valley',levels:5,ground:SHROOM_GROUND,ground2:'#0B1430',pathCol:SHROOM_PATH,decor:'glowshroom',
    density:18,tints:['#F2F4F8','#E6EAF2','#FFFFFF'],
    poly:SHROOM_COAST,nodes:[[1680,790],[1800,750],[1900,840],[1800,925],[1685,960]],clear:[[1880,975]]},
-  // the valley's far corner around the extra level: misty greenish-yellow fungal ground (like Hollow Knight's Fungal Wastes), bent turquoise-capped mushrooms and acid pools (no levels of its own)
-  {id:'fungal',name:'The Sporeshroom Lands',levels:0,ground:'#8DA83A',ground2:'#64802A',pathCol:'#5E7468',decor:'fungal',oldGrounds:['#2F4B47','#76813A','#A3A846'],
+  // the valley's far corner around the extra level: misty teal ground glowing into soft yellow-green haze (inspired by the background of Hollow Knight's Fungal Wastes), bent turquoise-capped mushrooms and acid pools (no levels of its own)
+  {id:'fungal',name:'The Sporeshroom Lands',levels:0,ground:'#355A63',ground2:'#22404A',pathCol:'#3A4038',decor:'fungal',oldGrounds:['#2F4B47','#76813A','#A3A846','#8DA83A'],oldPaths:['#6B5A3E','#5E7468'],
    density:9,tints:['#3FB3A0','#4CC2AE','#2FA08C'],
    poly:[[1838,912],[1905,884],[1958,892],[1962,918],[1914,1004],[1800,1052],[1786,1030],[1815,985]],nodes:[],clear:[[1880,975]]},
 ];
@@ -3938,7 +3938,7 @@ function nearestSpots(x,y){
 const FOREST_BY_REGION={fields:'plains',forest:'dark',desert:'desert',mountain:'snowy',jungle:'jungle',hell:'charred',kingdom:'orchard',
   graveyard:'deadwood',pumpkin:'autumn',ashen:'ashwood',wretched:'wretched',glowshroom:'glowshroom',fungal:'fungal'};
 const FOREST_FLOOR={plains:'#2f5a2a',dark:'#14231a',webbed:'#14231a',desert:'#9a7638',snowy:'#b8c8d4',jungle:'#1c4219',charred:'#241010',
-  orchard:'#4a6630',deadwood:'#272b23',autumn:'#4f3512',ashwood:'#28282b',wretched:'#0c1710',glowshroom:'#0d1734',fungal:'#3b4320'};
+  orchard:'#4a6630',deadwood:'#272b23',autumn:'#4f3512',ashwood:'#28282b',wretched:'#0c1710',glowshroom:'#0d1734',fungal:'#1d3238'};
 function forestLook(ground,st){
   if(st==='webbed')return 'webbed';
   const hex=c=>{ const n=parseInt(String(c||'#83A84E').slice(1),16); return [(n>>16)&255,(n>>8)&255,n&255]; }, g=hex(ground);
@@ -6625,7 +6625,7 @@ function sbxRender(){
   // a map saved while the Sporeshroom Lands had older colours picks up its current ones
   { const fr=SHROOM_REGIONS.find(r=>r.id==='fungal'), low=x=>String(x||'').toLowerCase();
     if(!sbx.grassCustom&&gc&&gc.c===fr.ground&&fr.oldGrounds.some(o=>low(o)===low(sbx.ground)))sbx.ground=fr.ground;
-    if(!sbx.pathCustom&&pc&&pc.c===fr.pathCol&&low(sbx.pathCol)!==low(fr.pathCol))sbx.pathCol=fr.pathCol; }
+    if(!sbx.pathCustom&&pc&&pc.c===fr.pathCol&&fr.oldPaths.some(o=>low(o)===low(sbx.pathCol)))sbx.pathCol=fr.pathCol; }
   document.getElementById('sbxPathSw').style.background=sbx.pathCol;
   document.getElementById('sbxGrassSw').style.background=sbx.ground;
   document.getElementById('sbxPathName').textContent=sbx.pathCustom?'Custom '+sbx.pathCol:pc.name+' '+pc.c;
@@ -8063,13 +8063,17 @@ function buildTerrain(){
     g.addColorStop(0,lite?'rgba(255,250,200,.07)':'rgba(0,20,0,.08)'); g.addColorStop(1,'rgba(0,0,0,0)');
     ctx.fillStyle=g; ctx.fillRect(x-R,y-R,R*2,R*2);
   }
-  // the Sporeshroom Lands lie under a slight yellow spore haze (it drifts too, see drawAmbience)
+  // the Sporeshroom Lands: misty teal ground glowing into soft yellow-green haze, with blurry light spots like out-of-focus spores (it drifts too, see drawAmbience)
   for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
     if(groundRegion(groundAt(r,c))!=='fungal')continue;
-    ctx.fillStyle='rgba(240,232,120,.07)'; ctx.fillRect(c*CELL,r*CELL,CELL,CELL);
-    if(hashAt(r*5.3+1,c*3.9+2)<0.4){ const x=c*CELL+CELL*hashAt(c,r*2.2), y=r*CELL+CELL*hashAt(r,c*1.7), R=CELL*(1.1+hashAt(r+c,3.3));
-      const g=ctx.createRadialGradient(x,y,0,x,y,R); g.addColorStop(0,'rgba(246,240,150,.2)'); g.addColorStop(1,'rgba(246,240,150,0)');
+    const hz=hashAt(r*5.3+1,c*3.9+2);
+    if(hz<0.55){ const x=c*CELL+CELL*hashAt(c,r*2.2), y=r*CELL+CELL*hashAt(r,c*1.7), R=CELL*(1.4+1.6*hashAt(r+c,3.3)), teal=hashAt(c*1.3,r*0.7)<0.5;
+      const g=ctx.createRadialGradient(x,y,0,x,y,R); g.addColorStop(0,teal?'rgba(120,205,215,.24)':'rgba(222,232,140,.26)'); g.addColorStop(0.5,teal?'rgba(120,205,215,.1)':'rgba(222,232,140,.1)'); g.addColorStop(1,'rgba(0,0,0,0)');
       ctx.fillStyle=g; ctx.fillRect(x-R,y-R,R*2,R*2); }
+    for(let b=0;b<2;b++){ if(hashAt(r*2.1+b*7,c*3.3+b)>0.55)continue;
+      const x=c*CELL+CELL*hashAt(c*2.9+b,r), y=r*CELL+CELL*hashAt(r*3.1,c+b), rr=CELL*(0.1+0.14*hashAt(c+b,r*4.4)), warm=hashAt(c*b+1,r*1.9)<0.5;
+      const g=ctx.createRadialGradient(x,y,rr*0.55,x,y,rr); g.addColorStop(0,warm?'rgba(230,236,160,.16)':'rgba(170,225,230,.16)'); g.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle=g; ctx.beginPath();ctx.arc(x,y,rr,0,Math.PI*2);ctx.fill(); }
   }
   ctx.restore();
   // small decorations on open ground: flowers in the fields, mushrooms and leaves in dark woods, pebbles anywhere,
@@ -8209,10 +8213,10 @@ function drawGroundBit(g,reg,x,y,pick,h2){
         g.fillStyle='#3fb3a0'; g.beginPath();g.ellipse(cx+ln,cy-sz*0.2,sz,sz*0.6,ln*0.12,Math.PI,0);g.fill();
         g.fillStyle='#f2d86a'; g.beginPath();g.arc(cx+ln-sz*0.3,cy-sz*0.45,sz*0.16,0,Math.PI*2);g.arc(cx+ln+sz*0.35,cy-sz*0.35,sz*0.13,0,Math.PI*2);g.fill(); });
     } else if(pick<0.85){    // spongy pores in the fungal ground
-      g.strokeStyle='rgba(40,46,14,.5)'; g.lineWidth=0.9;
+      g.strokeStyle='rgba(12,30,34,.5)'; g.lineWidth=0.9;
       [[0,0,1.6],[-3,1,1.1],[2.8,1.3,1.2],[0.6,-2.4,0.9],[-2,-1.8,0.8]].forEach(([dx,dy,r])=>{ g.beginPath();g.arc(x+dx,y+dy,r,0,Math.PI*2);g.stroke(); });
-    } else {                 // a mossy olive stone
-      g.fillStyle='#636b34'; g.beginPath();g.ellipse(x,y,3.2,2.2,0.3,0,Math.PI*2);g.fill();
+    } else {                 // a mossy teal stone
+      g.fillStyle='#2a464d'; g.beginPath();g.ellipse(x,y,3.2,2.2,0.3,0,Math.PI*2);g.fill();
       g.fillStyle='rgba(235,245,170,.3)'; g.beginPath();g.ellipse(x-0.8,y-0.8,1.3,0.7,0.3,0,Math.PI*2);g.fill();
     }
   } else if(reg==='glowshroom'){
@@ -10337,13 +10341,14 @@ function drawAmbience(){
     if(reg==='graveyard'){             // low mist drifting between the graves
       const a=fade*0.07*(1+Math.sin(frameCount*0.01+i));
       ctx.fillStyle='rgba(215,222,214,'+a.toFixed(3)+')'; ctx.beginPath();ctx.ellipse(m.x,m.y,16+m.r*8,4+m.r*1.5,0,0,Math.PI*2);ctx.fill();
-    } else if(reg==='fungal'){         // a slight greenish-yellow spore fog drifting low, with a few floating spores
-      const a=fade*0.16*(1.2+Math.sin(frameCount*0.008+i)), fx=m.x+Math.sin(frameCount*0.004+i)*24;
-      const g=ctx.createRadialGradient(fx,m.y,0,fx,m.y,34+m.r*10);
-      g.addColorStop(0,'rgba(244,238,140,'+a.toFixed(3)+')'); g.addColorStop(1,'rgba(244,238,140,0)');
-      ctx.save(); ctx.translate(fx,m.y); ctx.scale(2.2,1); ctx.translate(-fx,-m.y);
-      ctx.fillStyle=g; ctx.beginPath();ctx.arc(fx,m.y,34+m.r*10,0,Math.PI*2);ctx.fill(); ctx.restore();
-      if(i%3===0){ ctx.fillStyle='rgba(240,250,180,'+(fade*0.55).toFixed(3)+')'; ctx.beginPath();ctx.arc(m.x,m.y,1.1,0,Math.PI*2);ctx.fill(); }
+    } else if(reg==='fungal'){         // drifting teal and yellow-green mist, and floating yellow spore sparks
+      if(i%2){ const a=fade*0.14*(1.2+Math.sin(frameCount*0.008+i)), fx=m.x+Math.sin(frameCount*0.004+i)*24, R=34+m.r*10, rgb=i%4===1?'120,205,215':'222,232,140';
+        const g=ctx.createRadialGradient(fx,m.y,0,fx,m.y,R); g.addColorStop(0,'rgba('+rgb+','+a.toFixed(3)+')'); g.addColorStop(1,'rgba('+rgb+',0)');
+        ctx.fillStyle=g; ctx.beginPath();ctx.arc(fx,m.y,R,0,Math.PI*2);ctx.fill(); }
+      else { const a=fade*(0.5+0.5*Math.sin(frameCount*0.07+i*1.3)), g=ctx.createRadialGradient(m.x,m.y,0,m.x,m.y,5);
+        g.addColorStop(0,'rgba(250,230,120,'+(0.6*a).toFixed(3)+')'); g.addColorStop(1,'rgba(250,230,120,0)');
+        ctx.fillStyle=g; ctx.beginPath();ctx.arc(m.x,m.y,5,0,Math.PI*2);ctx.fill();
+        ctx.fillStyle='rgba(255,245,170,'+a.toFixed(3)+')'; ctx.beginPath();ctx.arc(m.x,m.y,1.1,0,Math.PI*2);ctx.fill(); }
     } else if(reg==='pumpkin'){        // autumn leaves tumbling down
       const ly=CH-m.y, rot=frameCount*0.03+i;
       ctx.save(); ctx.translate(m.x+Math.sin(frameCount*0.03+i)*6,ly); ctx.rotate(rot); ctx.globalAlpha=Math.min(0.85,m.life/120);
