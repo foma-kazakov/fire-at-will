@@ -197,11 +197,16 @@
   .sbxShell{width:100%;max-width:1760px;margin:0 auto;display:flex;flex-direction:column;gap:8px;}
   .sbxShell .sbxPanel{max-width:none;margin:0;padding:8px 10px;}
   .sbxStrip{padding-right:108px!important;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;}
-  .sbxMats .sbxRow{justify-content:flex-start;}
-  .sbxMain{display:flex;gap:8px;align-items:flex-start;}
-  .sbxWaves{flex:0 0 310px;width:310px;display:flex;flex-direction:column;gap:6px;position:sticky;top:0;max-height:calc(100dvh - 20px);}
+  .sbxMats .sbxRow{justify-content:center;}
+  .sbxMats .sbxTab{font-size:.95rem;padding:6px 14px;}
+  .sbxMats .sbxSec .toolBtn{font-size:1.02rem;padding:11px 18px;border-width:3px;border-radius:10px;box-shadow:0 4px 0 var(--ink);background:linear-gradient(180deg,#e9dcb4,#d2c08e);}
+  .sbxMats .sbxSec .toolBtn.on{background:linear-gradient(180deg,#f3c75b,#dba52c);}
+  .sbxMats .sbxSec{gap:9px!important;}
+  .sbxMain{display:flex;gap:8px;align-items:stretch;}
+  .sbxWaves{flex:0 0 300px;width:300px;display:flex;flex-direction:column;gap:6px;overflow:hidden;}
   .sbxCenter{flex:1 1 0;min-width:0;}
-  .sbxSide{flex:0 0 260px;width:260px;display:flex;flex-direction:column;gap:6px;}
+  .sbxSide{flex:0 0 310px;width:310px;display:flex;flex-direction:column;gap:8px;}
+  .sbxSide #sbxCode{flex:1 1 auto;min-height:90px;resize:none;} .sbxSide .toolBtn{font-size:.86rem;padding:7px 11px;}
   .sbxHead{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;} .sbxHead b{font-family:'Bungee','Russo One',sans-serif;font-size:.95rem;}
   .sbxSep{border-top:2px dashed rgba(34,38,28,.18);margin:2px 0;}
   .sbxSwName{font-size:.78rem;text-align:center;}
@@ -214,7 +219,7 @@
   #sbxWaves .wvHat{min-width:0;width:100%;} #sbxWaves .wvBlock{margin-left:6px;} #sbxWaves .wvStack{align-items:stretch;}
   .wvHouse{background:#8a5a2b;} .wvFungi{background:#2c7fc0;}
   @media (max-width:1150px){ .sbxMain{flex-direction:column;align-items:stretch;} .sbxCenter{order:1;flex:none;} .sbxSide{order:2;flex:none;width:auto;}
-    .sbxWaves{order:3;flex:none;width:auto;position:static;max-height:none;} #sbxWaves #wvArea{max-height:70dvh;} }
+    .sbxWaves{order:3;flex:none;width:auto;height:auto!important;} #sbxWaves #wvArea{max-height:70dvh;} }
   .sbxPanel{background:var(--paper);border:3px solid var(--ink);border-radius:12px;padding:10px 12px;
     box-shadow:0 5px 0 rgba(0,0,0,.3);width:100%;max-width:820px;margin:0 auto 10px;color:var(--ink);}
   .sbxRow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:center;}
@@ -6338,9 +6343,12 @@ function sbxRender(){
   if(cv.width!==W2*2||cv.height!==H2*2){ cv.width=W2*2; cv.height=H2*2; }
   { const hk=sbx.houses.length+'/'+sbx.shroomHouses.length; if(hk!==sbxHouseKey){ sbxHouseKey=hk; if(wvWaves.some(w=>w.some(b=>b.house!=null||b.fungi!=null)))wvRender(); } }
   const cen=document.getElementById('sbxCenter'), wide=window.innerWidth>1150;
+  document.getElementById('sbxWaves').style.height='0px';   // the waves window never sets the row's height: it matches the map's, then scrolls
   const availW=Math.max(200,(cen.clientWidth||window.innerWidth-40)-24), availH=wide?Math.max(260,window.innerHeight-cen.getBoundingClientRect().top-56):Math.max(260,window.innerHeight*0.72);
   const k=Math.min(availW/W2,availH/H2);
   cv.style.width=Math.floor(W2*k)+'px'; cv.style.height=Math.floor(H2*k)+'px';
+  { const wv=document.getElementById('sbxWaves'), side=document.querySelector('.sbxSide');
+    wv.style.height=wide?Math.max(cen.offsetHeight,side.scrollHeight)+'px':''; }
   sbxR=sbxRoutes();
   const R=sbxR, errs=R.errs, st=document.getElementById('sbxStatus');
   if(sbxNote){ st.style.color='var(--rust)'; st.textContent=sbxNote; }
