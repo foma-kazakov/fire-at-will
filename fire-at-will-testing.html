@@ -1892,6 +1892,9 @@ const ENCY=[
  {type:'abomination',role:'Spore Thrower',
   skills:['400 health of pale flesh with glowshrooms growing all over it.','When one of your units is within 2 tiles in front of it, it stops and throws small glowshrooms.','Each glowshroom poisons the unit it hits for 5 seconds.'],
   weak:['Slow, and it stands still while it throws — easy to focus.','Towers never get thrown at: keep units behind it.','Ice Age and Lightning.']},
+ {type:'crab',role:'Sand Digger',
+  skills:['A red beach crab scuttling sideways: 75 health.','On sand it digs in and runs a few tiles underground, where towers cannot see or shoot it, then pops up further down the road.','Crawls out of crab nests.'],
+  weak:['Shoot it while it is above ground: towers by the nest catch it as it comes out.','Low health — Gunners and splash damage finish it fast.','It cannot dig on grass or a road with no sand around it.']},
  {type:'grassmer',role:'Boss — The Fields',
   skills:['2600 health and immune to poison.','Sprouts three weakened grunts from its body every few seconds.','Slow but nearly unstoppable in a straight fight.'],
   weak:['Sustained single-target damage: Sniper, Cannon.','Ice Age and Lightning.','Clear its sprouts fast or they overwhelm you.']},
@@ -2043,6 +2046,8 @@ function drawEnemyIcon(cv,type,infected){
       g.beginPath();g.arc(b[0]*rad,b[1]*rad,b[2]*rad,0,Math.PI*2);g.fill(); });
     g.fillStyle='#c9e08a';
     g.beginPath();g.arc(-rad*0.25,-rad*0.2,rad*0.16,0,Math.PI*2);g.fill();
+  } else if(type==='crab'){
+    drawCrabShape(g,rad,col,0);
   } else if(SHROOMS.includes(type)){
     drawShroomEnemy(g,type,rad,col,0,0,false);
   } else if(UNDEAD.includes(type)){
@@ -2184,6 +2189,7 @@ const ENEMIES={
   abomination:{name:'Glowshroom Abomination',hp:400,speed:0.45,reward:28,r:14,col:'#e4e0ee',lobs:true,region:'glowshroom'},
   puffer:{name:'Puffball',hp:70,speed:0.85,reward:8,r:10,col:'#d3dbef',popsBlind:true,region:'glowshroom'},
   flatcap:{name:'Flatcap Golem',hp:300,speed:0.75,reward:30,r:13,col:'#d6dbe8',burrows:true,region:'glowshroom'},
+  crab:{name:'Crab',hp:75,speed:1.1,reward:7,r:9,col:'#e0603a',sandDigs:true,region:'beach'},
   zombiegrunt:{name:'Zombie Grunt',hp:100,speed:1.0,reward:11,r:10,col:null,bites:true,looksInfected:true,region:'halloween'},
   grassmer:{name:'Grassmer',hp:2600,speed:0.55,reward:90,r:20,col:'#3f7d3a',boss:true,region:'fields'},
 };
@@ -3087,11 +3093,14 @@ SHROOM_REGIONS.forEach(r=>{ for(let i=0;i<r.levels;i++){
 const TEST_SLOT=LEVELS.length;          // a hidden level the testing modes fill in
 LEVELS.push({region:REGIONS[0],regionIndex:0,indexInRegion:0,def:null,name:'Test',waves:1,boss:false,
   hpMul:1,speedMul:1,startGold:0,lives:20,test:true});
+// the Beach: sandbox-only sand (no island on the campaign map); the Sand block paints tiles as it, like the Biome brush
+const BEACH_SAND='#E8D3A0';
+const BEACH_REGIONS=[{id:'beach',name:'Beach',ground:BEACH_SAND,pathCol:'#CDB27C',decor:'beach',levels:0,density:0,tints:['#3F8F4A']}];
 // a valley map (its dark blue grass) plays at night
 const isNightGround=g=>String(g||'').toLowerCase()===SHROOM_GROUND.toLowerCase();
 // which DLC location a grass colour belongs to, so its ground gets that place's own little details and ambience
 function groundRegion(g){ const k=String(g||'').toLowerCase();
-  const r=ISLE_REGIONS.concat(SHROOM_REGIONS).find(o=>o.ground.toLowerCase()===k||(o.ground2&&o.ground2.toLowerCase()===k)||(o.oldGrounds||[]).some(c=>c.toLowerCase()===k));
+  const r=ISLE_REGIONS.concat(SHROOM_REGIONS,BEACH_REGIONS).find(o=>o.ground.toLowerCase()===k||(o.ground2&&o.ground2.toLowerCase()===k)||(o.oldGrounds||[]).some(c=>c.toLowerCase()===k));
   return r?r.id:null; }
 
 // a winding trail from level a to level b: the straight line is bent side to side in a few smooth swings
@@ -3403,7 +3412,7 @@ let CELL,COLS,ROWS,path,paths=[],pathSet,pathCells=[];
 let CW=0,CH=0,terrainCache=null,groundGlows=[];
 // the sandbox's Biome brush: tiles painted as another location ('r,c' -> that location), for ground, details, trees and forests
 let biomeTiles=new Map();
-function biomeById(id){ return REGIONS.concat(ISLE_REGIONS,SHROOM_REGIONS).find(r=>r.id===id)||null; }
+function biomeById(id){ return REGIONS.concat(ISLE_REGIONS,SHROOM_REGIONS,BEACH_REGIONS).find(r=>r.id===id)||null; }
 function biomeList(){ return REGIONS.concat(halloweenOn()?ISLE_REGIONS:[],shroomedOn()?SHROOM_REGIONS:[]); }
 function themeAt(r,c){ return biomeTiles.get(r+','+c)||((splitEdge&&c>=splitEdge[r]&&themeB)?themeB:theme); }
 function groundAt(r,c){ const th=themeAt(r,c); return th?th.ground:'#3e5230'; }
@@ -3686,12 +3695,16 @@ const TREE_KINDS={
   oak:{name:'Oak',region:'Fields'}, birch:{name:'Birch',region:'Fields'}, apple:{name:'Apple tree',region:'Fields'},
   pine:{name:'Pine',region:'Dark Forest'}, rotten:{name:'Rotten tree',region:'Dark Forest'}, gnarled:{name:'Gnarled tree',region:'Dark Forest'},
   deadtree:{name:'Dead tree',region:'The Graveyard'}, willow:{name:'Weeping willow',region:'The Graveyard'}, cypress:{name:'Cypress',region:'The Graveyard'},
-  glowcap:{name:'Glowshroom',region:'The Glowshroom Valley'}, glowshelf:{name:'Flat glowshroom',region:'The Glowshroom Valley'}, glowtwin:{name:'Twin glowshrooms',region:'The Glowshroom Valley'}};
+  glowcap:{name:'Glowshroom',region:'The Glowshroom Valley'}, glowshelf:{name:'Flat glowshroom',region:'The Glowshroom Valley'}, glowtwin:{name:'Twin glowshrooms',region:'The Glowshroom Valley'},
+  rock:{name:'Rock',region:'Beach'}, rock2:{name:'Rock',region:'Beach'}, rock3:{name:'Rock',region:'Beach'}};
 const SHROOM_KINDS=['glowcap','glowshelf','glowtwin'];
 const GRAVE_KINDS=['deadtree','willow','cypress'];
 // on graveyard grass the ordinary trees grow as the graveyard's own: oak -> dead tree, apple -> weeping willow, birch -> cypress
 const GRAVE_SWAP={oak:'deadtree',apple:'willow',birch:'cypress',pine:'cypress',rotten:'deadtree',gnarled:'willow'};
-function treeKindHere(kind,r,c){ const g=r!=null?groundAt(r,c):theme&&theme.ground; return groundRegion(g)==='graveyard'&&GRAVE_SWAP[kind]||kind; }
+// on the Beach's sand every tree is a rock instead (one of 3 looks)
+const BEACH_SWAP={oak:'rock',birch:'rock2',apple:'rock3',pine:'rock2',rotten:'rock',gnarled:'rock3',deadtree:'rock',willow:'rock3',cypress:'rock2'};
+function treeKindHere(kind,r,c){ const g=r!=null?groundAt(r,c):theme&&theme.ground, reg=groundRegion(g);
+  return reg==='graveyard'&&GRAVE_SWAP[kind]||reg==='beach'&&BEACH_SWAP[kind]||kind; }
 // the Graveyard's three trees
 function drawGraveTree(g,kind,sw){
   g.fillStyle='rgba(0,0,0,.26)'; g.beginPath();g.ellipse(1,14,13,4.6,0,0,Math.PI*2);g.fill();
@@ -3796,6 +3809,7 @@ function drawNight(t){
 function drawTreeSprite(g,kind,sw){
   if(SHROOM_CAPS[kind]){ drawShroomTree(g,kind,sw); return; }
   if(GRAVE_KINDS.includes(kind)){ drawGraveTree(g,kind,sw); return; }
+  if(kind==='rock'||kind==='rock2'||kind==='rock3'){ drawRock(g,kind); return; }
   if(kind==='birch'||kind==='apple'||kind==='pine'||kind==='gnarled'){ drawTreeExtra(g,kind,sw); return; }
   const t={rotten:kind==='rotten'};
     g.fillStyle='rgba(0,0,0,.26)';
@@ -4145,6 +4159,7 @@ function buyAlchemist(){
   setMsg('An alchemist sets off up the road!');
 }
 function updateLake(){
+  const lake=freshLake();
   if(!lake.length||!lakeWave||wave<lakeWave||!waveActive)return;
   if(lakeNext>0){lakeNext--;return;}
   lakeNext=420;
@@ -4564,7 +4579,7 @@ function drawWebbedOverlay(u,r){
   }
   ctx.restore();
 }
-function lakeShape(r){
+function lakeShape(r,lake=freshLake()){
   // union of every lake tile: a disc on each tile, bridges to neighbours, filled corners
   const has=(row,col)=>lake.some(l=>l.row===row&&l.col===col);
   ctx.beginPath();
@@ -4586,6 +4601,7 @@ function lakeShape(r){
 // a wooden bridge carries the road over water
 function drawBridges(){
   bridges.forEach(b=>{
+    if(lake.some(l=>l.sea&&l.row===b.row&&l.col===b.col))return;   // on the sea it is a shore (drawSea)
     const x=b.col*CELL, y=b.row*CELL;
     const horiz=pathSet.has(b.row+','+(b.col-1))||pathSet.has(b.row+','+(b.col+1));
     ctx.save(); ctx.translate(x+CELL/2,y+CELL/2); if(!horiz)ctx.rotate(Math.PI/2);
@@ -4671,7 +4687,7 @@ function drawWebPaths(){
 }
 // one little pier for every stretch of road that runs along a lake; a lake spawn's exit gets it
 function computePiers(){
-  const isLake=(r,c)=>lake.some(l=>l.row===r&&l.col===c), isBridge=(r,c)=>bridges.some(b=>b.row===r&&b.col===c)||silkBridges.some(b=>b.row===r&&b.col===c);
+  const lake=freshLake(), isLake=(r,c)=>lake.some(l=>l.row===r&&l.col===c), isBridge=(r,c)=>bridges.some(b=>b.row===r&&b.col===c)||silkBridges.some(b=>b.row===r&&b.col===c);
   const exits=lakeExitPts.map(e=>Math.floor(e.y/CELL)+','+Math.floor(e.x/CELL));
   const C=[];
   lake.forEach(l=>{ if(isBridge(l.row,l.col))return;
@@ -4713,7 +4729,10 @@ function drawPiers(){
     ctx.restore();
   });
 }
+// the sea lives in the lake list (so nothing is built on it) but never acts or looks like a lake
+const freshLake=()=>lake.filter(l=>!l.sea);
 function drawLake(){
+  const lake=freshLake();
   if(!lake.length)return;
   ctx.save();
   ctx.fillStyle='#5a4a33'; lakeShape(CELL*0.54); ctx.fill('nonzero');      // muddy shore
@@ -4730,6 +4749,184 @@ function drawLake(){
       ctx.beginPath();ctx.arc(x+CELL*0.35,y+CELL*0.68+Math.sin(frameCount*0.06+lk.col)*2,3,0,Math.PI*2);ctx.fill();
     }
   });
+  ctx.restore();
+}
+/* ---------- the Beach: sea, shores (a bridge put on the sea) and paths dug in the sand ---------- */
+let beachPaths=[];
+// crab nests (crabs climb out like a glow pool) and beach balls (explode and stun 4 random towers)
+let crabNests=[], beachBalls=[], ballPops=[], crabNext=0; const CRAB_WAVE=2, CRAB_GAP=480, CRAB_DIG_GAP=240, CRAB_DIG_TILES=2.5, BALL_STUN=600;
+// sand under a spot: a Sand tile, or a whole map of Beach sand
+function onSandAt(x,y){ return groundRegion(groundAt(Math.floor(y/CELL),Math.floor(x/CELL)))==='beach'; }
+// a splash or a death close enough sets a beach ball off: it bursts and stuns 4 random towers on the map
+function beachBallNear(x,y,reach){
+  for(let i=beachBalls.length-1;i>=0;i--){ const b=beachBalls[i], bx=b.col*CELL+CELL/2, by=b.row*CELL+CELL/2;
+    if(Math.hypot(x-bx,y-by)>reach)continue;
+    beachBalls.splice(i,1); ballPops.push({x:bx,y:by,life:50,max:50}); shake=Math.max(shake,6);
+    const pool=towers.filter(t=>!t.isTime&&!t.isWorkshop);
+    for(let k=0;k<4&&pool.length;k++){ const t=pool.splice(Math.floor(Math.random()*pool.length),1)[0]; t.disabled=Math.max(t.disabled||0,BALL_STUN);
+      for(let q=0;q<6;q++)sparks.push({x:t.x,y:t.y-8,vx:(Math.random()-0.5)*2.4,vy:-Math.random()*2,life:22,col:'#ffe066'}); }
+    setMsg('The beach ball explodes — 4 towers are stunned!'); }
+}
+function drawBallPops(){
+  ballPops=ballPops.filter(p=>p.life>0);
+  ballPops.forEach(p=>{ p.life--; const f=1-p.life/p.max, cols=['#e8433a','#ffffff','#2f7fd6','#ffd23f'];
+    ctx.save();
+    ctx.fillStyle='rgba(255,250,220,'+(0.6*(1-f)).toFixed(2)+')'; ctx.beginPath(); ctx.arc(p.x,p.y,CELL*(0.3+0.9*f),0,Math.PI*2); ctx.fill();
+    for(let k=0;k<12;k++){ const a=k/12*Math.PI*2+k*0.3, d=CELL*(0.2+1.1*f)*(0.7+0.3*((k*7)%5)/5);
+      ctx.fillStyle=cols[k%4]; ctx.globalAlpha=1-f; ctx.save(); ctx.translate(p.x+Math.cos(a)*d,p.y+Math.sin(a)*d+f*f*10); ctx.rotate(a+f*6);
+      ctx.fillRect(-3,-1.5,6,3); ctx.restore(); }
+    ctx.restore(); });
+}
+// a big striped beach ball, bobbing a little
+function drawBeachBall(k,t){
+  const x=k.col*CELL+CELL/2, y=k.row*CELL+CELL/2+2, R=CELL*0.3, bob=Math.sin(t*0.05+k.row+k.col)*1.2, sp=t*0.004+k.col;
+  ctx.save();
+  ctx.fillStyle='rgba(0,0,0,.25)'; ctx.beginPath(); ctx.ellipse(x+1,y+R*0.95,R*0.95,R*0.3,0,0,Math.PI*2); ctx.fill();
+  ctx.translate(x,y-bob);
+  ctx.save(); ctx.beginPath(); ctx.arc(0,0,R,0,Math.PI*2); ctx.clip();
+  const cols=['#e8433a','#ffffff','#2f7fd6','#ffffff','#ffd23f','#ffffff'];
+  for(let i=0;i<6;i++){ const a0=sp+i*Math.PI/3; ctx.fillStyle=cols[i]; ctx.beginPath(); ctx.moveTo(0,-R*0.15);
+    ctx.ellipse(0,-R*0.15,R*1.6,R*1.1,0,a0,a0+Math.PI/3); ctx.closePath(); ctx.fill(); }
+  const g=ctx.createRadialGradient(-R*0.35,-R*0.4,R*0.1,0,0,R); g.addColorStop(0,'rgba(255,255,255,.45)'); g.addColorStop(0.6,'rgba(255,255,255,0)'); g.addColorStop(1,'rgba(0,0,0,.25)');
+  ctx.fillStyle=g; ctx.fillRect(-R,-R,R*2,R*2); ctx.restore();
+  ctx.strokeStyle='#22261c'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(0,0,R,0,Math.PI*2); ctx.stroke();
+  ctx.fillStyle='#f4f4f4'; ctx.strokeStyle='#22261c'; ctx.lineWidth=1; ctx.beginPath(); ctx.ellipse(0,-R*0.15,R*0.2,R*0.14,0,0,Math.PI*2); ctx.fill(); ctx.stroke();
+  ctx.restore();
+}
+// a crab nest: a sand dune riddled with holes; crabs peek out of them, more of them when some are about to come out
+function drawCrabNest(k,t){
+  const x=k.col*CELL+CELL/2, y=k.row*CELL+CELL/2+4, W=CELL*0.56, H=CELL*0.44;
+  ctx.save();
+  ctx.fillStyle='rgba(90,62,24,.3)'; ctx.beginPath(); ctx.ellipse(x+1,y+H*0.55,W*1.05,H*0.45,0,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#E3C68B'; ctx.strokeStyle='#7a5f34'; ctx.lineWidth=1.6;
+  ctx.beginPath(); ctx.moveTo(x-W,y+H*0.5); ctx.bezierCurveTo(x-W*0.8,y-H*0.9,x-W*0.1,y-H*1.25,x+W*0.25,y-H*0.95);
+  ctx.bezierCurveTo(x+W*0.7,y-H*0.7,x+W*1.05,y-H*0.1,x+W,y+H*0.5); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.fillStyle='rgba(255,248,220,.55)'; ctx.beginPath(); ctx.ellipse(x-W*0.35,y-H*0.55,W*0.35,H*0.18,-0.3,0,Math.PI*2); ctx.fill();
+  const holes=[[-0.5,0.15],[0.05,-0.45],[0.5,0.1],[-0.05,0.3]];
+  holes.forEach(([hx,hy],i)=>{ const px=x+hx*W, py=y+hy*H;
+    ctx.fillStyle='#3b2a14'; ctx.beginPath(); ctx.ellipse(px,py,4.2,2.8,0,0,Math.PI*2); ctx.fill();
+    const out=k.peek>0||((Math.floor(t/50)+i*3+k.col)%5)<2;      // crabs looking out
+    if(!out)return;
+    const bob=Math.sin(t*0.15+i*2)*0.6;
+    ctx.strokeStyle='#22261c'; ctx.lineWidth=1;
+    ctx.fillStyle='#e0603a'; ctx.beginPath(); ctx.ellipse(px,py-0.5+bob,3.6,1.8,0,Math.PI,0); ctx.fill();
+    [-1.4,1.4].forEach(ex=>{ ctx.strokeStyle='#8a2f18'; ctx.lineWidth=0.9; ctx.beginPath(); ctx.moveTo(px+ex,py-1+bob); ctx.lineTo(px+ex*1.2,py-3.6+bob); ctx.stroke();
+      ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(px+ex*1.2,py-3.9+bob,1.1,0,Math.PI*2); ctx.fill(); ctx.fillStyle='#111'; ctx.beginPath(); ctx.arc(px+ex*1.2,py-3.9+bob,0.55,0,Math.PI*2); ctx.fill(); });
+    if(k.peek>0||i%2){ ctx.fillStyle='#e0603a'; ctx.strokeStyle='#22261c'; ctx.lineWidth=0.8;
+      ctx.beginPath(); ctx.arc(px+4.4,py-1.2+bob,1.6,0,Math.PI*2); ctx.fill(); ctx.stroke(); } });
+  ctx.restore();
+}
+// a crab: wide red shell on six walking legs, two big claws in front and eyes on stalks (drawn facing right)
+function drawCrabShape(g,rad,col,step){
+  g.save(); g.lineJoin='round'; g.lineCap='round';
+  g.strokeStyle='#8a2f18'; g.lineWidth=1.6;
+  [-1,1].forEach(sd=>{ for(let k=0;k<3;k++){ const lx=(-0.45+k*0.38)*rad, st=(k%2?step:-step)*0.5*sd;
+    g.beginPath(); g.moveTo(lx,sd*rad*0.35); g.lineTo(lx-rad*0.15+st,sd*rad*0.8); g.lineTo(lx-rad*0.3+st,sd*rad*0.95+rad*0.15); g.stroke(); } });
+  g.strokeStyle='#22261c'; g.lineWidth=1.8; g.fillStyle=col;
+  [-1,1].forEach(sd=>{ const cx=rad*1.05, cy=sd*rad*0.55;
+    g.beginPath(); g.moveTo(rad*0.55,sd*rad*0.3); g.lineTo(cx-rad*0.15,cy); g.stroke();
+    g.beginPath(); g.ellipse(cx,cy,rad*0.38,rad*0.26,sd*0.3,0,Math.PI*2); g.fill(); g.stroke();
+    g.beginPath(); g.moveTo(cx+rad*0.1,cy); g.lineTo(cx+rad*0.42,cy-sd*rad*0.05); g.stroke(); });
+  g.beginPath(); g.ellipse(0,0,rad*0.85,rad*0.6,0,0,Math.PI*2); g.fill(); g.stroke();
+  g.fillStyle='rgba(255,255,255,.22)'; g.beginPath(); g.ellipse(-rad*0.2,-rad*0.2,rad*0.45,rad*0.22,0,0,Math.PI*2); g.fill();
+  g.fillStyle='rgba(120,30,10,.35)'; [[-0.3,0.15],[0.1,0.25],[0.35,-0.05]].forEach(([dx,dy])=>{ g.beginPath(); g.arc(dx*rad,dy*rad,rad*0.07,0,Math.PI*2); g.fill(); });
+  [-1,1].forEach(sd=>{ g.strokeStyle='#22261c'; g.lineWidth=1.3; g.beginPath(); g.moveTo(rad*0.45,sd*rad*0.18); g.lineTo(rad*0.62,sd*rad*0.34); g.stroke();
+    g.fillStyle='#fff'; g.beginPath(); g.arc(rad*0.66,sd*rad*0.38,rad*0.13,0,Math.PI*2); g.fill(); g.stroke();
+    g.fillStyle='#111'; g.beginPath(); g.arc(rad*0.7,sd*rad*0.38,rad*0.06,0,Math.PI*2); g.fill(); });
+  g.restore();
+}
+// a crab under the sand: a little ridge of sand running along the road, puffing up grains
+function drawSandMound(e,idx){
+  const w=Math.sin(frameCount*0.4+idx)*1.2;
+  ctx.save(); ctx.translate(e.x,e.y+4);
+  ctx.fillStyle='rgba(90,62,24,.25)'; ctx.beginPath(); ctx.ellipse(1,2,11,4,0,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#D9BE85'; ctx.strokeStyle='rgba(122,95,52,.8)'; ctx.lineWidth=1.2;
+  ctx.beginPath(); ctx.ellipse(0,0,10+w,4.5,0,Math.PI,0); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.fillStyle='#EAD7A6';
+  for(let k=0;k<3;k++){ const ph=((frameCount*0.05+k/3+idx*0.1)%1); ctx.globalAlpha=1-ph; ctx.beginPath(); ctx.arc(-6+k*6,-3-ph*7,1.2,0,Math.PI*2); ctx.fill(); }
+  ctx.restore();
+}
+// rocks: what trees become on the Beach's sand (they block building and clear like a tree)
+function drawRock(g,kind){
+  const stone=(x,y,rx,ry,base,tilt)=>{
+    g.fillStyle=base; g.strokeStyle='#3a3630'; g.lineWidth=2;
+    g.beginPath(); g.moveTo(x-rx,y+ry*0.4); g.quadraticCurveTo(x-rx*1.05,y-ry*0.6,x-rx*0.35+tilt,y-ry); g.quadraticCurveTo(x+rx*0.5+tilt,y-ry*1.1,x+rx,y-ry*0.15);
+    g.quadraticCurveTo(x+rx*1.1,y+ry*0.6,x+rx*0.4,y+ry*0.8); g.lineTo(x-rx*0.6,y+ry*0.8); g.closePath(); g.fill(); g.stroke();
+    g.fillStyle='rgba(255,255,255,.22)'; g.beginPath(); g.ellipse(x-rx*0.35,y-ry*0.45,rx*0.4,ry*0.25,-0.4,0,Math.PI*2); g.fill();
+    g.fillStyle='rgba(0,0,0,.16)'; g.beginPath(); g.ellipse(x+rx*0.3,y+ry*0.35,rx*0.55,ry*0.35,0,0,Math.PI*2); g.fill(); };
+  g.fillStyle='rgba(0,0,0,.26)'; g.beginPath(); g.ellipse(1,13,15,4.8,0,0,Math.PI*2); g.fill();
+  if(kind==='rock'){ stone(0,3,14,11,'#9c968b',2);
+    g.strokeStyle='rgba(50,46,40,.7)'; g.lineWidth=1.1; g.beginPath(); g.moveTo(-2,-7); g.lineTo(1,-1); g.lineTo(-1,4); g.stroke(); }
+  else if(kind==='rock2'){ stone(-3,0,10,14,'#a19a8d',-1); stone(9,8,6,5,'#8d877c',1); }
+  else { stone(-6,6,8,7,'#958f84',1); stone(6,5,9,8,'#a39c8f',-1); stone(0,-3,8,7,'#aaa396',2);
+    g.fillStyle='#5f7a3a'; g.beginPath(); g.ellipse(-9,11,3,1.2,0,0,Math.PI*2); g.fill(); }
+}
+// wet sand at the waterline, surf that runs up and back, turquoise shallows and deeper blue water with drifting wave crests
+function drawSea(){
+  const sea=lake.filter(l=>l.sea); if(!sea.length)return;
+  const t=frameCount, lap=Math.sin(t*0.035);
+  ctx.save();
+  ctx.fillStyle='#CDB27C'; lakeShape(CELL*0.62,sea); ctx.fill('nonzero');
+  ctx.fillStyle='rgba(250,253,250,.92)'; lakeShape(CELL*(0.535+0.035*lap),sea); ctx.fill('nonzero');
+  ctx.fillStyle='#63CBC6'; lakeShape(CELL*0.5,sea); ctx.fill('nonzero');
+  ctx.clip();
+  ctx.fillStyle='#3E9FC8'; lakeShape(CELL*0.4,sea); ctx.fill('nonzero');
+  ctx.fillStyle='#2B7FB3'; lakeShape(CELL*0.26,sea); ctx.fill('nonzero');
+  ctx.lineCap='round';
+  sea.forEach(s=>{ const x=s.col*CELL, y=s.row*CELL, ph=t*0.03+s.col*0.9+s.row*0.6;
+    const wx=x+CELL*(0.3+0.15*Math.sin(ph*0.7)), wy=y+CELL*(0.3+((s.row*5+s.col*3)%3)*0.18);
+    ctx.strokeStyle='rgba(255,255,255,'+(0.3+0.2*Math.sin(ph)).toFixed(2)+')'; ctx.lineWidth=1.4;
+    ctx.beginPath(); ctx.moveTo(wx-6,wy); ctx.quadraticCurveTo(wx-2,wy-3,wx+2,wy); ctx.quadraticCurveTo(wx+5,wy+2.5,wx+8,wy); ctx.stroke();
+    if(((s.row*7+s.col*11)%4)===0){ const a=0.5+0.5*Math.sin(t*0.08+s.row*2+s.col);
+      ctx.fillStyle='rgba(255,255,255,'+(0.7*a).toFixed(2)+')'; ctx.fillRect(x+CELL*0.68,y+CELL*0.66,2,2); } });
+  ctx.restore();
+  bridges.forEach(b=>{ if(sea.some(s=>s.row===b.row&&s.col===b.col))drawShore(b,lap); });
+}
+// a bridge that goes into the sea is a strip of shore: dry sand on top, wet sand at its edges and surf on both sides
+function drawShore(b,lap){
+  const C=CELL, cx=b.col*C+C/2, cy=b.row*C+C/2;
+  let dirs=[[0,1],[0,-1],[1,0],[-1,0]].filter(([dr,dc])=>pathSet.has((b.row+dr)+','+(b.col+dc)));
+  if(!dirs.length)dirs=[[0,1],[0,-1]];
+  const shape=w=>{ ctx.beginPath(); ctx.moveTo(cx+w/2,cy); ctx.arc(cx,cy,w/2,0,Math.PI*2);
+    dirs.forEach(([dr,dc])=>{ if(dc)ctx.rect(dc>0?cx:cx-C/2-0.5,cy-w/2,C/2+0.5,w); else ctx.rect(cx-w/2,dr>0?cy:cy-C/2-0.5,w,C/2+0.5); }); };
+  const h=n=>((Math.sin(b.row*41.3+b.col*17.9+n*7.13)*43758.5)%1+1)%1;
+  ctx.save();
+  ctx.fillStyle='rgba(250,253,250,.9)'; shape(C*(0.96+0.06*lap)); ctx.fill('nonzero');
+  ctx.fillStyle='#CDB27C'; shape(C*0.88); ctx.fill('nonzero');
+  ctx.fillStyle=BEACH_SAND; shape(C*0.72); ctx.fill('nonzero');
+  ctx.fillStyle='rgba(150,118,66,.35)';
+  for(let k=0;k<5;k++){ ctx.beginPath(); ctx.ellipse(cx+(h(k)-0.5)*C*0.5,cy+(h(k+9)-0.5)*C*0.5,1.5,1,h(k+3)*3,0,Math.PI*2); ctx.fill(); }
+  if(h(20)<0.5){ ctx.fillStyle='#f4e4d4'; ctx.beginPath(); const sx=cx+(h(21)-0.5)*C*0.4, sy=cy+(h(22)-0.5)*C*0.4;
+    ctx.moveTo(sx,sy+2); ctx.arc(sx,sy+2,3.6,Math.PI*1.15,Math.PI*1.85); ctx.closePath(); ctx.fill(); }
+  ctx.restore();
+}
+// a beach path: a trench dug out of the sand. Damp darker sand at the bottom with spade marks, a shadowed wall on the
+// top and left, a sunlit wall on the bottom and right, and heaped sand along every side that is not road. Decoration only.
+function drawBeachPaths(){
+  if(!beachPaths.length)return;
+  const road=(r,c)=>pathSet.has(r+','+c), C=CELL;
+  ctx.save(); ctx.lineCap='round';
+  beachPaths.forEach(k=>{ const x=k.col*C, y=k.row*C, h=n=>((Math.sin(k.row*41.3+k.col*17.9+n*7.13)*43758.5)%1+1)%1;
+    ctx.fillStyle='#C3A36B'; ctx.fillRect(x,y,C,C);
+    for(let j=0;j<8;j++){ ctx.fillStyle=j%2?'rgba(240,220,170,.35)':'rgba(110,80,40,.25)';
+      ctx.beginPath(); ctx.ellipse(x+h(j+30)*C,y+h(j+40)*C,1.2+h(j+50)*1.6,0.9+h(j+60),h(j+70)*3,0,Math.PI*2); ctx.fill(); }
+    ctx.strokeStyle='rgba(112,82,40,.4)'; ctx.lineWidth=1.3;
+    for(let j=0;j<3;j++){ const sx=x+C*(0.22+0.56*h(j)), sy=y+C*(0.22+0.56*h(j+5)), a=h(j+7)*Math.PI*2;
+      ctx.beginPath(); ctx.arc(sx,sy,3+h(j+2)*3,a,a+Math.PI*0.8); ctx.stroke(); } });
+  beachPaths.forEach(k=>{ const x=k.col*C, y=k.row*C, h=n=>((Math.sin(k.row*41.3+k.col*17.9+n*7.13)*43758.5)%1+1)%1;
+    [[-1,0],[1,0],[0,-1],[0,1]].forEach(([dr,dc],si)=>{ if(road(k.row+dr,k.col+dc))return;
+      const W=C*0.2, shadow=dr===-1||dc===-1;
+      const g=dr===-1?ctx.createLinearGradient(0,y,0,y+W):dr===1?ctx.createLinearGradient(0,y+C,0,y+C-W):dc===-1?ctx.createLinearGradient(x,0,x+W,0):ctx.createLinearGradient(x+C,0,x+C-W,0);
+      g.addColorStop(0,shadow?'rgba(78,50,16,.6)':'rgba(255,244,210,.55)'); g.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle=g;
+      if(dr)ctx.fillRect(x,dr<0?y:y+C-W,C,W); else ctx.fillRect(dc<0?x:x+C-W,y,W,C);
+      // the dug-out sand heaped up along the edge, in lumps
+      const n=3, lumps=[];
+      for(let j=0;j<n;j++){ const u=(j+0.5)/n*C+(h(si*9+j)-0.5)*6, R=5+h(si*5+j+20)*3;
+        lumps.push([dr?x+u:(dc<0?x-2:x+C+2), dr?(dr<0?y-2:y+C+2):y+u, R]); }
+      ctx.fillStyle='rgba(90,62,24,.22)'; lumps.forEach(([px,py,R])=>{ ctx.beginPath(); ctx.ellipse(px+1,py+1.8,dr?R*1.3:R*0.75,dr?R*0.6:R*1.1,0,0,Math.PI*2); ctx.fill(); });
+      ctx.fillStyle='#DEC690'; lumps.forEach(([px,py,R])=>{ ctx.beginPath(); ctx.ellipse(px,py,dr?R*1.3:R*0.75,dr?R*0.6:R*1.1,0,0,Math.PI*2); ctx.fill(); });
+      ctx.fillStyle='rgba(255,246,218,.5)'; lumps.forEach(([px,py,R])=>{ ctx.beginPath(); ctx.ellipse(px-R*0.25,py-R*0.2,R*0.55,R*0.25,0,0,Math.PI*2); ctx.fill(); }); }); });
   ctx.restore();
 }
 function updateSewers(){
@@ -4840,6 +5037,14 @@ function updateTheDead(){
         for(let i=0;i<n;i++)setTimeout(()=>{ if(gameOver)return; const P=w.routes[Math.floor(Math.random()*w.routes.length)];
           const e=makeEnemy('fungling'); e.pth=P; e.pos=0; e.x=P[0].x; e.y=P[0].y; enemies.push(e); },i*300); } } }
   glowPools.forEach(w=>{ if(w.splash>0)w.splash--; });
+  // crab nests: from wave 2, every 8 seconds 1 to 3 crabs climb out of one and scuttle to the road
+  if(crabNests.length&&wave>=CRAB_WAVE&&waveActive){
+    if(crabNext>0)crabNext--;
+    else { crabNext=CRAB_GAP; const w=crabNests[Math.floor(Math.random()*crabNests.length)];
+      if(w.routes.length){ w.peek=60; const n=1+Math.floor(Math.random()*3);
+        for(let i=0;i<n;i++)setTimeout(()=>{ if(gameOver)return; const P=w.routes[Math.floor(Math.random()*w.routes.length)];
+          const e=makeEnemy('crab'); e.pth=P; e.pos=0; e.x=P[0].x; e.y=P[0].y; enemies.push(e); },i*320); } } }
+  crabNests.forEach(w=>{ if(w.peek>0)w.peek--; });
   puffballs.forEach(p=>{ if(p.regrow>0)p.regrow--; });
   // mycelium: enemies walking the glowing roots slowly heal
   if(myceliums.length){ const mk=new Set(myceliums.map(k=>k.row+','+k.col));
@@ -5068,6 +5273,16 @@ function updateSpecials(){
     if(near){ if(!(e.under>0))fxSmoke(e.x,e.y+6,6,'70,62,52',5); e.under=45; }
     if(e.under>0){ e.under--; e.held=Math.max(e.held||0,2); if(!e.under)fxSmoke(e.x,e.y+6,4,'70,62,52',4); }
   });
+  // crabs dig into the sand and scuttle a few tiles underground, out of sight, then pop up further down the road
+  enemies.forEach(e=>{
+    if(!e.sandDigs||e.hp<=0)return;
+    const onSand=onSandAt(e.x,e.y);
+    if(e.sandUnder>0){ e.sandUnder--;
+      if(!e.sandUnder||!onSand){ e.sandUnder=0; e.sandCd=CRAB_DIG_GAP; fxSmoke(e.x,e.y+4,5,'214,190,140',5); }
+      return; }
+    if(e.sandCd>0){ e.sandCd--; return; }
+    if(onSand&&!(e.frozen>0)&&!(e.held>0)){ e.sandUnder=Math.round(CELL*CRAB_DIG_TILES/(e.speed*2)); fxSmoke(e.x,e.y+4,6,'214,190,140',5); }
+  });
   // glowshroom abominations stop when one of your units is up to 2 tiles in front of them and throw poisonous glowshrooms
   enemies.forEach(e=>{
     if(!e.lobs||e.frozen>0||e.dragging)return;
@@ -5269,7 +5484,7 @@ function randomPathPoint(){
   return {x:a.x+(b.x-a.x)*f, y:a.y+(b.y-a.y)*f};
 }
 function areaDamage(x,y,radius,dmg){
-  eggsInSplash(x,y,radius);
+  eggsInSplash(x,y,radius); if(beachBalls.length)beachBallNear(x,y,radius+CELL*0.5);
   enemies.forEach(e=>{
     if(Math.hypot(e.x-x,e.y-y)<=radius)hurt(e,dmg,'area');
   });
@@ -5299,7 +5514,7 @@ function updatePowers(){
     const a=allies[i];
     if(a.delay>0){a.delay--;continue;}
     enemies.forEach(e=>{
-      if(e.under>0)return;                           // a dug-in flatcap golem: the unit runs right over it
+      if(e.under>0||e.sandUnder>0)return;            // a dug-in flatcap golem or a crab under the sand: the unit runs right over it
       if(Math.hypot(e.x-a.x,e.y-a.y)<(a.r||12)+10){
         if(a.machine){ a.hp-=e.hp*0.5; if(a.hp>0)hurt(e,60,'contact'); if(e.hp<0)e.hp=0; }
         else { a.hp-=e.hp; e.hp=0; }
@@ -5678,6 +5893,7 @@ ISLE_REGIONS.forEach(r=>{
   if(!GRASS_COLORS.some(o=>o.c===r.ground))GRASS_COLORS.push({name:r.name,c:r.ground,dlc:'halloween'});
   });
 SHROOM_REGIONS.forEach(r=>{ PATH_COLORS.push({name:r.name,c:r.pathCol,dlc:'shroomed'}); GRASS_COLORS.push({name:r.name,c:r.ground,dlc:'shroomed'}); });
+BEACH_REGIONS.forEach(r=>{ PATH_COLORS.push({name:r.name,c:r.pathCol}); GRASS_COLORS.push({name:r.name,c:r.ground}); });
 // the slider only offers the colours of DLCs that are installed: these are the list positions it walks through
 function sbxColorSteps(list){ const on={halloween:halloweenOn(),shroomed:shroomedOn()}; return list.map((o,i)=>(!o.dlc||on[o.dlc])?i:-1).filter(i=>i>=0); }
 function sbxSetSliders(){
@@ -5693,6 +5909,7 @@ const SBX_TOOLS=[['path','Path'],['spawn','Spawn'],['base','Base'],['tree','Tree
   ['bridge','Bridge'],['webpath','Web path'],['forest','Forest'],['webforest','Webbed forest'],['plainsforest','Plains forest'],
   ['spider','Spider den'],['nest','Spider nest'],['queen','Spider queen'],['web','Web'],['solidweb','Solid web'],['webwall','Web wall'],['cocoon','Cocoon'],['eggs','Egg sacs'],['silkbridge','Silk bridge'],
   ['tunnelin','Tunnel in'],['tunnelout','Tunnel out'],['ruin','Webbed ruin'],['bones','Bones'],['grave','Grave'],['graveyard','Graveyard'],['crypt','Crypt'],['house','Abandoned house'],['pumpkin','Pumpkin'],['jack',"Jack o' lantern"],['barn','Barn'],['thornpath','Thorny path'],['corn','Corn rows'],['well','Well'],['candles','Candle shrine'],['opengrave','Open grave'],['glowshroom','Glowshroom'],['shroompath','Glowshroom path'],['shroomhouse','Glowshroom house'],['corpse','Fungi corpse'],['glowpool','Glow pool'],['puffball','Puffball'],['mycelium','Mycelium path'],
+  ['sand','Sand'],['sea','Sea'],['beachpath','Beach path'],['crabnest','Crab nest'],['beachball','Beach ball'],
   ['bush','Bush'],['bigbush','Big bush'],['sewer','Sewer'],['erase','Eraser'],['biome','Biome brush']];
 const SBX_SIZES={computer:{COLS:19,ROWS:12},phone:{COLS:10,ROWS:18},large:{COLS:25,ROWS:16},huge:{COLS:31,ROWS:20}};
 const SBX_SECTIONS={
@@ -5700,7 +5917,8 @@ const SBX_SECTIONS={
   tabs:{
     'Plains':['tree','bridge','forest','bush','bigbush'],
     'Dark Forest':['lake','lakespawn','sewer'],
-    'Spiders':['spider','nest','queen','web','solidweb','webwall','webpath','cocoon','eggs','silkbridge','tunnelin','tunnelout','ruin','bones']}};
+    'Spiders':['spider','nest','queen','web','solidweb','webwall','webpath','cocoon','eggs','silkbridge','tunnelin','tunnelout','ruin','bones'],
+    'Beach':['sand','sea','bridge','beachpath','crabnest','beachball']}};
 // the Halloween DLC adds its own tab, and the bones move there because they now let out skeletons
 function sbxSections(){
   const t=Object.assign({},SBX_SECTIONS.tabs);
@@ -5714,7 +5932,7 @@ function sbxSections(){
    arr = the sandbox list the block lives in (sbx[arr]); match = optional test on a list item.
    Each text is [English, Russian]. A new block only needs a new entry here. */
 const BLOCK_INFO={
-  biome:{arr:'biomes',size:['1 tile (drag to paint)','1 клетка (тяните, чтобы рисовать)'],where:['Anywhere: grass, road, trees and forests.','Где угодно: трава, дорога, деревья и леса.'],
+  biome:{arr:'biomes',match:p=>p[2]!=='beach',size:['1 tile (drag to paint)','1 клетка (тяните, чтобы рисовать)'],where:['Anywhere: grass, road, trees and forests.','Где угодно: трава, дорога, деревья и леса.'],
     does:["Paints tiles as another location. Pick one under the tools: the tiles take its grass, road colour, ground details, trees and forest look. 'Map grass' or the Eraser turns a tile back to the map's own grass.","Превращает клетки в другую местность. Выберите её под инструментами: клетки получают её траву, цвет дороги, мелкие детали, деревья и вид леса. «Трава карты» или Ластик возвращают клетке траву самой карты."]},
   pumpkin:{arr:'pumpkins',size:['1 tile','1 клетка'],where:['On grass off the road.','На траве, не на дороге.'],
     does:['A pumpkin patch: blocks building and can never be cleared in a game. Comes in 3 random looks.','Тыквенная грядка: мешает строить, и в игре её не убрать. 3 случайных вида.']},
@@ -5775,11 +5993,13 @@ const BLOCK_INFO={
   glowshroom:{arr:'trees',match:p=>!!SHROOM_CAPS[p[2]],size:['1 tile','1 клетка'],where:['On grass, not on the road.','На траве, не на дороге.'],
     does:['A big white glowshroom with glowing light-blue spots, in 3 random looks. Works like a tree: blocks building until the player clears it for 100 gold. On the valley\'s dark blue grass the map plays at night and every tree grows as a glowshroom.','Большой белый светогриб со светящимися голубыми пятнами, 3 случайных вида. Работает как дерево: мешает строить, пока игрок не срубит его за 100 золота. На тёмно-синей траве долины карта играется ночью, и все деревья растут светогрибами.']},
   tree:{arr:'trees',size:['1 tile','1 клетка'],where:['On grass, not on the road.','На траве, не на дороге.'],
-    does:['Blocks building until the player clears it for 100 gold. Light grass grows Fields trees, dark grass grows Dark Forest trees.','Мешает строить, пока игрок не срубит его за 100 золота. На светлой траве растут деревья Полей, на тёмной — Тёмного леса.']},
+    does:['Blocks building until the player clears it for 100 gold. Light grass grows Fields trees, dark grass grows Dark Forest trees. On Beach sand it is a big rock instead.','Мешает строить, пока игрок не срубит его за 100 золота. На светлой траве растут деревья Полей, на тёмной — Тёмного леса. На пляжном песке это большой камень.']},
   sewer:{arr:'sewers',size:['1 tile','1 клетка'],where:['Off the road.','Не на дороге.'],
     does:['A sewer grate. Rats come out of it on one wave (wave 3 by default). Blocks building.','Канализационная решётка. На одной волне (по умолчанию 3-й) из неё выходят крысы. Мешает строить.']},
   silkbridge:{arr:'silkBridges',size:['1 tile','1 клетка'],where:['Across a lake.','Через озеро.'],
     does:['A bridge woven from silk that carries the road over water, like a normal bridge.','Мост из паутины, ведёт дорогу через воду, как обычный мост.']},
+  shore:{arr:'bridges',match:p=>sHas(sbx.seas,p[0],p[1]),size:['1 tile','1 клетка'],where:['A Bridge put on the sea.','Мост, поставленный на море.'],
+    does:['A bridge that goes into the sea turns into a strip of shore: sand with the surf on both sides. Enemies walk it like a road.','Мост, уходящий в море, превращается в полосу берега: песок, и с обеих сторон прибой. Враги идут по нему, как по дороге.']},
   bridge:{arr:'bridges',size:['1 tile','1 клетка'],where:['Across a lake.','Через озеро.'],
     does:['Carries the road over a lake.','Ведёт дорогу через озеро.']},
   thornpath:{arr:'thornPaths',size:['1 tile','1 клетка'],where:['On the road (it lays road if there is none).','На дороге (если дороги нет, кладёт её).'],
@@ -5792,6 +6012,14 @@ const BLOCK_INFO={
     does:['Thick forest that takes the look of the place it grows in: leafy on light grass, dark pines on dark grass. Blocks building and cannot be cleared. Spider dens hide in it.','Густой лес, который выглядит как местность, где растёт: лиственный на светлой траве, тёмные ели на тёмной. Мешает строить, его не убрать. В нём прячутся паучьи логова.']},
   webforest:{arr:'forest',match:f=>f[2]==='webbed',size:['1 tile','1 клетка'],where:['Off the road. Drag to paint.','Не на дороге. Тяните, чтобы рисовать.'],
     does:['Forest wrapped in webs. Works like Forest: blocks building, and spider dens can hide in it.','Лес в паутине. Работает как Лес: мешает строить, в нём могут прятаться логова.']},
+  sea:{arr:'seas',size:['1 tile','1 клетка'],where:['Off the road. Drag to paint.','Не на дороге. Тяните, чтобы рисовать.'],
+    does:['Blue sea with surf on its sandy edge: no building on it, and nothing comes out of it. A Bridge put on it becomes a shore.','Синее море с прибоем у песчаного края: строить нельзя, и из него никто не выходит. Мост на нём становится берегом.']},
+  beachpath:{arr:'beachPaths',size:['1 tile','1 клетка'],where:['On the road (it lays road if there is none).','На дороге (если дороги нет, кладёт её).'],
+    does:['Decor: a path that looks freshly dug out of the sand, with heaped sand along its edges. Enemies walk it like any road.','Декор: тропа, будто только что выкопанная в песке, с кучками песка по краям. Враги идут по ней, как по любой дороге.']},
+  crabnest:{arr:'crabNests',size:['1 tile','1 клетка'],where:['On grass or sand beside the road.','На траве или песке у дороги.'],
+    does:['A sand dune riddled with holes, crabs peeking out of them. From wave 2, every 8 seconds 1 to 3 crabs (75 health) climb out and scuttle to the nearest road. On sand they dig in and skip a few tiles underground, where towers cannot shoot them. Blocks building.','Песчаная дюна в норках, из которых выглядывают крабы. Со 2-й волны каждые 8 секунд из неё вылезают 1–3 краба (75 здоровья) и бегут к ближайшей дороге. На песке они зарываются и проходят несколько клеток под землёй, где башни не могут в них стрелять. Мешает строить.']},
+  beachball:{arr:'beachBalls',size:['1 tile','1 клетка'],where:['On grass or sand beside the road.','На траве или песке у дороги.'],
+    does:['A big striped beach ball. If splash damage touches it, or any enemy dies within 5 tiles of it, it explodes and stuns 4 random towers on the map for 10 seconds. Explodes only once. Blocks building until then.','Большой полосатый пляжный мяч. Если его заденет урон по площади или любой враг погибнет в пределах 5 клеток от него, он взрывается и оглушает 4 случайные башни на карте на 10 секунд. Взрывается один раз. До этого мешает строить.']},
   lake:{arr:'lake',size:['1 tile','1 клетка'],where:['Off the road. Drag to paint.','Не на дороге. Тяните, чтобы рисовать.'],
     does:['Water: no building on it. Cross it with a Bridge. Without a lake spawn, tumorlings still leave a lake that touches the road (wave 4 by default).','Вода: строить нельзя. Перейти можно по мосту. Даже без озёрного спавна из озера у дороги выходят опухольки (по умолчанию на 4-й волне).']},
   house:{arr:'houses',size:['2×2 tiles','2×2 клетки'],where:['Anywhere off the road and water. Its door is at the bottom.','Где угодно, не на дороге и не в воде. Дверь внизу.'],
@@ -5806,12 +6034,14 @@ const BLOCK_INFO={
     does:['The giant spider queen. Decoration for now (she will become a boss). Blocks building.','Гигантская паучиха-королева. Пока украшение (станет боссом). Мешает строить.']},
   bigbush:{arr:'bigBushes',size:['2×2 tiles','2×2 клетки'],where:['On grass off the road.','На траве, не на дороге.'],
     does:['A big bush that blocks building. It has no other use yet.','Большой куст, мешает строить. Другого применения пока нет.']},
+  sand:{arr:'biomes',match:p=>p[2]==='beach',size:['1 tile (drag to paint)','1 клетка (тяните, чтобы рисовать)'],where:['Anywhere: grass, road, trees and forests.','Где угодно: трава, дорога, деревья и леса.'],
+    does:['Beach sand instead of grass, with little shells and ripples. A road on it turns sandy. Tap a sand tile again (or use the Eraser) to bring the grass back.','Пляжный песок вместо травы, с ракушками и рябью. Дорога на нём становится песчаной. Нажмите на песок ещё раз (или Ластиком), чтобы вернуть траву.']},
   erase:{size:['1 tile','1 клетка'],where:['Anywhere.','Где угодно.'],
     does:['Removes the topmost thing on a tile: a web before its road, a bridge before its lake.','Убирает верхнюю вещь на клетке: сначала паутину, потом дорогу; сначала мост, потом озеро.']},
 };
 const GRASS_INFO={size:['1 tile','1 клетка'],where:['Every empty tile.','Любая пустая клетка.'],does:['Empty ground: this is where the player builds towers.','Пустая земля: здесь игрок строит башни.']};
 Object.values(BLOCK_INFO).concat([GRASS_INFO]).forEach(b=>['size','where','does'].forEach(k=>{ if(b[k])I18N.ru[b[k][0]]=b[k][1]; }));
-Object.assign(I18N.ru,{"Description":"Описание","Size":"Размер","Where":"Где ставить","What it does":"Что делает","Grass":"Трава",
+Object.assign(I18N.ru,{"Description":"Описание","Beach":"Пляж","Sand":"Песок","Sea":"Море","Beach path":"Тропа в песке","Shore":"Берег","Crab nest":"Крабье гнездо","Beach ball":"Пляжный мяч","Rock":"Камень","Crab":"Краб","Sand Digger":"Песчаный копатель","A crab nest has no road to a Base nearby.":"У крабьего гнезда нет дороги к базе рядом.","Crabs scuttle out of the nest!":"Из гнезда выбегают крабы!","The beach ball explodes — 4 towers are stunned!":"Пляжный мяч взорвался — 4 башни оглушены!","Bridges go across a lake or into the sea.":"Мосты ставятся через озеро или в море.","A red beach crab scuttling sideways: 75 health.":"Красный пляжный краб бегает боком: 75 здоровья.","On sand it digs in and runs a few tiles underground, where towers cannot see or shoot it, then pops up further down the road.":"На песке он зарывается и пробегает несколько клеток под землёй, где башни его не видят и не стреляют, а потом вылезает дальше по дороге.","Crawls out of crab nests.":"Вылезает из крабьих гнёзд.","Shoot it while it is above ground: towers by the nest catch it as it comes out.":"Стреляйте, пока он на поверхности: башни у гнезда ловят его на выходе.","Low health — Gunners and splash damage finish it fast.":"Мало здоровья — Пулемётчики и урон по площади быстро его добивают.","It cannot dig on grass or a road with no sand around it.":"На траве и на дороге без песка вокруг он зарыться не может.","Size":"Размер","Where":"Где ставить","What it does":"Что делает","Grass":"Трава",
   "Tap any block on the map, or a tool button, to read about it.":"Нажмите на любой блок на карте или на кнопку инструмента, чтобы прочитать о нём.",
   "No description for this block yet.":"Для этого блока пока нет описания."});
 let sbxDescOn=false;
@@ -5849,7 +6079,7 @@ function sbxZoomBy(d){ const i=SBX_ZOOMS.indexOf(sbxZoom); sbxZoom=d===0?1:SBX_Z
 let sbx=null, sbxTool='path', sbxPainting=false, sbxNote='', sbxShowRoutes=true, sbxTerrain=null, sbxTerrainKey='', sbxFrame=0, sbxAnimOn=false, sbxR=null;
 function sbxBlank(orient){
   const C=SBX_SIZES[orient]||SBX_SIZES.computer;
-  return {orient,COLS:C.COLS,ROWS:C.ROWS,path:[],spawns:[],bases:[],trees:[],lake:[],lakeSpawns:[],forest:[],spiderDens:[],nests:[],webs:[],solidWebs:[],bridges:[],webPaths:[],bushes:[],bigBushes:[],queens:[],webWalls:[],cocoons:[],eggSacs:[],bones:[],ruins:[],silkBridges:[],tunnelIns:[],tunnelOuts:[],sewers:[],graves:[],graveyards:[],crypts:[],houses:[],pumpkins:[],jacks:[],barns:[],thornPaths:[],corns:[],wells:[],candles:[],openGraves:[],shroomPaths:[],shroomHouses:[],corpses:[],glowPools:[],puffballs:[],myceliums:[],biomes:[],waveScript:null,
+  return {orient,COLS:C.COLS,ROWS:C.ROWS,path:[],spawns:[],bases:[],trees:[],lake:[],lakeSpawns:[],forest:[],spiderDens:[],nests:[],webs:[],solidWebs:[],bridges:[],webPaths:[],bushes:[],bigBushes:[],queens:[],webWalls:[],cocoons:[],eggSacs:[],bones:[],ruins:[],silkBridges:[],tunnelIns:[],tunnelOuts:[],sewers:[],graves:[],graveyards:[],crypts:[],houses:[],pumpkins:[],jacks:[],barns:[],thornPaths:[],corns:[],wells:[],candles:[],openGraves:[],shroomPaths:[],shroomHouses:[],corpses:[],glowPools:[],puffballs:[],myceliums:[],beachPaths:[],seas:[],crabNests:[],beachBalls:[],biomes:[],waveScript:null,
     pathIdx:1,grassIdx:1,pathCol:PATH_COLORS[1].c,ground:GRASS_COLORS[1].c,pathCustom:false,grassCustom:false};
 }
 function sbxFix(d){                    // fill in anything an older save or code is missing
@@ -5859,6 +6089,7 @@ function sbxFix(d){                    // fill in anything an older save or code
   if(d.spiderDen){ if(!d.spiderDens.some(x=>x[0]===d.spiderDen[0]&&x[1]===d.spiderDen[1]))d.spiderDens.push(d.spiderDen); }
   delete d.spiderDen;
   d.webPaths=d.webPaths.filter(w=>d.path.some(q=>q[0]===w[0]&&q[1]===w[1]));   // old grass-only web paths are dropped
+  d.seas=d.seas.filter(w=>d.lake.some(q=>q[0]===w[0]&&q[1]===w[1]));             // sea tiles are lake tiles marked as sea
   d.trees=d.trees.map(t=>[t[0],t[1],t[2]||sbxRandomTree(d.ground)]);
   d.bones=d.bones.map(b=>[b[0],b[1],b[2]!=null?b[2]:Math.floor(Math.random()*5)]);
   d.ground=undeep(d.ground);                                   // slider positions moved when the deep grasses went, so find them again by colour
@@ -5921,7 +6152,7 @@ function sbxApply(r,c,first){
   const t=sbxTool;
   const clearProps=()=>{ sDel(sbx.trees,r,c); sDel(sbx.lake,r,c); sDel(sbx.sewers,r,c); sDel(sbx.forest,r,c);
     sDel(sbx.lakeSpawns,r,c); sDel(sbx.spiderDens,r,c); sDel(sbx.nests,r,c); sDel(sbx.bridges,r,c); sDel(sbx.webPaths,r,c); sDel(sbx.bushes,r,c);
-    sDel(sbx.wells,r,c); sDel(sbx.candles,r,c); sDel(sbx.openGraves,r,c); sDel(sbx.corpses,r,c); sDel(sbx.glowPools,r,c); sDel(sbx.puffballs,r,c); };
+    sDel(sbx.wells,r,c); sDel(sbx.candles,r,c); sDel(sbx.openGraves,r,c); sDel(sbx.corpses,r,c); sDel(sbx.glowPools,r,c); sDel(sbx.puffballs,r,c); sDel(sbx.seas,r,c); sDel(sbx.crabNests,r,c); sDel(sbx.beachBalls,r,c); };
   const clearRoad=()=>{ sDel(sbx.path,r,c); sDel(sbx.spawns,r,c); sDel(sbx.bases,r,c); sDel(sbx.webs,r,c); sDel(sbx.solidWebs,r,c); };
   const onRoad=()=>sHas(sbx.path,r,c)||sHas(sbx.bridges,r,c);
   if(t==='biome'){ const was=sbx.biomes.find(b=>b[0]===r&&b[1]===c);
@@ -5929,6 +6160,9 @@ function sbxApply(r,c,first){
     // a tree on the tile regrows as one of the new place's trees (glowshrooms stay glowshrooms only in the valley)
     const tr=sbx.trees.find(q=>q[0]===r&&q[1]===c); if(tr)tr[2]=sbxRandomTree(sbxGroundAt(r,c));
     return; }
+  if(t==='sand'){ const was=sbx.biomes.find(b=>b[0]===r&&b[1]===c);   // sand is the Beach painted on with the biome brush
+    if(was&&was[2]==='beach'){ if(first)sDel(sbx.biomes,r,c); return; }
+    sDel(sbx.biomes,r,c); sbx.biomes.push([r,c,'beach']); return; }
   if(t==='path'){ clearProps(); if(!onRoad())sbx.path.push([r,c]); }
   else if(t==='spawn'){ if(!first)return; clearProps(); if(!onRoad())sbx.path.push([r,c]); sDel(sbx.bases,r,c);
     if(sHas(sbx.spawns,r,c))sDel(sbx.spawns,r,c); else sbx.spawns.push([r,c]); }
@@ -5940,7 +6174,9 @@ function sbxApply(r,c,first){
   else if(t==='glowshroom'){ if(onRoad())return;
     if(sHas(sbx.trees,r,c)){ if(first)sDel(sbx.trees,r,c); return; }
     clearProps(); sbx.trees.push([r,c,SHROOM_KINDS[Math.floor(Math.random()*3)]]); }
-  else if(t==='lake'){ if(onRoad())return; if(sHas(sbx.lake,r,c))return; clearProps(); sbx.lake.push([r,c]); }
+  else if(t==='lake'){ if(onRoad())return; if(sHas(sbx.lake,r,c)){ sDel(sbx.seas,r,c); return; } clearProps(); sbx.lake.push([r,c]); }
+  else if(t==='sea'){ if(sHas(sbx.seas,r,c)||(onRoad()&&!sHas(sbx.lake,r,c)))return;   // a lake (bridges and all) can be turned into sea
+    if(!sHas(sbx.lake,r,c)){ clearProps(); sbx.lake.push([r,c]); } sDel(sbx.lakeSpawns,r,c); sbx.seas.push([r,c]); }
   else if(t==='forest'||t==='webforest'||t==='plainsforest'){ if(onRoad())return;
     const st=t==='webforest'?'webbed':forestLook(sbxGroundAt(r,c));
     const f=sbx.forest.find(p=>p[0]===r&&p[1]===c);
@@ -5952,7 +6188,7 @@ function sbxApply(r,c,first){
     clearProps(); sbx.bushes.push([r,c]); }
   else if(t==='sewer'){ if(!first||onRoad())return; if(sHas(sbx.sewers,r,c)){ sDel(sbx.sewers,r,c); return; } clearProps(); sbx.sewers.push([r,c]); }
   else if(t==='lakespawn'){ if(!first)return;
-    if(!sHas(sbx.lake,r,c)){ sbxNote='Put the lake spawn on a lake tile.'; return; }
+    if(!sHas(sbx.lake,r,c)||sHas(sbx.seas,r,c)){ sbxNote='Put the lake spawn on a lake tile.'; return; }
     if(sHas(sbx.lakeSpawns,r,c))sDel(sbx.lakeSpawns,r,c); else sbx.lakeSpawns.push([r,c]); }
   else if(t==='spider'){ if(!first)return;
     if(!sHas(sbx.forest,r,c)){ sbxNote='Put the spider den on a forest tile.'; return; }
@@ -5969,7 +6205,7 @@ function sbxApply(r,c,first){
     if(sHas(arr,r,c)){ if(first)sDel(arr,r,c); return; }
     sDel(other,r,c); arr.push([r,c]); }
   else if(t==='bridge'){
-    if(!sHas(sbx.lake,r,c)){ if(first)sbxNote='Bridges go across a lake.'; return; }
+    if(!sHas(sbx.lake,r,c)){ if(first)sbxNote='Bridges go across a lake or into the sea.'; return; }
     if(sHas(sbx.bridges,r,c)){ if(first){ sDel(sbx.bridges,r,c); sDel(sbx.webs,r,c); sDel(sbx.solidWebs,r,c); } return; }
     sDel(sbx.lakeSpawns,r,c); sbx.bridges.push([r,c]); }
   else if(t==='thornpath'){
@@ -5980,13 +6216,17 @@ function sbxApply(r,c,first){
     if(sHas(sbx.myceliums,r,c)){ if(first)sDel(sbx.myceliums,r,c); return; }
     if(sHas(sbx.bridges,r,c))return;
     clearProps(); if(!sHas(sbx.path,r,c))sbx.path.push([r,c]); sbx.myceliums.push([r,c]); }
-  else if(t==='glowpool'||t==='puffball'){ if(!first)return;
-    const arr=t==='glowpool'?sbx.glowPools:sbx.puffballs;
+  else if(t==='glowpool'||t==='puffball'||t==='crabnest'||t==='beachball'){ if(!first)return;
+    const arr={glowpool:sbx.glowPools,puffball:sbx.puffballs,crabnest:sbx.crabNests,beachball:sbx.beachBalls}[t];
     if(onRoad()||sHas(sbx.lake,r,c)){ sbxNote='That goes on grass beside the road.'; return; }
     if(sHas(arr,r,c)){ sDel(arr,r,c); return; }
     if(sbxCoverAt(r,c)){ sbxNote='Something already stands here.'; return; }
     sDel(sbx.trees,r,c); sDel(sbx.bushes,r,c); sDel(sbx.sewers,r,c); sDel(sbx.nests,r,c); sDel(sbx.cocoons,r,c); sDel(sbx.forest,r,c);
-    [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.pumpkins,sbx.jacks,sbx.corns,sbx.wells,sbx.candles,sbx.openGraves,sbx.corpses,sbx.glowPools,sbx.puffballs].forEach(a=>sDel(a,r,c)); arr.push([r,c]); }
+    [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.pumpkins,sbx.jacks,sbx.corns,sbx.wells,sbx.candles,sbx.openGraves,sbx.corpses,sbx.glowPools,sbx.puffballs,sbx.crabNests,sbx.beachBalls].forEach(a=>sDel(a,r,c)); arr.push([r,c]); }
+  else if(t==='beachpath'){
+    if(sHas(sbx.beachPaths,r,c)){ if(first)sDel(sbx.beachPaths,r,c); return; }
+    if(sHas(sbx.bridges,r,c))return;
+    clearProps(); if(!sHas(sbx.path,r,c))sbx.path.push([r,c]); sbx.beachPaths.push([r,c]); }
   else if(t==='shroompath'){
     if(sHas(sbx.shroomPaths,r,c)){ if(first)sDel(sbx.shroomPaths,r,c); return; }
     if(sHas(sbx.bridges,r,c))return;
@@ -5997,14 +6237,14 @@ function sbxApply(r,c,first){
     for(let rr=r;rr<r+2;rr++)for(let cc=c;cc<c+2;cc++){
       if(sHas(sbx.path,rr,cc)||sHas(sbx.bridges,rr,cc)||sHas(sbx.lake,rr,cc)||sbxCoverAt(rr,cc)){ sbxNote='It needs 2×2 clear tiles off the road and water.'; return; } }
     for(let rr=r;rr<r+2;rr++)for(let cc=c;cc<c+2;cc++){ sDel(sbx.trees,rr,cc); sDel(sbx.bushes,rr,cc); sDel(sbx.sewers,rr,cc); sDel(sbx.nests,rr,cc); sDel(sbx.solidWebs,rr,cc); sDel(sbx.webWalls,rr,cc); sDel(sbx.forest,rr,cc);
-      [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.cocoons,sbx.pumpkins,sbx.jacks,sbx.corns,sbx.wells,sbx.candles,sbx.openGraves,sbx.corpses,sbx.glowPools,sbx.puffballs].forEach(a=>sDel(a,rr,cc)); }
+      [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.cocoons,sbx.pumpkins,sbx.jacks,sbx.corns,sbx.wells,sbx.candles,sbx.openGraves,sbx.corpses,sbx.glowPools,sbx.puffballs,sbx.crabNests,sbx.beachBalls].forEach(a=>sDel(a,rr,cc)); }
     sbx.shroomHouses.push([r,c]); }
   else if(t==='corpse'){ if(!first)return;
     if(onRoad()||sHas(sbx.lake,r,c)){ sbxNote='That goes on grass off the road.'; return; }
     if(sHas(sbx.corpses,r,c)){ sDel(sbx.corpses,r,c); return; }
     if(sbxCoverAt(r,c)){ sbxNote='Something already stands here.'; return; }
     sDel(sbx.trees,r,c); sDel(sbx.bushes,r,c); sDel(sbx.sewers,r,c); sDel(sbx.nests,r,c); sDel(sbx.cocoons,r,c); sDel(sbx.forest,r,c);
-    [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.pumpkins,sbx.jacks,sbx.corns,sbx.wells,sbx.candles,sbx.openGraves,sbx.corpses,sbx.glowPools,sbx.puffballs].forEach(a=>sDel(a,r,c)); sbx.corpses.push([r,c,Math.random()<0.5?0:1]); }
+    [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.pumpkins,sbx.jacks,sbx.corns,sbx.wells,sbx.candles,sbx.openGraves,sbx.corpses,sbx.glowPools,sbx.puffballs,sbx.crabNests,sbx.beachBalls].forEach(a=>sDel(a,r,c)); sbx.corpses.push([r,c,Math.random()<0.5?0:1]); }
   else if(t==='webpath'){
     if(sHas(sbx.webPaths,r,c)){ if(first)sDel(sbx.webPaths,r,c); return; }
     if(sHas(sbx.bridges,r,c))return;
@@ -6020,13 +6260,13 @@ function sbxApply(r,c,first){
     if(sHas(arr,r,c)){ sDel(arr,r,c); return; }
     if(sbxCoverAt(r,c)){ sbxNote='Something already stands here.'; return; }
     sDel(sbx.trees,r,c); sDel(sbx.bushes,r,c); sDel(sbx.sewers,r,c); sDel(sbx.nests,r,c); sDel(sbx.cocoons,r,c);
-    [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.pumpkins,sbx.jacks,sbx.corns,sbx.wells,sbx.candles,sbx.openGraves,sbx.corpses,sbx.glowPools,sbx.puffballs].forEach(a=>sDel(a,r,c)); arr.push(t==='bones'?[r,c,Math.floor(Math.random()*5)]:[r,c]); }
+    [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.pumpkins,sbx.jacks,sbx.corns,sbx.wells,sbx.candles,sbx.openGraves,sbx.corpses,sbx.glowPools,sbx.puffballs,sbx.crabNests,sbx.beachBalls].forEach(a=>sDel(a,r,c)); arr.push(t==='bones'?[r,c,Math.floor(Math.random()*5)]:[r,c]); }
   else if(t==='grave'){ if(!first)return;
     if(onRoad()||sHas(sbx.lake,r,c)){ sbxNote='Graves go on grass beside the road.'; return; }
     if(sHas(sbx.graves,r,c)){ sDel(sbx.graves,r,c); return; }
     if(sbxCoverAt(r,c)){ sbxNote='Something already stands here.'; return; }
     sDel(sbx.trees,r,c); sDel(sbx.bushes,r,c); sDel(sbx.sewers,r,c); sDel(sbx.nests,r,c); sDel(sbx.cocoons,r,c);
-    [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.pumpkins,sbx.jacks,sbx.corns,sbx.wells,sbx.candles,sbx.openGraves,sbx.corpses,sbx.glowPools,sbx.puffballs].forEach(a=>sDel(a,r,c)); sbx.graves.push([r,c]); }
+    [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.pumpkins,sbx.jacks,sbx.corns,sbx.wells,sbx.candles,sbx.openGraves,sbx.corpses,sbx.glowPools,sbx.puffballs,sbx.crabNests,sbx.beachBalls].forEach(a=>sDel(a,r,c)); sbx.graves.push([r,c]); }
   else if(t==='graveyard'){ if(!first)return;
     const hit=sbxCoverAt(r,c);
     if(hit&&hit.arr===sbx.graveyards){                     // tap it again: the gate turns to the next side on the road
@@ -6039,7 +6279,7 @@ function sbxApply(r,c,first){
     const sides=sbxGateSides(r,c);
     if(!sides.length){ sbxNote='A graveyard must have one whole side against the road (2 road tiles).'; return; }
     for(let rr=r;rr<r+2;rr++)for(let cc=c;cc<c+2;cc++){ sDel(sbx.trees,rr,cc); sDel(sbx.bushes,rr,cc); sDel(sbx.sewers,rr,cc); sDel(sbx.nests,rr,cc); sDel(sbx.solidWebs,rr,cc); sDel(sbx.webWalls,rr,cc);
-      [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.cocoons,sbx.pumpkins,sbx.jacks,sbx.corns,sbx.wells,sbx.candles,sbx.openGraves,sbx.corpses,sbx.glowPools,sbx.puffballs].forEach(a=>sDel(a,rr,cc)); }
+      [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.cocoons,sbx.pumpkins,sbx.jacks,sbx.corns,sbx.wells,sbx.candles,sbx.openGraves,sbx.corpses,sbx.glowPools,sbx.puffballs,sbx.crabNests,sbx.beachBalls].forEach(a=>sDel(a,rr,cc)); }
     sbx.graveyards.push([r,c,sides[0]]);
     if(sides.length>1)sbxNote='Tap the graveyard again to turn its gate.'; }
   else if(t==='crypt'){ if(!first)return;
@@ -6048,7 +6288,7 @@ function sbxApply(r,c,first){
     for(let cc=c;cc<c+2;cc++){
       if(sHas(sbx.path,r,cc)||sHas(sbx.bridges,r,cc)||sHas(sbx.lake,r,cc)||sbxCoverAt(r,cc)){ sbxNote='It needs 2 clear tiles side by side, off the road and water.'; return; } }
     for(let cc=c;cc<c+2;cc++){ sDel(sbx.trees,r,cc); sDel(sbx.bushes,r,cc); sDel(sbx.sewers,r,cc); sDel(sbx.nests,r,cc); sDel(sbx.solidWebs,r,cc); sDel(sbx.webWalls,r,cc);
-      [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.cocoons,sbx.pumpkins,sbx.jacks,sbx.corns,sbx.wells,sbx.candles,sbx.openGraves,sbx.corpses,sbx.glowPools,sbx.puffballs].forEach(a=>sDel(a,r,cc)); }
+      [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.cocoons,sbx.pumpkins,sbx.jacks,sbx.corns,sbx.wells,sbx.candles,sbx.openGraves,sbx.corpses,sbx.glowPools,sbx.puffballs,sbx.crabNests,sbx.beachBalls].forEach(a=>sDel(a,r,cc)); }
     sbx.crypts.push([r,c,'r']); }
   else if(t==='house'){ if(!first)return;
     const hit=sbxCoverAt(r,c); if(hit&&hit.arr===sbx.houses){ sbx.houses.splice(sbx.houses.indexOf(hit.item),1); return; }
@@ -6056,7 +6296,7 @@ function sbxApply(r,c,first){
     for(let rr=r;rr<r+2;rr++)for(let cc=c;cc<c+2;cc++){
       if(sHas(sbx.path,rr,cc)||sHas(sbx.bridges,rr,cc)||sHas(sbx.lake,rr,cc)||sbxCoverAt(rr,cc)){ sbxNote='It needs 2×2 clear tiles off the road and water.'; return; } }
     for(let rr=r;rr<r+2;rr++)for(let cc=c;cc<c+2;cc++){ sDel(sbx.trees,rr,cc); sDel(sbx.bushes,rr,cc); sDel(sbx.sewers,rr,cc); sDel(sbx.nests,rr,cc); sDel(sbx.solidWebs,rr,cc); sDel(sbx.webWalls,rr,cc);
-      [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.cocoons,sbx.pumpkins,sbx.jacks,sbx.corns,sbx.wells,sbx.candles,sbx.openGraves,sbx.corpses,sbx.glowPools,sbx.puffballs].forEach(a=>sDel(a,rr,cc)); }
+      [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.cocoons,sbx.pumpkins,sbx.jacks,sbx.corns,sbx.wells,sbx.candles,sbx.openGraves,sbx.corpses,sbx.glowPools,sbx.puffballs,sbx.crabNests,sbx.beachBalls].forEach(a=>sDel(a,rr,cc)); }
     sbx.houses.push([r,c]); }
   else if(t==='pumpkin'||t==='jack'){ if(!first)return;
     const arr=t==='pumpkin'?sbx.pumpkins:sbx.jacks;
@@ -6064,14 +6304,14 @@ function sbxApply(r,c,first){
     if(sHas(arr,r,c)){ sDel(arr,r,c); return; }
     if(sbxCoverAt(r,c)){ sbxNote='Something already stands here.'; return; }
     sDel(sbx.trees,r,c); sDel(sbx.bushes,r,c); sDel(sbx.sewers,r,c); sDel(sbx.nests,r,c); sDel(sbx.cocoons,r,c);
-    [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.pumpkins,sbx.jacks,sbx.corns,sbx.wells,sbx.candles,sbx.openGraves,sbx.corpses,sbx.glowPools,sbx.puffballs].forEach(a=>sDel(a,r,c));
+    [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.pumpkins,sbx.jacks,sbx.corns,sbx.wells,sbx.candles,sbx.openGraves,sbx.corpses,sbx.glowPools,sbx.puffballs,sbx.crabNests,sbx.beachBalls].forEach(a=>sDel(a,r,c));
     arr.push(t==='pumpkin'?[r,c,Math.floor(Math.random()*3)]:[r,c]); }
   else if(t==='corn'){
     if(sHas(sbx.corns,r,c)){ if(first)sDel(sbx.corns,r,c); return; }
     if(sHas(sbx.lake,r,c)&&!sHas(sbx.bridges,r,c)){ if(first)sbxNote='Corn does not grow in water.'; return; }
     if(!onRoad()){ if(sbxCoverAt(r,c)){ if(first)sbxNote='Something already stands here.'; return; }
       sDel(sbx.trees,r,c); sDel(sbx.bushes,r,c); sDel(sbx.sewers,r,c); sDel(sbx.nests,r,c); sDel(sbx.cocoons,r,c); sDel(sbx.solidWebs,r,c); sDel(sbx.webWalls,r,c); sDel(sbx.forest,r,c);
-      [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.pumpkins,sbx.jacks,sbx.wells,sbx.candles,sbx.openGraves,sbx.corpses,sbx.glowPools,sbx.puffballs].forEach(a=>sDel(a,r,c)); }
+      [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.pumpkins,sbx.jacks,sbx.wells,sbx.candles,sbx.openGraves,sbx.corpses,sbx.glowPools,sbx.puffballs,sbx.crabNests,sbx.beachBalls].forEach(a=>sDel(a,r,c)); }
     sbx.corns.push([r,c]); }
   else if(t==='well'||t==='candles'||t==='opengrave'){ if(!first)return;
     const arr=t==='well'?sbx.wells:t==='candles'?sbx.candles:sbx.openGraves;
@@ -6079,14 +6319,14 @@ function sbxApply(r,c,first){
     if(sHas(arr,r,c)){ sDel(arr,r,c); return; }
     if(sbxCoverAt(r,c)){ sbxNote='Something already stands here.'; return; }
     sDel(sbx.trees,r,c); sDel(sbx.bushes,r,c); sDel(sbx.sewers,r,c); sDel(sbx.nests,r,c); sDel(sbx.cocoons,r,c); sDel(sbx.forest,r,c);
-    [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.pumpkins,sbx.jacks,sbx.corns,sbx.wells,sbx.candles,sbx.openGraves,sbx.corpses,sbx.glowPools,sbx.puffballs].forEach(a=>sDel(a,r,c)); arr.push([r,c]); }
+    [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.pumpkins,sbx.jacks,sbx.corns,sbx.wells,sbx.candles,sbx.openGraves,sbx.corpses,sbx.glowPools,sbx.puffballs,sbx.crabNests,sbx.beachBalls].forEach(a=>sDel(a,r,c)); arr.push([r,c]); }
   else if(t==='barn'){ if(!first)return;
     const hit=sbxCoverAt(r,c); if(hit&&hit.arr===sbx.barns){ sbx.barns.splice(sbx.barns.indexOf(hit.item),1); return; }
     if(r+2>sbx.ROWS||c+3>sbx.COLS){ sbxNote='Not enough room here — a barn needs 3 tiles across and 2 down.'; return; }
     for(let rr=r;rr<r+2;rr++)for(let cc=c;cc<c+3;cc++){
       if(sHas(sbx.path,rr,cc)||sHas(sbx.bridges,rr,cc)||sHas(sbx.lake,rr,cc)||sbxCoverAt(rr,cc)){ sbxNote='A barn needs 3×2 clear tiles off the road and water.'; return; } }
     for(let rr=r;rr<r+2;rr++)for(let cc=c;cc<c+3;cc++){ sDel(sbx.trees,rr,cc); sDel(sbx.bushes,rr,cc); sDel(sbx.sewers,rr,cc); sDel(sbx.nests,rr,cc); sDel(sbx.solidWebs,rr,cc); sDel(sbx.webWalls,rr,cc);
-      [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.cocoons,sbx.pumpkins,sbx.jacks,sbx.corns,sbx.wells,sbx.candles,sbx.openGraves,sbx.corpses,sbx.glowPools,sbx.puffballs].forEach(a=>sDel(a,rr,cc)); }
+      [sbx.eggSacs,sbx.bones,sbx.ruins,sbx.graves,sbx.cocoons,sbx.pumpkins,sbx.jacks,sbx.corns,sbx.wells,sbx.candles,sbx.openGraves,sbx.corpses,sbx.glowPools,sbx.puffballs,sbx.crabNests,sbx.beachBalls].forEach(a=>sDel(a,rr,cc)); }
     sbx.barns.push([r,c,'r']); }
   else if(t==='silkbridge'){
     if(!sHas(sbx.lake,r,c)){ if(first)sbxNote='Silk bridges go across a lake.'; return; }
@@ -6133,8 +6373,8 @@ function sbxCoverAt(r,c){
 // the eraser peels off only the topmost thing on a tile: a web before its road, a bridge before its lake
 function sbxEraseTop(r,c){
   const cov=sbxCoverAt(r,c); if(cov){ cov.arr.splice(cov.arr.indexOf(cov.item),1); return; }
-  const layers=[sbx.puffballs,sbx.glowPools,sbx.myceliums,sbx.corpses,sbx.shroomPaths,sbx.wells,sbx.candles,sbx.openGraves,sbx.corns,sbx.pumpkins,sbx.jacks,sbx.thornPaths,sbx.graves,sbx.webWalls,sbx.cocoons,sbx.eggSacs,sbx.bones,sbx.ruins,sbx.tunnelIns,sbx.tunnelOuts,sbx.solidWebs,sbx.webs,sbx.spawns,sbx.bases,sbx.nests,sbx.spiderDens,sbx.lakeSpawns,sbx.bushes,sbx.trees,sbx.sewers,sbx.bridges,sbx.silkBridges,sbx.webPaths,sbx.path,sbx.lake,sbx.forest,sbx.biomes];
-  for(const L of layers){ if(sHas(L,r,c)){ sDel(L,r,c); return; } }
+  const layers=[sbx.crabNests,sbx.beachBalls,sbx.beachPaths,sbx.puffballs,sbx.glowPools,sbx.myceliums,sbx.corpses,sbx.shroomPaths,sbx.wells,sbx.candles,sbx.openGraves,sbx.corns,sbx.pumpkins,sbx.jacks,sbx.thornPaths,sbx.graves,sbx.webWalls,sbx.cocoons,sbx.eggSacs,sbx.bones,sbx.ruins,sbx.tunnelIns,sbx.tunnelOuts,sbx.solidWebs,sbx.webs,sbx.spawns,sbx.bases,sbx.nests,sbx.spiderDens,sbx.lakeSpawns,sbx.bushes,sbx.trees,sbx.sewers,sbx.bridges,sbx.silkBridges,sbx.webPaths,sbx.path,sbx.lake,sbx.forest,sbx.biomes];
+  for(const L of layers){ if(sHas(L,r,c)){ sDel(L,r,c); if(L===sbx.lake)sDel(sbx.seas,r,c); return; } }
 }
 // breadth-first walk across a set of tiles; returns the tile list from start to the first goal reached
 function sbxBFS(starts,walk,goal,jumps){
@@ -6184,7 +6424,7 @@ function sbxRoutes(){
     if(!rs.length){ errs.push('The road next to the '+what+' does not reach a Base.'); return null; }
     return {inner,routes:rs};
   };
-  const openWater=sbx.lake.filter(p=>!sHas(sbx.bridges,p[0],p[1])&&!sHas(sbx.silkBridges,p[0],p[1]));
+  const openWater=sbx.lake.filter(p=>!sHas(sbx.bridges,p[0],p[1])&&!sHas(sbx.silkBridges,p[0],p[1])&&!sHas(sbx.seas,p[0],p[1]));
   sbx.lakeSpawns.forEach(ls=>{ const e=emerge(ls,openWater,'lake with the lake spawn'); if(!e)return;
     const exit=e.inner[e.inner.length-1];
     out.lakeExits.push({spawn:ls,exit,routes:e.routes.map(rc=>sbxWaypoints([exit].concat(rc)))}); });
@@ -6209,6 +6449,11 @@ function sbxRoutes(){
     const cand=sbx.path.slice().sort((a,b)=>Math.hypot(a[0]-n[0],a[1]-n[1])-Math.hypot(b[0]-n[0],b[1]-n[1]));
     for(const R of cand){ const rs=toBases(R); if(rs.length)return {at:n,routes:rs.map(rc=>[n].concat(sbxWaypoints(rc)))}; }
     errs.push('A glow pool has no road to a Base nearby.'); return {at:n,routes:[]}; });
+  // crab nests: crabs scuttle to the nearest road tile that leads to a base, like a glow pool
+  out.crabNests=sbx.crabNests.map(n=>{
+    const cand=sbx.path.slice().sort((a,b)=>Math.hypot(a[0]-n[0],a[1]-n[1])-Math.hypot(b[0]-n[0],b[1]-n[1]));
+    for(const R of cand){ const rs=toBases(R); if(rs.length)return {at:n,routes:rs.map(rc=>[n].concat(sbxWaypoints(rc)))}; }
+    errs.push('A crab nest has no road to a Base nearby.'); return {at:n,routes:[]}; });
   // nests crawl to the nearest road tile that leads to a base
   out.nests=[];
   sbx.nests.forEach(n=>{
@@ -6364,7 +6609,7 @@ function sbxCode(){
     routeGroups:R.groups,lakeExits:R.lakeExits,spiderRoutes:R.spiderRoutes,
     nests:R.nests,trees:sbx.trees,lake:sbx.lake,lakeSpawns:sbx.lakeSpawns,forest:sbx.forest,spiderDens:sbx.spiderDens,
     spiderNests:sbx.nests,webs:sbx.webs,solidWebs:sbx.solidWebs,bridges:sbx.bridges,webPaths:sbx.webPaths,bushes:sbx.bushes,bigBushes:sbx.bigBushes,queens:sbx.queens,webWalls:sbx.webWalls,cocoons:sbx.cocoons,eggSacs:sbx.eggSacs,bones:sbx.bones,ruins:sbx.ruins,silkBridges:sbx.silkBridges,tunnelIns:sbx.tunnelIns,tunnelOuts:sbx.tunnelOuts,sewers:sbx.sewers,graves:sbx.graves,graveyards:sbx.graveyards,crypts:sbx.crypts,houses:sbx.houses,pumpkins:sbx.pumpkins,jacks:sbx.jacks,barns:sbx.barns,thornPaths:sbx.thornPaths,corns:sbx.corns,wells:sbx.wells,candles:sbx.candles,openGraves:sbx.openGraves,shroomPaths:sbx.shroomPaths,shroomHouses:sbx.shroomHouses,corpses:sbx.corpses,glowPools:sbx.glowPools,puffballs:sbx.puffballs,myceliums:sbx.myceliums,
-    biomes:sbx.biomes.length?sbx.biomes:undefined,road:sbx.path,spawns:sbx.spawns,bases:sbx.bases,waveScript:sbx.waveScript||undefined});
+    beachPaths:sbx.beachPaths.length?sbx.beachPaths:undefined,seas:sbx.seas.length?sbx.seas:undefined,crabNests:sbx.crabNests.length?sbx.crabNests:undefined,beachBalls:sbx.beachBalls.length?sbx.beachBalls:undefined,biomes:sbx.biomes.length?sbx.biomes:undefined,road:sbx.path,spawns:sbx.spawns,bases:sbx.bases,waveScript:sbx.waveScript||undefined});
 }
 function sbxRender(){
   if(!sbx)return;
@@ -6435,7 +6680,7 @@ function sbxDraw(){
   const keepBiomes=biomeTiles;
   const cv=document.getElementById('sbxCanvas');
   const saved={ctx,CELL,COLS,ROWS,CW,CH,paths,path,pathSet,pathCells,lake,grove,trees,sewers,lab,theme,themeB,splitEdge,
-    terrainCache,forestPathIdx,forestIdxs,denPoints,nestPts,webs,bridges,webPaths,bigBushes,queens,webWalls,cocoons,eggSacs,boneHeaps,ruins,silkBridges,tunnels,piers,lakeExitPts,lakeSpawnPts,frameCount,extraBases,hiddenPaths,graves,graveyards,crypts,houses,pumpkins,jacks,barns,thornPaths,corns,wells,candles,openGraves,shroomPaths,shroomHouses,corpses,glowPools,puffballs,myceliums};
+    terrainCache,forestPathIdx,forestIdxs,denPoints,nestPts,webs,bridges,webPaths,bigBushes,queens,webWalls,cocoons,eggSacs,boneHeaps,ruins,silkBridges,tunnels,piers,lakeExitPts,lakeSpawnPts,frameCount,extraBases,hiddenPaths,graves,graveyards,crypts,houses,pumpkins,jacks,barns,thornPaths,corns,wells,candles,openGraves,shroomPaths,shroomHouses,corpses,glowPools,puffballs,myceliums,beachPaths,crabNests,beachBalls};
   try{
     const S=40, pt=([r,c])=>({x:c*S+S/2,y:r*S+S/2});
     ctx=cv.getContext('2d'); ctx.setTransform(2,0,0,2,0,0);
@@ -6454,7 +6699,8 @@ function sbxDraw(){
     glowPools=sbx.glowPools.map(([r,c])=>({row:r,col:c,routes:[],splash:0})); puffballs=sbx.puffballs.map(([r,c])=>({row:r,col:c,regrow:0})); myceliums=sbx.myceliums.map(([r,c])=>({row:r,col:c}));
     ruins=sbx.ruins.map(([r,c])=>({row:r,col:c})); silkBridges=sbx.silkBridges.map(([r,c])=>({row:r,col:c}));
     tunnels=sbx.tunnelIns.map((tin,i)=>({in:tin,out:sbx.tunnelOuts[i]})).concat(sbx.tunnelOuts.slice(sbx.tunnelIns.length).map(o=>({in:null,out:o})));
-    lake=sbx.lake.map(([r,c])=>({row:r,col:c,x:c*S+S/2,y:r*S+S/2}));
+    lake=sbx.lake.map(([r,c])=>({row:r,col:c,x:c*S+S/2,y:r*S+S/2,sea:sHas(sbx.seas,r,c)})); beachPaths=sbx.beachPaths.map(([r,c])=>({row:r,col:c}));
+    crabNests=sbx.crabNests.map(([r,c])=>({row:r,col:c,routes:[],peek:0})); beachBalls=sbx.beachBalls.map(([r,c])=>({row:r,col:c}));
     biomeTiles=new Map(sbx.biomes.map(([r,c,id])=>[r+','+c,biomeById(id)]).filter(x=>x[1]));
     grove=sbx.forest.map(([r,c,st])=>({row:r,col:c,style:forestLook(biomeTiles.has(r+','+c)?biomeTiles.get(r+','+c).ground:sbx.ground,st),x:c*S+S/2,y:r*S+S/2}));
     trees=sbx.trees.map(([r,c,k])=>({row:r,col:c,kind:k,rotten:k==='rotten',sway:(r*1.7+c)%6}));
@@ -6471,7 +6717,7 @@ function sbxDraw(){
     ctx.clearRect(0,0,CW,CH);
     ctx.drawImage(sbxTerrain,0,0,CW,CH);
     piers=lake.length?computePiers():[];
-    drawRoadLayer(); drawWebPaths(); drawThornPaths(sbxFrame); drawShroomPaths(sbxFrame,false); drawMyceliums(sbxFrame,false); drawLake(); drawPiers(); drawBridges(); drawSilkBridges(); drawTunnels(); drawGrove(); drawWebs(); drawWebWalls(); drawNests(); drawTrees(); drawSewersAndLab();
+    drawRoadLayer(); drawWebPaths(); drawThornPaths(sbxFrame); drawShroomPaths(sbxFrame,false); drawMyceliums(sbxFrame,false); drawBeachPaths(); drawLake(); drawSea(); drawPiers(); drawBridges(); drawSilkBridges(); drawTunnels(); drawGrove(); drawWebs(); drawWebWalls(); drawNests(); drawTrees(); drawSewersAndLab();
     sbx.bushes.forEach(([r,c])=>drawBushAt(c*S+S/2,r*S+S/2));
     bigBushes.forEach(b=>drawBigBush(b.col*S,b.row*S));
     cocoons.forEach(k=>drawCocoon(k.col*S+S/2,k.row*S+S/2,k.row*31+k.col,sbxFrame));
@@ -6500,6 +6746,7 @@ function sbxDraw(){
       (sbxR.wells||[]).forEach(n=>n.routes.forEach(wp=>dash(wp,'rgba(170,230,190,.8)')));
       (sbxR.eggs||[]).forEach(n=>n.routes.forEach(wp=>dash(wp,'rgba(255,130,120,.75)')));
       (sbxR.glowPools||[]).forEach(n=>n.routes.forEach(wp=>dash(wp,'rgba(143,233,255,.85)')));
+      (sbxR.crabNests||[]).forEach(n=>n.routes.forEach(wp=>dash(wp,'rgba(255,150,110,.85)')));
       // every other enemy spawner (graves, graveyards, crypts, houses, jack o' lanterns, bones, sewers, glowshroom houses):
       // what comes out walks to the closest bit of road and follows it to the base, just as in the game (roadFrom)
       const polys=[].concat(...sbxR.groups).map(wp=>wp.map(p=>Object.assign(pt(p),{jump:!!p[2]})));
@@ -6527,7 +6774,7 @@ function sbxDraw(){
   } finally {
     biomeTiles=keepBiomes;
     ({ctx,CELL,COLS,ROWS,CW,CH,paths,path,pathSet,pathCells,lake,grove,trees,sewers,lab,theme,themeB,splitEdge,
-      terrainCache,forestPathIdx,forestIdxs,denPoints,nestPts,webs,bridges,webPaths,bigBushes,queens,webWalls,cocoons,eggSacs,boneHeaps,ruins,silkBridges,tunnels,piers,lakeExitPts,lakeSpawnPts,frameCount,extraBases,hiddenPaths,graves,graveyards,crypts,houses,pumpkins,jacks,barns,thornPaths,corns,wells,candles,openGraves,shroomPaths,shroomHouses,corpses,glowPools,puffballs,myceliums}=saved);
+      terrainCache,forestPathIdx,forestIdxs,denPoints,nestPts,webs,bridges,webPaths,bigBushes,queens,webWalls,cocoons,eggSacs,boneHeaps,ruins,silkBridges,tunnels,piers,lakeExitPts,lakeSpawnPts,frameCount,extraBases,hiddenPaths,graves,graveyards,crypts,houses,pumpkins,jacks,barns,thornPaths,corns,wells,candles,openGraves,shroomPaths,shroomHouses,corpses,glowPools,puffballs,myceliums,beachPaths,crabNests,beachBalls}=saved);
   }
 }
 function sbxToggleRoutes(){ sbxShowRoutes=!sbxShowRoutes; sbxRender(); }
@@ -6568,7 +6815,7 @@ function sbxSetOrient(o){
   const C=SBX_SIZES[o];
   const keep=arr=>arr.filter(([r,c])=>r<C.ROWS&&c<C.COLS);
   sbx.orient=o; sbx.COLS=C.COLS; sbx.ROWS=C.ROWS;
-  ['path','spawns','bases','trees','lake','lakeSpawns','forest','sewers','spiderDens','nests','webs','solidWebs','bridges','webPaths','bushes','webWalls','cocoons','eggSacs','bones','ruins','silkBridges','tunnelIns','tunnelOuts','graves','pumpkins','jacks','thornPaths','corns','wells','candles','openGraves','biomes','shroomPaths','corpses','glowPools','puffballs','myceliums'].forEach(k=>sbx[k]=keep(sbx[k]));
+  ['path','spawns','bases','trees','lake','lakeSpawns','forest','sewers','spiderDens','nests','webs','solidWebs','bridges','webPaths','bushes','webWalls','cocoons','eggSacs','bones','ruins','silkBridges','tunnelIns','tunnelOuts','graves','pumpkins','jacks','thornPaths','corns','wells','candles','openGraves','biomes','shroomPaths','corpses','glowPools','puffballs','myceliums','beachPaths','seas','crabNests','beachBalls'].forEach(k=>sbx[k]=keep(sbx[k]));
   sbx.shroomHouses=sbx.shroomHouses.filter(([r,c])=>r+2<=C.ROWS&&c+2<=C.COLS);
   sbx.graveyards=sbx.graveyards.filter(([r,c])=>r+2<=C.ROWS&&c+2<=C.COLS); sbx.houses=sbx.houses.filter(([r,c])=>r+2<=C.ROWS&&c+2<=C.COLS); sbx.barns=sbx.barns.filter(([r,c,d])=>d==='d'?r+3<=C.ROWS&&c+2<=C.COLS:r+2<=C.ROWS&&c+3<=C.COLS); sbx.crypts=sbx.crypts.filter(([r,c,d])=>d==='d'?r+2<=C.ROWS&&c<C.COLS:r<C.ROWS&&c+2<=C.COLS);
   sbx.bigBushes=sbx.bigBushes.filter(([r,c])=>r+2<=C.ROWS&&c+2<=C.COLS); sbx.queens=sbx.queens.filter(([r,c])=>r+4<=C.ROWS&&c+3<=C.COLS);
@@ -6598,7 +6845,7 @@ function sbxParse(d){
     const n=sbxFix({orient:d.orient,COLS:d.COLS,ROWS:d.ROWS,ground:d.ground,path:d.road||[],spawns:d.spawns||[],bases:d.bases||[],base:d.base,
       trees:d.trees||[],lake:d.lake||[],lakeSpawns:d.lakeSpawns||[],forest:d.forest||[],spiderDen:d.spiderDen||null,spiderDens:d.spiderDens||[],
       nests:d.spiderNests||[],webs:d.webs||[],solidWebs:d.solidWebs||[],bridges:d.bridges||[],webPaths:d.webPaths||[],bushes:d.bushes||[],bigBushes:d.bigBushes||[],queens:d.queens||[],webWalls:d.webWalls||[],cocoons:d.cocoons||[],eggSacs:d.eggSacs||[],bones:d.bones||[],ruins:d.ruins||[],silkBridges:d.silkBridges||[],
-      tunnelIns:d.tunnelIns||[],tunnelOuts:d.tunnelOuts||[],sewers:d.sewers||[],graves:d.graves||[],graveyards:d.graveyards||[],crypts:d.crypts||[],houses:d.houses||[],pumpkins:d.pumpkins||[],jacks:d.jacks||[],barns:d.barns||[],thornPaths:d.thornPaths||[],corns:d.corns||[],wells:d.wells||[],candles:d.candles||[],openGraves:d.openGraves||[],shroomPaths:d.shroomPaths||[],shroomHouses:d.shroomHouses||[],corpses:d.corpses||[],glowPools:d.glowPools||[],puffballs:d.puffballs||[],biomes:(d.biomes||[]).filter(b=>Array.isArray(b)&&biomeById(b[2])),myceliums:d.myceliums||[]});
+      tunnelIns:d.tunnelIns||[],tunnelOuts:d.tunnelOuts||[],sewers:d.sewers||[],graves:d.graves||[],graveyards:d.graveyards||[],crypts:d.crypts||[],houses:d.houses||[],pumpkins:d.pumpkins||[],jacks:d.jacks||[],barns:d.barns||[],thornPaths:d.thornPaths||[],corns:d.corns||[],wells:d.wells||[],candles:d.candles||[],openGraves:d.openGraves||[],shroomPaths:d.shroomPaths||[],shroomHouses:d.shroomHouses||[],corpses:d.corpses||[],glowPools:d.glowPools||[],puffballs:d.puffballs||[],biomes:(d.biomes||[]).filter(b=>Array.isArray(b)&&biomeById(b[2])),myceliums:d.myceliums||[],beachPaths:d.beachPaths||[],seas:d.seas||[],crabNests:d.crabNests||[],beachBalls:d.beachBalls||[]});
     if(!n.path.length&&Array.isArray(d.paths)){        // older code: rebuild the road from its waypoints
       d.paths.forEach(wp=>{ for(let i=0;i<wp.length-1;i++){ const [r1,c1]=wp[i],[r2,c2]=wp[i+1], m=Math.abs(r2-r1)+Math.abs(c2-c1);
         for(let k=0;k<=m;k++){ const p=[r1+Math.sign(r2-r1)*k,c1+Math.sign(c2-c1)*k]; if(!sHas(n.path,p[0],p[1]))n.path.push(p);} } });
@@ -6631,7 +6878,7 @@ function sbxLayout(R){
     lake:sbx.lake,keepLake:true,sewers:sbx.sewers,treesAt:sbx.trees,grove:sbx.forest,extraRoad:sbx.path.concat(sbx.bridges,sbx.silkBridges),bases:sbx.bases,
     bridges:sbx.bridges,webPaths:sbx.webPaths,bushes:sbx.bushes,bigBushes:sbx.bigBushes,queens:sbx.queens,webWalls:sbx.webWalls,cocoons:sbx.cocoons,
     eggSacs:R.eggs,bones:sbx.bones,ruins:sbx.ruins,silkBridges:sbx.silkBridges,graves:sbx.graves,graveyards:sbx.graveyards,crypts:sbx.crypts,houses:sbx.houses,pumpkins:sbx.pumpkins,jacks:sbx.jacks,barns:sbx.barns,thornPaths:sbx.thornPaths,
-    corns:sbx.corns,wells:R.wells||[],candles:sbx.candles,openGraves:sbx.openGraves,shroomPaths:sbx.shroomPaths,shroomHouses:sbx.shroomHouses,corpses:sbx.corpses,glowPools:R.glowPools||[],puffballs:sbx.puffballs,myceliums:sbx.myceliums,biomes:sbx.biomes,
+    corns:sbx.corns,wells:R.wells||[],candles:sbx.candles,openGraves:sbx.openGraves,shroomPaths:sbx.shroomPaths,shroomHouses:sbx.shroomHouses,corpses:sbx.corpses,glowPools:R.glowPools||[],puffballs:sbx.puffballs,myceliums:sbx.myceliums,biomes:sbx.biomes,beachPaths:sbx.beachPaths,seas:sbx.seas,crabNests:R.crabNests||[],beachBalls:sbx.beachBalls,
     tunnels:sbx.tunnelIns.map((tin,i)=>({in:tin,out:sbx.tunnelOuts[i]})).filter(t=>t.out),
     lakeSpawns:sbx.lakeSpawns,lakeExits:R.lakeExits.map(e=>({exit:e.exit,routes:e.routes}))};
   if(R.spiderRoutes.length){ L.forestPaths=R.spiderRoutes; L.forestHidden=true;
@@ -6895,6 +7142,10 @@ function startGame(){
   webs=(L.webs||[]).map(([r,c])=>({row:r,col:c,born:-9999})).concat((L.solidWebs||[]).map(([r,c])=>({row:r,col:c,born:-9999,solid:true})));
   webRolled=new Map(); spiderDone=false; bigSpiderDone=false; pendingForest=0;
   lake=(L.lake||[]).map(([r0,c0])=>L.keepLake?[r0,c0]:nudgeOff(r0,c0)).map(([r,c])=>({row:r,col:c,x:c*CELL+CELL/2,y:r*CELL+CELL/2}));
+  { const sea=new Set((L.seas||[]).map(([r,c])=>r+','+c)); lake.forEach(l=>{ if(sea.has(l.row+','+l.col))l.sea=true; }); }
+  beachPaths=(L.beachPaths||[]).map(([r,c])=>({row:r,col:c}));
+  crabNests=(L.crabNests||[]).map(k=>Array.isArray(k)?{row:k[0],col:k[1],routes:[],peek:0}:{row:k.at[0],col:k.at[1],routes:k.routes.map(wp=>wp.map(toPt)),peek:0}); crabNext=0;
+  beachBalls=(L.beachBalls||[]).map(([r,c])=>({row:r,col:c})); ballPops=[];
   lakeWave=(lvDef&&lvDef.lakeWave)||0; lakeNext=0; wellWave=(lvDef&&lvDef.wellWave!=null)?lvDef.wellWave:3; bonesWave=(lvDef&&lvDef.bonesWave)||0;
   if(lvDef&&lvDef.trees)placeTrees(lvDef.trees);
   if(L.treesAt)trees=L.treesAt.map(([r,c,k])=>({row:r,col:c,kind:k||'oak',rotten:k==='rotten',sway:(r*1.7+c)%6}));
@@ -6984,7 +7235,7 @@ function cellFree(row,col){
   if(graveyards.some(g=>row>=g.row&&row<g.row+2&&col>=g.col&&col<g.col+2))return false;
   if(houses.some(h=>row>=h.row&&row<h.row+2&&col>=h.col&&col<h.col+2))return false;
   if(pumpkins.some(k=>k.row===row&&k.col===col)||jacks.some(k=>!k.risen&&k.row===row&&k.col===col))return false;
-  if([corns,wells,candles,openGraves,corpses,glowPools,puffballs].some(a=>a.some(k=>k.row===row&&k.col===col)))return false;
+  if([corns,wells,candles,openGraves,corpses,glowPools,puffballs,crabNests,beachBalls].some(a=>a.some(k=>k.row===row&&k.col===col)))return false;
   if(shroomHouses.some(h=>row>=h.row&&row<h.row+2&&col>=h.col&&col<h.col+2))return false;
   if(barns.some(b=>{ const v=b.dir==='d'; return row>=b.row&&row<b.row+(v?3:2)&&col>=b.col&&col<b.col+(v?2:3); }))return false;
   if(crypts.some(k=>{ const v=k.dir==='d'; return row>=k.row&&row<k.row+(v?2:1)&&col>=k.col&&col<k.col+(v?1:2); }))return false;
@@ -7148,7 +7399,7 @@ function makeEnemy(type,pathIdx){
     speed:E.speed*diffCfg.speedMul, reward:E.reward, r:E.r, col:E.col,
     boss:!!E.boss, shoots:!!E.shoots, steals:!!E.steals, poisons:!!E.poisons,
     infects:(E.infects===undefined?-1:E.infects), mindless:!!E.mindless, dmgMul:E.dmg||1,
-    bites:!!E.bites, knives:!!E.knives, knifeCd:E.knives?90:0, throwFx:0, digs:!!E.digs, digCd:E.digs?180:0, dug:0, digFx:0, rolls:!!E.rolls, lobs:!!E.lobs, lobCd:0, burrows:!!E.burrows, under:0, sporeBurst:!!E.sporeBurst, popsBlind:!!E.popsBlind, bombing:false, roll:0, infected:!!E.looksInfected,
+    bites:!!E.bites, knives:!!E.knives, knifeCd:E.knives?90:0, throwFx:0, digs:!!E.digs, digCd:E.digs?180:0, dug:0, digFx:0, rolls:!!E.rolls, lobs:!!E.lobs, lobCd:0, burrows:!!E.burrows, under:0, sandDigs:!!E.sandDigs, sandUnder:0, sandCd:E.sandDigs?90:0, sporeBurst:!!E.sporeBurst, popsBlind:!!E.popsBlind, bombing:false, roll:0, infected:!!E.looksInfected,
     shield:E.shield||0, maxShield:E.shield||0, shieldCdMax:E.shieldCd||0, shieldCd:0,
     shotCd:E.shoots?300:0, flash:0, webs:E.webs||0, cellKey:null, poisonHit:E.poisonHit||0};
 }
@@ -7272,6 +7523,7 @@ function moveEnemy(e){
   if(e.frozen>0){ e.frozen--; return false; }
   if(e.held>0){ e.held--; return false; }
   if(e.poisoned>0){ e.poisoned--; sp*=0.45; }
+  if(e.sandUnder>0)sp*=2;                         // a crab racing along under the sand
   const dx=target.x-e.x, dy=target.y-e.y;
   const dist=Math.hypot(dx,dy);
   if(dist<sp){ e.pos+=1; e.x=target.x; e.y=target.y; }
@@ -7409,6 +7661,7 @@ function update(){
       if(e.infects>=0)burstInfection(e);
       if(e.sporeBurst)sporeBurst(e);
       if(e.popsBlind)puffPop(e.x,e.y);
+      if(beachBalls.length)beachBallNear(e.x,e.y,CELL*5);
       gold+=e.reward; enemies.splice(i,1); updateHud(); playDeath(); fxDeath(e);
       if(e.carrying){ towers.push(e.carrying); setMsg('Thief down — tower recovered!'); }
       if(e.devoured)setMsg('The Scorchwood swallows one whole!');
@@ -7449,7 +7702,7 @@ function update(){
       if(t.chew>0){ t.chew--; if(t.grabFx>0)t.grabFx--; return; }
       let prey=null,bl=-Infinity;
       enemies.forEach(e=>{
-        if(e.boss||e.inCorn)return;              // too big to swallow, or out of sight in the corn
+        if(e.boss||e.inCorn||e.sandUnder>0)return;   // too big to swallow, or out of sight in the corn or the sand
         if(Math.hypot(e.x-t.x,e.y-t.y)>t.range)return;
         const PP=e.pth||path; const n2=PP[Math.floor(e.pos)+1];
         const lead=e.pos*1000-(n2?Math.hypot(n2.x-e.x,n2.y-e.y):0);
@@ -7494,7 +7747,7 @@ function update(){
       if(!enemies.length)return;
       let best=null,bl=-Infinity;
       enemies.forEach(e=>{
-        if(e.inCorn)return;
+        if(e.inCorn||e.sandUnder>0)return;
         const P=e.pth||path; const nx=P[Math.floor(e.pos)+1];
         const lead=e.pos*1000-(nx?Math.hypot(nx.x-e.x,nx.y-e.y):0);
         if(lead>bl){bl=lead;best=e;}
@@ -7506,7 +7759,7 @@ function update(){
     if(t.isTriple){ updateTriple(t,targetCounts); return; }
     let target=null,best=-Infinity;
     for(const e of enemies){
-      if(e.inCorn)continue;                        // hidden in the corn
+      if(e.inCorn||e.sandUnder>0)continue;         // hidden in the corn or under the sand
       if(Math.hypot(e.x-t.x,e.y-t.y)>t.range)continue;
       const P=e.pth||path; const nx=P[Math.floor(e.pos)+1];
       const lead=e.pos*1000-(nx?Math.hypot(nx.x-e.x,nx.y-e.y):0);
@@ -7526,7 +7779,7 @@ function update(){
       if(puffballs.length)puffballHit(target.x,target.y);
       if(t.grenade)projectiles.push({x1:t.x,y1:t.y,x2:target.x+(Math.random()-0.5)*26,y2:target.y+(Math.random()-0.5)*26,life:11,total:11,color:'#c9d18a'});
       if(t.aoe){
-        eggsInSplash(target.x,target.y,t.aoe);
+        eggsInSplash(target.x,target.y,t.aoe); if(beachBalls.length)beachBallNear(target.x,target.y,t.aoe+CELL*0.5);
         let hitCount=0;
         enemies.forEach(e2=>{
           const dd=Math.hypot(e2.x-target.x,e2.y-target.y);
@@ -7738,6 +7991,12 @@ function buildTerrain(){
     const th=themeAt(r,c);
     const base=(th&&th.ground)?th.ground:'#3e5230';
     if(farmGround(base)>=0)continue;
+    if(groundRegion(base)==='beach'){                       // wind ripples in the sand
+      ctx.globalAlpha=0.32; ctx.lineWidth=1.1;
+      for(let k=0;k<2;k++){ const yy=r*CELL+CELL*(0.3+0.4*k)+(hashAt(r*2.3+k,c*1.7)-0.5)*6, x0=c*CELL+3+hashAt(c*3.1+k,r)*6, x1=c*CELL+CELL-3-hashAt(r*4.1+k,c)*6;
+        ctx.strokeStyle=shade(base,k?-30:-24); ctx.beginPath(); ctx.moveTo(x0,yy);
+        ctx.quadraticCurveTo((x0*3+x1)/4,yy-2.5,(x0+x1)/2,yy); ctx.quadraticCurveTo((x0+x1*3)/4,yy+2.5,x1,yy); ctx.stroke(); }
+      continue; }
     const n1=hashAt(r*5.9,c*3.7), n2=hashAt(c*8.3,r*4.9);
     if(n1<0.52)continue;
     const tx=c*CELL+6+n1*(CELL-12), ty=r*CELL+8+n2*(CELL-14);
@@ -7852,7 +8111,25 @@ function buildTerrain(){
 // one small ground detail in a DLC location (painted once into the terrain)
 function drawGroundBit(g,reg,x,y,pick,h2){
   g.lineCap='round';
-  if(reg==='graveyard'){
+  if(reg==='beach'){
+    if(pick<0.4){            // a little scallop shell
+      g.save(); g.translate(x,y); g.rotate((h2-0.5)*1.4);
+      g.fillStyle=h2<0.5?'#f6e9da':'#efc4ae'; g.beginPath(); g.moveTo(0,2); g.arc(0,2,4.2,Math.PI*1.18,Math.PI*1.82); g.closePath(); g.fill();
+      g.strokeStyle='rgba(150,100,70,.55)'; g.lineWidth=0.6;
+      for(let k=-2;k<=2;k++){ const a=Math.PI*1.5+k*0.26; g.beginPath(); g.moveTo(0,2); g.lineTo(Math.cos(a)*4,2+Math.sin(a)*4); g.stroke(); }
+      g.restore();
+    } else if(pick<0.65){    // pebbles
+      g.fillStyle='rgba(0,0,0,.15)'; g.beginPath(); g.ellipse(x+0.5,y+1.4,3,1.2,0,0,Math.PI*2); g.fill();
+      g.fillStyle='#b7ab97'; g.beginPath(); g.ellipse(x,y,2.6,1.8,h2,0,Math.PI*2); g.fill();
+      g.fillStyle='#d7cdb9'; g.beginPath(); g.ellipse(x+3.6,y+1,1.5,1.1,0,0,Math.PI*2); g.fill();
+    } else if(pick<0.8){     // a starfish
+      g.fillStyle=h2<0.5?'#e8834a':'#d9644a'; g.beginPath();
+      for(let k=0;k<10;k++){ const a=-Math.PI/2+k*Math.PI/5+h2, rr=k%2?1.3:3.8; g.lineTo(x+Math.cos(a)*rr,y+Math.sin(a)*rr); }
+      g.closePath(); g.fill();
+    } else {                 // a strand of washed-up seaweed
+      g.strokeStyle='#5f7a3a'; g.lineWidth=1.3; g.beginPath(); g.moveTo(x-4,y+1); g.quadraticCurveTo(x-1,y-3,x+1,y); g.quadraticCurveTo(x+3,y+3,x+5,y-1); g.stroke();
+    }
+  } else if(reg==='graveyard'){
     if(pick<0.3){            // an old bone
       const a=h2*Math.PI; g.save(); g.translate(x,y); g.rotate(a);
       g.strokeStyle='#d9d3bf'; g.lineWidth=1.8; g.beginPath();g.moveTo(-3.5,0);g.lineTo(3.5,0);g.stroke();
@@ -8984,6 +9261,7 @@ function drawHalloweenPieces(t){
   shroomHouses.forEach(h=>drawShroomHouse(h,t,false));
   corpses.forEach(k=>drawCorpse(k,t,false));
   glowPools.forEach(k=>drawGlowPool(k,t,false)); puffballs.forEach(k=>drawPuffball(k,t));
+  crabNests.forEach(k=>drawCrabNest(k,t)); beachBalls.forEach(k=>drawBeachBall(k,t)); drawBallPops();
   roadGraves.forEach(g=>{ drawGrave(g.x,g.y,g.seed,false);
     if(g.hp<ROAD_GRAVE_HP){ const w=24; ctx.fillStyle='rgba(0,0,0,.6)'; ctx.fillRect(g.x-w/2,g.y-CELL*0.5,w,4);
       ctx.fillStyle='#c9bfa8'; ctx.fillRect(g.x-w/2,g.y-CELL*0.5,w*Math.max(0,g.hp)/ROAD_GRAVE_HP,4); } });
@@ -9337,7 +9615,7 @@ function updateTriple(t,targetCounts){
   if(!t.cds){ t.cds=[0,7,14]; t.angles=[-0.55,-0.55,-0.55]; t.flashes=[0,0,0]; }
   const inRange=[];
   for(const e of enemies){
-    if(e.inCorn)continue;
+    if(e.inCorn||e.sandUnder>0)continue;
     if(Math.hypot(e.x-t.x,e.y-t.y)>t.range)continue;
     const P=e.pth||path; const nx=P[Math.floor(e.pos)+1];
     inRange.push({e,lead:e.pos*1000-(nx?Math.hypot(nx.x-e.x,nx.y-e.y):0)});
@@ -9685,8 +9963,8 @@ function draw(){
 
   drawRoadLayer();
   if(selectedType&&!gameOver)drawBuildGrid();
-  drawWebPaths(); drawThornPaths(frameCount); drawShroomPaths(frameCount,false); drawMyceliums(frameCount,false);
-  drawLake();
+  drawWebPaths(); drawThornPaths(frameCount); drawShroomPaths(frameCount,false); drawMyceliums(frameCount,false); drawBeachPaths();
+  drawLake(); drawSea();
   drawPiers();
   drawBridges();
   drawSilkBridges();
@@ -9815,6 +10093,7 @@ function draw(){
   });
   enemies.forEach((e,idx)=>{
     if(e.inCorn)return;                            // out of sight in the corn
+    if(e.sandUnder>0){ drawSandMound(e,idx); return; }   // a crab under the sand: only a moving ridge shows
     const rad=e.r||10;
     const bob=(e.frozen>0||e.held>0)?0:Math.sin((frameCount+idx*10)*0.2)*1.5;
     const P=e.pth||path;
@@ -9850,6 +10129,8 @@ function draw(){
       ctx.fillStyle='#c9e08a';
       ctx.beginPath();ctx.arc(-rad*0.25,-rad*0.2,rad*0.16,0,Math.PI*2);ctx.fill();
       ctx.beginPath();ctx.arc(rad*0.2,-rad*0.3,rad*0.12,0,Math.PI*2);ctx.fill();
+    } else if(e.type==='crab'){
+      drawCrabShape(ctx,rad,base,(e.frozen>0||e.held>0)?0:step);
     } else if(SHROOMS.includes(e.type)){
       drawShroomEnemy(ctx,e.type,rad,base,(e.frozen>0||e.held>0)?0:step,frameCount+idx*7,e.throwFx>0,e.under||0);
     } else if(UNDEAD.includes(e.type)){
