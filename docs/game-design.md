@@ -93,6 +93,8 @@ A tower defense game. You place towers on grass tiles beside the road, and enemi
 | B2 | The Silk Warren | 14 | 1000 | Bonus; 25×16; 5 dens, 2 spider nests, egg sacs, 2 bases |
 | B3 | The Queen's Lair | 15 | 900 | Bonus; 31×20; spider queen (decoration for now), lakes with lake spawns, silk bridge |
 
+**Harder waves (23 Oct 2026, foma):** levels 4–5 of the Fields and every Dark Forest level (bonus levels too) get about 12% more enemies in each group (rounded, so small groups of 1–4 barely change). Done in one line right after `LEVEL_DEFS`; the counts in the code are the old ones.
+
 The bonus levels unlock in order, top → middle → bottom. In code their level indexes are 42, 43 and 44, and the bonus levels are built straight from their sandbox level codes.
 
 ### Towers (units)

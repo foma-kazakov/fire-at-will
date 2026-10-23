@@ -2411,6 +2411,8 @@ const LEVEL_DEFS={
       [W('brute',4,950),W('grunt',16,420),W('gunner',4,640)],
       [W('brute',5,900),W('husker',6,780),W('runner',14,280),W('gunner',5,620)]]},
 };
+// a bit harder (foma, 23 Oct 2026): the end of the Fields and the whole Dark Forest, bonus levels too, get ~12% more enemies per group
+[3,4,5,6,7,8,9,10,11,42,43,44].forEach(i=>LEVEL_DEFS[i].waves.forEach(w=>w.forEach(g=>{ g.count=Math.round(g.count*1.12); })));
 
 const LEVELS=[];
 REGIONS.forEach((r,ri)=>{
