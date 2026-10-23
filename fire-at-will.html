@@ -2563,17 +2563,19 @@ function sprite(kind,v,tint){
     return sh+cap(-7,-30,15,15,8,40,[[-6,-6,2.6],[4,-10,1.8],[2,-3,1.4]],2)+cap(11,-8,10,9,6,17,[[-3,-4,2],[4,-3,1.3]],3);
   }
   if(kind==='fungal'){
-    // bouncy orange-capped mushrooms with banded rims, and acid-green pools
-    const cap=(cx,cy,rx,ry,stemW,stemH)=>`<path d="M${cx-stemW/2},${cy+stemH} q${-stemW*0.2},${-stemH*0.55} ${stemW*0.1},${-stemH} h${stemW*0.8} q${stemW*0.3},${stemH*0.45} ${stemW*0.1},${stemH} z" fill="#d8caa4" stroke="#2b241a" stroke-width="1.4"/>
-      <path d="M${cx-rx},${cy} a${rx},${ry} 0 0 1 ${rx*2},0 q${-rx},${ry*0.45} ${-rx*2},0 z" fill="${tint}" stroke="#2b241a" stroke-width="1.6"/>
-      <path d="M${cx-rx*0.92},${cy-ry*0.18} q${rx*0.92},${ry*0.4} ${rx*1.84},0" fill="none" stroke="#7a3d12" stroke-width="2.4" opacity=".55"/>
-      <path d="M${cx-rx*0.62},${cy-ry*0.55} a${rx*0.7},${ry*0.6} 0 0 1 ${rx*0.8},${-ry*0.32}" fill="none" stroke="#ffe2b0" stroke-width="2" opacity=".75"/>
-      <circle cx="${cx-rx*0.35}" cy="${cy-ry*0.5}" r="${(rx*0.09).toFixed(1)}" fill="#ffe7c2" opacity=".8"/><circle cx="${cx+rx*0.3}" cy="${cy-ry*0.62}" r="${(rx*0.07).toFixed(1)}" fill="#ffe7c2" opacity=".8"/>`;
-    if(v===0)return sh+cap(0,-18,22,15,11,28);
-    if(v===1)return sh+cap(-8,-22,13,10,7,32)+cap(9,-9,10,8,6,19)+cap(-1,-2,6,5,4,11);
+    // Sporeshroom mushrooms: a yellowish-white stem bent to one side, a tilted greenish-turquoise cap with yellow spots; and acid-green pools
+    const cap=(cx,cy,rx,ry,stemW,stemH,lean)=>{ const tx=cx+lean, w=stemW/2;
+      return `<path d="M${cx-w},${cy+stemH} Q${cx-w-lean*0.15},${cy+stemH*0.35} ${tx-w*0.7},${cy} H${tx+w*0.7} Q${cx+w-lean*0.15},${cy+stemH*0.35} ${cx+w},${cy+stemH} Z" fill="#efe6b8" stroke="#24302a" stroke-width="1.4"/>
+      <g transform="translate(${tx},${cy}) rotate(${(lean*1.6).toFixed(1)})">
+      <path d="M${-rx},0 a${rx},${ry} 0 0 1 ${rx*2},0 q${-rx},${ry*0.4} ${-rx*2},0 z" fill="${tint}" stroke="#1f2c28" stroke-width="1.6"/>
+      <path d="M${-rx*0.62},${-ry*0.55} a${rx*0.7},${ry*0.6} 0 0 1 ${rx*0.8},${-ry*0.32}" fill="none" stroke="#c9f5e6" stroke-width="2" opacity=".6"/>
+      <circle cx="${-rx*0.4}" cy="${-ry*0.45}" r="${(rx*0.12).toFixed(1)}" fill="#f2d86a"/><circle cx="${rx*0.25}" cy="${-ry*0.7}" r="${(rx*0.1).toFixed(1)}" fill="#f2d86a"/>
+      <circle cx="${rx*0.58}" cy="${-ry*0.28}" r="${(rx*0.08).toFixed(1)}" fill="#f2d86a"/><circle cx="${-rx*0.05}" cy="${-ry*0.25}" r="${(rx*0.07).toFixed(1)}" fill="#f2d86a"/></g>`; };
+    if(v===0)return sh+cap(0,-18,22,15,11,28,7);
+    if(v===1)return sh+cap(-8,-22,13,10,7,32,-6)+cap(9,-9,10,8,6,19,5)+cap(-1,-2,6,5,4,11,3);
     return `<ellipse cy="2" rx="22" ry="8" fill="#1a2c22"/><ellipse cy="1" rx="19" ry="6.4" fill="#7fd13b"><animate attributeName="fill" values="#7fd13b;#9be24f;#7fd13b" dur="3s" repeatCount="indefinite"/></ellipse>
       <ellipse cx="-5" cy="-0.5" rx="8" ry="2" fill="#d6ff8a" opacity=".55"/><circle cx="7" cy="1" r="1.6" fill="#d6ff8a" opacity=".8"/><circle cx="-10" cy="2" r="1.1" fill="#d6ff8a" opacity=".8"/>`
-      +cap(18,-6,7,6,4,12);
+      +cap(18,-6,7,6,4,12,4);
   }
   if(kind==='horror'){
     if(v===0)return sh+`<path d="M-6,10 C-4,-4 -9,-14 -2,-30 C2,-38 -2,-44 1,-50 L4,-50 C2,-42 7,-36 4,-26 C1,-14 6,-4 6,10 Z" fill="${tint}"/><path d="M-4,-20 C-14,-24 -18,-34 -26,-36 M-26,-36 L-30,-30 M-26,-36 L-28,-44 M3,-30 C12,-32 16,-42 24,-44 M24,-44 L30,-40 M24,-44 L24,-52 M0,-44 C-6,-50 -12,-50 -14,-56" stroke="${tint}" stroke-width="3" stroke-linecap="round" fill="none"/><ellipse cx="-1" cy="-14" rx="2.2" ry="3" fill="#000" opacity=".7"/>`;
@@ -3050,9 +3052,9 @@ const SHROOM_REGIONS=[
   {id:'glowshroom',name:'The Glowshroom Valley',levels:5,ground:SHROOM_GROUND,ground2:'#0B1430',pathCol:SHROOM_PATH,decor:'glowshroom',
    density:18,tints:['#F2F4F8','#E6EAF2','#FFFFFF'],
    poly:SHROOM_COAST,nodes:[[1680,790],[1800,750],[1900,840],[1800,925],[1685,960]],clear:[[1880,975]]},
-  // the valley's far corner around the extra level: misty greenish-yellow fungal ground (like Hollow Knight's Fungal Wastes), bouncy orange caps and acid pools (no levels of its own)
+  // the valley's far corner around the extra level: misty greenish-yellow fungal ground (like Hollow Knight's Fungal Wastes), bent turquoise-capped mushrooms and acid pools (no levels of its own)
   {id:'fungal',name:'The Sporeshroom Lands',levels:0,ground:'#76813A',ground2:'#4E5826',pathCol:'#6B5A3E',decor:'fungal',
-   density:9,tints:['#D9822B','#C96F22','#E39A3D'],
+   density:9,tints:['#3FB3A0','#4CC2AE','#2FA08C'],
    poly:[[1838,912],[1905,884],[1958,892],[1962,918],[1914,1004],[1800,1052],[1786,1030],[1815,985]],nodes:[],clear:[[1880,975]]},
 ];
 const SHROOM_SLOT=SHROOM_REGIONS[0].clear[0];                // the extra level: its spot is kept free and marked
@@ -4344,17 +4346,18 @@ function paintBiomeGrove(g){
     if(hh(11)<0.35){ const ex=X+CELL*(0.35+0.3*hh(12)), ey=Y+CELL*0.78; ctx.fillStyle='#d8e86a';
       ctx.beginPath();ctx.ellipse(ex-2.6,ey,1.6,1,0,0,Math.PI*2);ctx.ellipse(ex+2.6,ey,1.6,1,0,0,Math.PI*2);ctx.fill(); }
     return true; }
-  if(st==='fungal'){                                    // a thicket of bouncy orange caps round a little acid pool
+  if(st==='fungal'){                                    // a thicket of bent turquoise-capped mushrooms round a little acid pool
     if(hh(13)<0.4){ const px=X+CELL*(0.3+0.4*hh(14)), py=Y+CELL*0.82;
       ctx.fillStyle='#14241c'; ctx.beginPath();ctx.ellipse(px,py,CELL*0.24,CELL*0.09,0,0,Math.PI*2);ctx.fill();
       ctx.fillStyle='#7fd13b'; ctx.beginPath();ctx.ellipse(px,py-0.5,CELL*0.2,CELL*0.065,0,0,Math.PI*2);ctx.fill();
       ctx.fillStyle='rgba(214,255,138,.6)'; ctx.beginPath();ctx.ellipse(px-3,py-1.2,CELL*0.07,1.2,0,0,Math.PI*2);ctx.fill(); }
-    spots(3).forEach(({k,h,x,y,s})=>{ const cw=(k===1?9:7)*s, top=y-(k===1?12:8)*s;
-      ctx.strokeStyle='#2b241a'; ctx.lineWidth=1.4;
-      ctx.fillStyle='#d8caa4'; ctx.beginPath();ctx.moveTo(x-2.6*s,y+8*s);ctx.quadraticCurveTo(x-3.2*s,y,x-1.8*s,top);ctx.lineTo(x+1.8*s,top);ctx.quadraticCurveTo(x+3.2*s,y,x+2.6*s,y+8*s);ctx.closePath();ctx.fill();ctx.stroke();
-      ctx.fillStyle=['#D9822B','#C96F22','#E39A3D'][Math.floor(h*3)]; ctx.beginPath();ctx.moveTo(x-cw,top+1);ctx.bezierCurveTo(x-cw,top-cw*0.95,x+cw,top-cw*0.95,x+cw,top+1);ctx.quadraticCurveTo(x,top+3.5,x-cw,top+1);ctx.fill();ctx.stroke();
-      ctx.strokeStyle='rgba(122,61,18,.6)'; ctx.lineWidth=2; ctx.beginPath();ctx.moveTo(x-cw*0.9,top-1);ctx.quadraticCurveTo(x,top+1.8,x+cw*0.9,top-1);ctx.stroke();
-      ctx.fillStyle='rgba(255,231,194,.85)'; ctx.beginPath();ctx.arc(x-cw*0.35,top-cw*0.42,cw*0.1,0,Math.PI*2);ctx.arc(x+cw*0.3,top-cw*0.5,cw*0.08,0,Math.PI*2);ctx.fill(); });
+    spots(3).forEach(({k,h,x,y,s})=>{ const cw=(k===1?9:7)*s, top=y-(k===1?12:8)*s, dir=(h*7%1)<0.5?-1:1, lean=dir*(2+2*h)*s;
+      ctx.strokeStyle='#24302a'; ctx.lineWidth=1.4;
+      ctx.fillStyle='#efe6b8'; ctx.beginPath();ctx.moveTo(x-2.6*s,y+8*s);ctx.quadraticCurveTo(x-2.8*s-lean*0.2,y,x+lean-1.8*s,top);ctx.lineTo(x+lean+1.8*s,top);ctx.quadraticCurveTo(x+2.8*s-lean*0.2,y,x+2.6*s,y+8*s);ctx.closePath();ctx.fill();ctx.stroke();
+      ctx.save(); ctx.translate(x+lean,top); ctx.rotate(dir*0.22);
+      ctx.fillStyle=['#3FB3A0','#4CC2AE','#2FA08C'][Math.floor(h*3)]; ctx.beginPath();ctx.moveTo(-cw,1);ctx.bezierCurveTo(-cw,-cw*0.95,cw,-cw*0.95,cw,1);ctx.quadraticCurveTo(0,3.5,-cw,1);ctx.fill();ctx.stroke();
+      ctx.fillStyle='#f2d86a'; [[-0.4,-0.38,0.13],[0.28,-0.55,0.11],[0.6,-0.15,0.08],[-0.05,-0.15,0.07]].forEach(([dx,dy,r])=>{ ctx.beginPath();ctx.arc(dx*cw,dy*cw,r*cw,0,Math.PI*2);ctx.fill(); });
+      ctx.restore(); });
     return true; }
   if(st==='glowshroom'){                                // a thicket of tall glowshrooms
     spots(3).forEach(({k,h,x,y,s})=>{ const top=y-12*s, cw=8*s;
@@ -7908,10 +7911,11 @@ function drawGroundBit(g,reg,x,y,pick,h2){
       g.fillStyle='#16261f'; g.beginPath();g.ellipse(x,y,5,2.4,0,0,Math.PI*2);g.fill();
       g.fillStyle='#7fd13b'; g.beginPath();g.ellipse(x,y-0.3,4,1.7,0,0,Math.PI*2);g.fill();
       g.fillStyle='rgba(214,255,138,.7)'; g.beginPath();g.arc(x-1.4,y-0.6,0.7,0,Math.PI*2);g.fill();
-    } else if(pick<0.6){     // tiny orange caps
-      [[0,0,2.8],[-3.6,1.6,1.9],[3.4,1.4,1.6]].slice(0,2+(h2<0.5?1:0)).forEach(([dx,dy,sz])=>{ const cx=x+dx, cy=y+dy;
-        g.fillStyle='#d8caa4'; g.fillRect(cx-0.6,cy-sz*0.2,1.2,sz*1.1);
-        g.fillStyle='#d9822b'; g.beginPath();g.ellipse(cx,cy-sz*0.2,sz,sz*0.6,0,Math.PI,0);g.fill(); });
+    } else if(pick<0.6){     // tiny bent turquoise caps with yellow spots
+      [[0,0,2.8],[-3.6,1.6,1.9],[3.4,1.4,1.6]].slice(0,2+(h2<0.5?1:0)).forEach(([dx,dy,sz],k)=>{ const cx=x+dx, cy=y+dy, ln=(k%2?-1:1)*sz*0.35;
+        g.strokeStyle='#efe6b8'; g.lineWidth=1.2; g.beginPath();g.moveTo(cx,cy+sz*0.9);g.quadraticCurveTo(cx,cy+sz*0.2,cx+ln,cy-sz*0.2);g.stroke();
+        g.fillStyle='#3fb3a0'; g.beginPath();g.ellipse(cx+ln,cy-sz*0.2,sz,sz*0.6,ln*0.12,Math.PI,0);g.fill();
+        g.fillStyle='#f2d86a'; g.beginPath();g.arc(cx+ln-sz*0.3,cy-sz*0.45,sz*0.16,0,Math.PI*2);g.arc(cx+ln+sz*0.35,cy-sz*0.35,sz*0.13,0,Math.PI*2);g.fill(); });
     } else if(pick<0.85){    // spongy pores in the fungal ground
       g.strokeStyle='rgba(40,46,14,.5)'; g.lineWidth=0.9;
       [[0,0,1.6],[-3,1,1.1],[2.8,1.3,1.2],[0.6,-2.4,0.9],[-2,-1.8,0.8]].forEach(([dx,dy,r])=>{ g.beginPath();g.arc(x+dx,y+dy,r,0,Math.PI*2);g.stroke(); });
