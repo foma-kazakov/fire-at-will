@@ -2448,7 +2448,7 @@ function levelUnlocked(i){
   const L=LEVELS[i]; if(!L)return false;
   if(L.bonus)return !!L.def&&!!completed[L.prev];
   if(L.isle)return !!L.def&&halloweenOn()&&(L.prev==null||!!completed[L.prev]);   // the island's first level is open as soon as the DLC is in
-  if(L.shroom)return !!L.def&&shroomedOn()&&(L.prev==null||!!completed[L.prev]);   // so is the valley's, with its DLC
+  if(L.shroom)return !!L.def&&shroomedOn()&&(L.prev==null||!LEVELS[L.prev].def||!!completed[L.prev]);   // so is the valley's, with its DLC (a level not built yet is skipped)
   return !!L.def&&(i===0||!!completed[i-1]);
 }
 function bonusVisible(i){ const L=LEVELS[i]; return !!L&&L.bonus&&!!completed[BONUS.find(b=>b.idx.includes(i)).after]; }
@@ -3065,6 +3065,7 @@ fitNodes(SHROOM_REGIONS);
 // the valley's levels, in valley order; like the island they sit after every other level so saved progress never shifts
 const SHROOM_DEFS={
   glowshroom:[
+    null,                                                  // level 1: foma is sending it later (until then level 2 opens first)
     {name:'Glowcap Hollow',startGold:450,lives:20,hpMul:1.5,speedMul:1.05,
      code:{"v":3,"orient":"computer","COLS":19,"ROWS":12,"ground":"#1B2B52","pathCol":"#455C92","routeGroups":[[[[3,0],[3,9],[8,9],[8,6],[11,6]]],[[[0,6],[3,6],[3,9],[8,9],[8,6],[11,6]]],[[[0,12],[2,12],[2,14],[5,14],[5,9],[8,9],[8,6],[11,6]]],[[[5,18],[5,9],[8,9],[8,6],[11,6]]]],"lakeExits":[],"spiderRoutes":[],"nests":[],"trees":[[0,0,"glowshelf"],[1,2,"glowtwin"],[2,3,"glowshelf"],[4,1,"glowcap"],[6,2,"glowtwin"],[4,6,"glowcap"],[7,7,"glowshelf"],[8,3,"glowcap"],[11,5,"glowshelf"],[11,0,"glowshelf"],[9,1,"glowtwin"],[9,8,"glowtwin"],[11,7,"glowshelf"],[2,8,"glowshelf"],[0,7,"glowtwin"],[1,11,"glowtwin"],[4,10,"glowshelf"],[3,13,"glowcap"],[0,14,"glowtwin"],[1,16,"glowtwin"],[0,18,"glowshelf"],[4,17,"glowtwin"],[8,18,"glowcap"],[7,14,"glowcap"],[6,10,"glowcap"],[9,12,"glowshelf"],[10,11,"glowtwin"],[11,15,"glowshelf"],[10,17,"glowshelf"],[9,15,"glowcap"],[6,16,"glowcap"],[6,5,"glowshelf"]],"lake":[],"lakeSpawns":[],"forest":[],"spiderDens":[],"spiderNests":[],"webs":[],"solidWebs":[],"bridges":[],"webPaths":[],"bushes":[],"bigBushes":[],"queens":[],"webWalls":[],"cocoons":[],"eggSacs":[],"bones":[],"ruins":[],"silkBridges":[],"tunnelIns":[],"tunnelOuts":[],"sewers":[],"graves":[],"graveyards":[],"crypts":[],"houses":[],"pumpkins":[],"jacks":[],"barns":[],"thornPaths":[],"corns":[],"wells":[],"candles":[],"openGraves":[],"shroomPaths":[[0,6],[1,6],[2,6],[3,6],[3,5],[3,4],[3,7],[5,9],[4,9],[5,10],[5,11],[6,9],[7,9],[8,7],[8,6],[9,6],[10,6],[5,16],[5,15],[5,14],[4,14],[0,12],[3,1],[3,0],[2,13],[2,14],[5,18]],"shroomHouses":[[2,15],[1,0],[7,10]],"corpses":[[1,9,0],[7,15,1],[10,9,1],[7,4,1],[5,7,1],[10,2,0],[2,4,0],[1,17,0],[3,18,0],[9,18,1]],"glowPools":[],"puffballs":[],"myceliums":[],"road":[[3,0],[3,1],[3,2],[3,3],[3,4],[3,5],[0,6],[1,6],[2,6],[3,6],[3,7],[3,8],[3,9],[4,9],[5,9],[6,9],[7,9],[10,6],[11,6],[8,6],[9,6],[8,7],[8,8],[8,9],[5,10],[5,11],[5,12],[5,13],[5,14],[5,15],[5,16],[5,17],[5,18],[4,14],[3,14],[2,14],[2,13],[2,12],[1,12],[0,12]],"spawns":[[3,0],[0,6],[0,12],[5,18]],"bases":[[11,6]]},
      houseMix:[['fungling',75],['shroomwarrior',25,4]],    // foma: only funglings and warriors here
