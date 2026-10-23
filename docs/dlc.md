@@ -56,7 +56,7 @@ Each level:
 | `lives` | 20 | Lives. |
 | `hpMul`, `speedMul` | 1 | Enemy health and speed multipliers (campaign Dark Forest levels are about 1.6–2.2 health). |
 | `waves` | sandbox waves | A list of waves; each wave is a list of `[enemy, count, gap in ms]` groups (or `{"type","count","gap"}`). Enemies: `grunt`, `runner`, `gunner`, `thief`, `husker`, `brute`, `rat`, `tumor`, `tumorling`, `drowned`, `spider`, `bigspider`, `grassmer`, `zombie`, `skeleton`, `skeletonknight`, `zombiegrunt`, `jack`, `gravedigger`, `pumpkinbomber`, `fungling`, `shroomwarrior`, `abomination`. |
-| `waveScript` | from the code | Waves made in the Testing app's Waves control (the level code carries them). Each wave is a list of `{"type":"grunt","count":5,"every":0.5}` enemy blocks and `{"wait":3}` cooldowns, played with exact timing. Used when `waves` is left out. |
+| `waveScript` | from the code | Waves made in the Testing app's Waves control (the level code carries them). Each wave is a list of `{"type":"grunt","count":5,"every":0.5}` enemy blocks `{"wait":3}` cooldowns, `{"house":2}` (abandoned house number 2 breaks its door at that moment) and `{"fungi":1}` (glowshroom house number 1 lets out its 2-5 mushrooms), played with exact timing. Houses are numbered in the order they were placed; with any House or FungiHouse block in the waves, those houses no longer go off on their own. Used when `waves` is left out. |
 | `sewerWave`, `lakeWave` | auto | Wave when rats leave sewers / tumorlings leave lakes (0 = never). Only filled in by themselves when `waves` is left out. |
 | `bonesWave` | 3 if the map has bones | Wave when skeletons crawl out of bones (0 = never). |
 | `wellWave` | 3 | Wave when tumorlings start climbing out of wells (0 = never). |
