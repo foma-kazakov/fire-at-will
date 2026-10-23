@@ -2160,7 +2160,7 @@ const ENEMIES={
   zombiegrunt:{name:'Zombie Grunt',hp:100,speed:1.0,reward:11,r:10,col:null,bites:true,looksInfected:true,region:'halloween'},
   grassmer:{name:'Grassmer',hp:2600,speed:0.55,reward:90,r:20,col:'#3f7d3a',boss:true,region:'fields'},
 };
-function W(type,count,gap){ return {type,count,gap:gap||500}; }
+function W(type,count,gap,at){ return at==null?{type,count,gap:gap||500}:{type,count,gap:gap||500,at}; }   // at: 0.5 = these come in the middle of the wave
 /* Fields campaign — waves are explicit so each level teaches something */
 const LEVEL_DEFS={
   0:{name:'First Steps',tutorial:true,startGold:220,lives:20,waves:[
@@ -3019,17 +3019,15 @@ const SHROOM_DEFS={
   glowshroom:[
     {name:'Glowcap Hollow',startGold:450,lives:20,hpMul:1.5,speedMul:1.05,
      code:{"v":3,"orient":"computer","COLS":19,"ROWS":12,"ground":"#1B2B52","pathCol":"#455C92","routeGroups":[[[[3,0],[3,9],[8,9],[8,6],[11,6]]],[[[0,6],[3,6],[3,9],[8,9],[8,6],[11,6]]],[[[0,12],[2,12],[2,14],[5,14],[5,9],[8,9],[8,6],[11,6]]],[[[5,18],[5,9],[8,9],[8,6],[11,6]]]],"lakeExits":[],"spiderRoutes":[],"nests":[],"trees":[[0,0,"glowshelf"],[1,2,"glowtwin"],[2,3,"glowshelf"],[4,1,"glowcap"],[6,2,"glowtwin"],[4,6,"glowcap"],[7,7,"glowshelf"],[8,3,"glowcap"],[11,5,"glowshelf"],[11,0,"glowshelf"],[9,1,"glowtwin"],[9,8,"glowtwin"],[11,7,"glowshelf"],[2,8,"glowshelf"],[0,7,"glowtwin"],[1,11,"glowtwin"],[4,10,"glowshelf"],[3,13,"glowcap"],[0,14,"glowtwin"],[1,16,"glowtwin"],[0,18,"glowshelf"],[4,17,"glowtwin"],[8,18,"glowcap"],[7,14,"glowcap"],[6,10,"glowcap"],[9,12,"glowshelf"],[10,11,"glowtwin"],[11,15,"glowshelf"],[10,17,"glowshelf"],[9,15,"glowcap"],[6,16,"glowcap"],[6,5,"glowshelf"]],"lake":[],"lakeSpawns":[],"forest":[],"spiderDens":[],"spiderNests":[],"webs":[],"solidWebs":[],"bridges":[],"webPaths":[],"bushes":[],"bigBushes":[],"queens":[],"webWalls":[],"cocoons":[],"eggSacs":[],"bones":[],"ruins":[],"silkBridges":[],"tunnelIns":[],"tunnelOuts":[],"sewers":[],"graves":[],"graveyards":[],"crypts":[],"houses":[],"pumpkins":[],"jacks":[],"barns":[],"thornPaths":[],"corns":[],"wells":[],"candles":[],"openGraves":[],"shroomPaths":[[0,6],[1,6],[2,6],[3,6],[3,5],[3,4],[3,7],[5,9],[4,9],[5,10],[5,11],[6,9],[7,9],[8,7],[8,6],[9,6],[10,6],[5,16],[5,15],[5,14],[4,14],[0,12],[3,1],[3,0],[2,13],[2,14],[5,18]],"shroomHouses":[[2,15],[1,0],[7,10]],"corpses":[[1,9,0],[7,15,1],[10,9,1],[7,4,1],[5,7,1],[10,2,0],[2,4,0],[1,17,0],[3,18,0],[9,18,1]],"glowPools":[],"puffballs":[],"myceliums":[],"road":[[3,0],[3,1],[3,2],[3,3],[3,4],[3,5],[0,6],[1,6],[2,6],[3,6],[3,7],[3,8],[3,9],[4,9],[5,9],[6,9],[7,9],[10,6],[11,6],[8,6],[9,6],[8,7],[8,8],[8,9],[5,10],[5,11],[5,12],[5,13],[5,14],[5,15],[5,16],[5,17],[5,18],[4,14],[3,14],[2,14],[2,13],[2,12],[1,12],[0,12]],"spawns":[[3,0],[0,6],[0,12],[5,18]],"bases":[[11,6]]},
+     houseMix:[['fungling',75],['shroomwarrior',25,4]],    // foma: only funglings and warriors here
      waves:[
-      [W('fungling',10,700)],
-      [W('fungling',14,550),W('shroomwarrior',2,1500)],
-      [W('shroomwarrior',6,1000),W('fungling',12,500)],
-      [W('fungling',22,380),W('shroomwarrior',4,1100)],
-      [W('shroomwarrior',8,850),W('fungling',16,450)],
-      [W('abomination',1,1000),W('fungling',18,420),W('shroomwarrior',5,900)],
-      [W('shroomwarrior',10,750),W('abomination',2,1800),W('fungling',20,380)],
-      [W('flatcap',2,1600),W('fungling',24,340),W('shroomwarrior',6,850)],
-      [W('abomination',3,1500),W('flatcap',3,1400),W('shroomwarrior',10,700)],
-      [W('flatcap',4,1300),W('abomination',4,1400),W('shroomwarrior',12,650),W('fungling',30,300)]]}]};
+      [W('fungling',8,750)],
+      [W('fungling',12,600)],
+      [W('fungling',14,520),W('shroomwarrior',2,1200,0.5)],
+      [W('fungling',16,480),W('shroomwarrior',4,1000)],
+      [W('fungling',20,440),W('shroomwarrior',6,900)],
+      [W('fungling',24,400),W('shroomwarrior',8,850)],
+      [W('fungling',30,360),W('shroomwarrior',11,750)]]}]};
 const SHROOM_IDX=[];
 SHROOM_REGIONS.forEach(r=>{ for(let i=0;i<r.levels;i++){
   const gi=LEVELS.length, def=(SHROOM_DEFS[r.id]||[])[i]||null;
@@ -4694,7 +4692,7 @@ function updateTheDead(){
       const [x,y,h]=src[Math.floor(Math.random()*src.length)], n=2+Math.floor(Math.random()*4), w=wave;
       if(h)h.puff=40; wi.total+=n; sporePuffs.push({x,y,r:CELL*0.6,life:40,max:40});
       setMsg(h?'Mushroom folk come pouring out of a glowshroom house!':'A swarm of funglings pops out of the glowshroom path!');
-      for(let i=0;i<n;i++)setTimeout(()=>{ if(gameOver)return; const e=spawnDead(houseMushroom(),x+(Math.random()-0.5)*8,y+(Math.random()-0.5)*6); e.waveNo=w;
+      for(let i=0;i<n;i++)setTimeout(()=>{ if(gameOver)return; const lvd=LEVELS[currentLevel]&&LEVELS[currentLevel].def, e=spawnDead(houseMushroom(lvd&&lvd.houseMix,w),x+(Math.random()-0.5)*8,y+(Math.random()-0.5)*6); e.waveNo=w;
         const wj=waveInfo[w]; if(wj)wj.spawned++; },i*260); } }
   if(openGraves.length&&wave>openGraveWave){ openGraveWave=wave; const wi=waveInfo[wave];
     openGraves.forEach(g=>{ g.waiting=true; g.waveNo=wave; if(wi)wi.total++; }); }
@@ -7009,12 +7007,15 @@ function spawnWave(){
   }
   let queue=[];
   if(lv.def){
-    (lv.def.waves[wave-1]||[]).forEach(g=>{ for(let i=0;i<g.count;i++)queue.push({type:g.type,gap:g.gap}); });
+    const late=[];
+    (lv.def.waves[wave-1]||[]).forEach(g=>{ for(let i=0;i<g.count;i++)(g.at!=null?late:queue).push({type:g.type,gap:g.gap,at:g.at}); });
     // interleave the groups so mixed waves feel mixed
     queue.sort((a,b)=>a.gap-b.gap);
     const inter=[]; let idx=0;
     while(queue.length){ inter.push(queue.splice(idx%queue.length,1)[0]); idx+=3; }
     queue=inter;
+    // groups with a set place (W(...,0.5)) join at that point of the wave, spread over the rest of it
+    late.forEach((q,j)=>{ const pos=Math.min(queue.length,Math.floor(queue.length*q.at)+j*2); queue.splice(pos,0,q); });
   } else {
     const n=4+wave*2;
     for(let i=0;i<n;i++)queue.push({type:(wave>3&&i%4===0)?'runner':'grunt',gap:500});
@@ -8004,7 +8005,9 @@ function drawMyceliums(t,glow){
 const SHROOMS=['fungling','shroomwarrior','abomination','flatcap','puffer'];
 // who comes out of a glowshroom house: fungling 55%, warrior 20%, puffball 15%, abomination 10%
 const HOUSE_MIX=[['fungling',55],['shroomwarrior',20],['puffer',15],['abomination',10]];
-function houseMushroom(){ let r=Math.random()*100; for(const [k,p] of HOUSE_MIX){ if((r-=p)<0)return k; } return 'fungling'; }
+// a level can set its own mix (def.houseMix); an entry's third number is the first wave it can come out on
+function houseMushroom(mix,w){ mix=(mix||HOUSE_MIX).filter(m=>!m[2]||(w||1)>=m[2]); const tot=mix.reduce((a,m)=>a+m[1],0);
+  let r=Math.random()*tot; for(const [k,p] of mix){ if((r-=p)<0)return k; } return 'fungling'; }
 let sporeLobs=[], sporePuffs=[], funglingWave=0; const SPORE_POISON=300, SPORE_BURST_DMG=35;
 // a warrior falls: its spores puff out and hurt and poison your units within 1.5 tiles
 function sporeBurst(e){
