@@ -2414,8 +2414,8 @@ let totalWaves=10, theme=null, themeB=null, splitCol=-1, splitEdge=null, deviceC
 function levelUnlocked(i){
   const L=LEVELS[i]; if(!L)return false;
   if(L.bonus)return !!L.def&&!!completed[L.prev];
-  if(L.isle)return !!L.def&&halloweenOn()&&(L.prev==null||!!completed[L.prev]);
-  if(L.shroom)return !!L.def&&shroomedOn()&&(L.prev==null||!!completed[L.prev]);   // the valley opens with its DLC   // the island's first level is open as soon as the DLC is in
+  if(L.isle)return !!L.def&&halloweenOn()&&(L.prev==null||!!completed[L.prev]);   // the island's first level is open as soon as the DLC is in
+  if(L.shroom)return !!L.def&&shroomedOn()&&(L.prev==null||!!completed[L.prev]);   // so is the valley's, with its DLC
   return !!L.def&&(i===0||!!completed[i-1]);
 }
 function bonusVisible(i){ const L=LEVELS[i]; return !!L&&L.bonus&&!!completed[BONUS.find(b=>b.idx.includes(i)).after]; }
