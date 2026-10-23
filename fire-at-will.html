@@ -2848,7 +2848,22 @@ const ISLE_DEFS={
       [W('gravedigger',1,1000),W('zombie',12,600),W('skeleton',6,800)],
       [W('skeletonknight',4,1100),W('skeleton',10,560)],
       [W('zombie',16,500),W('zombiegrunt',10,480),W('skeletonknight',3,1200)],
-      [W('gravedigger',2,1400),W('skeletonknight',5,1000),W('zombie',18,460),W('skeleton',10,520)]]}]};
+      [W('gravedigger',2,1400),W('skeletonknight',5,1000),W('zombie',18,460),W('skeleton',10,520)]]},
+    {name:"Mourners' Crossing",startGold:600,lives:20,hpMul:1.75,speedMul:1.05,
+     code:{"v":3,"orient":"large","COLS":25,"ROWS":16,"ground":"#565C50","pathCol":"#7d7768","routeGroups":[[[[6,0],[6,4],[12,4],[12,7],[15,7]],[[6,0],[6,11],[0,11]]],[[[5,24],[5,19],[8,19],[8,13],[12,13],[12,7],[15,7]],[[5,24],[5,19],[4,19],[4,11],[0,11]]],[[[12,24],[12,19],[8,19],[8,13],[12,13],[12,7],[15,7]],[[12,24],[12,19],[4,19],[4,11],[0,11]]]],"lakeExits":[],"spiderRoutes":[],"nests":[],"trees":[[3,2,"oak"],[2,7,"apple"],[4,22,"apple"],[1,23,"birch"],[2,19,"birch"],[0,15,"oak"],[3,13,"oak"],[1,9,"oak"],[4,8,"birch"],[0,2,"apple"],[4,0,"apple"],[8,0,"oak"],[15,6,"birch"],[15,1,"oak"],[11,3,"oak"],[7,2,"apple"],[13,8,"birch"],[14,11,"oak"],[15,16,"birch"],[11,18,"apple"],[9,14,"apple"],[14,18,"oak"],[6,20,"birch"],[8,24,"birch"],[9,21,"apple"],[7,15,"willow"],[5,12,"cypress"],[10,11,"deadtree"],[11,8,"cypress"],[8,6,"willow"]],"lake":[],"lakeSpawns":[],"forest":[],"spiderDens":[],"spiderNests":[],"webs":[],"solidWebs":[],"bridges":[],"webPaths":[],"bushes":[],"bigBushes":[],"queens":[],"webWalls":[],"cocoons":[],"eggSacs":[],"bones":[],"ruins":[],"silkBridges":[],"tunnelIns":[],"tunnelOuts":[],"sewers":[],"graves":[[3,18],[2,14],[1,13],[5,2],[3,4],[4,6],[7,17],[6,18],[5,16],[7,11],[8,10],[9,7],[7,6],[12,14],[11,16],[10,15],[11,10],[11,6],[15,20],[13,18],[14,17],[11,23],[13,23],[15,22],[14,22],[15,24],[9,20]],"graveyards":[[7,8,"u"]],"crypts":[],"houses":[[13,19],[10,21]],"pumpkins":[],"jacks":[],"barns":[],"thornPaths":[],"corns":[],"wells":[],"candles":[],"openGraves":[],"shroomPaths":[],"shroomHouses":[],"corpses":[],"road":[[6,1],[6,0],[6,2],[6,3],[4,18],[5,19],[6,19],[7,19],[8,19],[8,18],[8,17],[8,16],[8,15],[8,14],[8,13],[9,13],[10,13],[11,13],[13,7],[14,7],[15,7],[1,11],[0,11],[12,13],[12,12],[12,11],[12,10],[12,9],[12,8],[12,7],[6,4],[7,4],[8,4],[9,4],[10,4],[11,4],[12,4],[12,6],[12,5],[2,11],[3,11],[4,11],[6,5],[6,6],[6,7],[6,8],[6,9],[6,10],[6,11],[5,11],[4,17],[4,16],[4,15],[4,14],[4,13],[4,12],[4,19],[5,20],[5,21],[5,22],[5,23],[5,24],[9,19],[10,19],[11,19],[12,19],[12,20],[12,21],[12,22],[12,23],[12,24],[13,21],[14,21],[15,21]],"spawns":[[6,0],[5,24],[12,24]],"bases":[[15,7],[0,11]]},
+     waves:[
+      [W('zombie',10,850)],
+      [W('zombie',10,750),W('skeleton',5,1000)],
+      [W('skeleton',10,700),W('zombiegrunt',8,650)],
+      [W('zombie',14,600),W('skeletonknight',2,1400)],
+      [W('skeleton',12,600),W('zombiegrunt',10,550)],
+      [W('gravedigger',1,1000),W('zombie',14,550),W('skeleton',6,800)],
+      [W('skeletonknight',5,1000),W('zombie',12,550)],
+      [W('zombiegrunt',16,450),W('skeleton',10,550)],
+      [W('gravedigger',2,1300),W('skeletonknight',4,1000),W('zombie',14,500)],
+      [W('skeleton',16,450),W('skeletonknight',6,900)],
+      [W('zombie',20,420),W('zombiegrunt',14,420),W('gravedigger',2,1500)],
+      [W('skeletonknight',8,800),W('skeleton',14,450),W('zombie',20,400),W('gravedigger',2,1500)]]}]};
 const ISLE_IDX=[];
 ISLE_REGIONS.forEach(r=>{ for(let i=0;i<r.levels;i++){
   const gi=LEVELS.length, def=(ISLE_DEFS[r.id]||[])[i]||null, last=ISLE_IDX.length===8;
