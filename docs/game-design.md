@@ -77,7 +77,7 @@ A tower defense game. You place towers on grass tiles beside the road, and enemi
 | 9 | Rotwood Thicket | 15 | 420 | Unlocks Scorchwood |
 | 10 | The Foul Pool | 9 | 460 | Lake, tumorlings |
 | 11 | The Webbed Trail | 12 | 480 | 9 spiders at wave 7, big spider at wave 12 |
-| 12 | The Mire Crossing | 14 | 700 | Dark Forest boss: 4 spawns, lake spawn, the Drowned from wave 3 |
+| 12 | The Mire Crossing | 14 | 700 | Dark Forest boss: 4 spawns, lake spawn, the Drowned from wave 3. Unlocks Triple Gunner |
 | B1 | Twin Dens | 12 | 560 | Bonus; 19×12; 2 spider dens, ruins |
 | B2 | The Silk Warren | 14 | 1000 | Bonus; 25×16; 5 dens, 2 spider nests, egg sacs, 2 bases |
 | B3 | The Queen's Lair | 15 | 900 | Bonus; 31×20; spider queen (decoration for now), lakes with lake spawns, silk bridge |
@@ -88,6 +88,7 @@ The bonus levels unlock in order, top → middle → bottom. In code their level
 | Tower | Cost | How you get it |
 |---|---|---|
 | Gunner | 50g | Start |
+| Triple Gunner | 140g | Level 12 reward (The Mire Crossing) |
 | Cannon | 100g | Start |
 | Sniper | 150g | Start |
 | Farm | 75g | "Make it Rain" achievement; max 5 per level |
@@ -103,6 +104,8 @@ The bonus levels unlock in order, top → middle → bottom. In code their level
 | Mender | 120g | Level 4 reward |
 | Fire Brazier | 120g | 40 gems; burns nearby webs, but not solid webs or web walls |
 | Artillery | 180g | "Bombardment" achievement |
+
+**Triple Gunner** (23 Oct 2026, designed by the user): three gunners in one nest on one tile, each with the Gunner's stats (8 damage, range 100, same fire rate) and its own aim and reload. Barrel 1 shoots the enemy furthest along the road, barrel 2 the next one, barrel 3 the third; when fewer enemies than barrels are in range, the spare barrels wrap round to the front ones instead of sitting idle (`updateTriple`). Cost 140g (Claude's pick: a small discount on three Gunners). Players who had already beaten The Mire Crossing get it when the game loads.
 
 You start with 5 unit slots, which can be raised to 7 with gems.
 
