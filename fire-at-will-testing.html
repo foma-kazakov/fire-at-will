@@ -3055,7 +3055,7 @@ const SHROOM_REGIONS=[
    density:18,tints:['#F2F4F8','#E6EAF2','#FFFFFF'],
    poly:SHROOM_COAST,nodes:[[1680,790],[1800,750],[1900,840],[1800,925],[1685,960]],clear:[[1880,975]]},
   // the valley's far corner around the extra level: misty greenish-yellow fungal ground (like Hollow Knight's Fungal Wastes), bent turquoise-capped mushrooms and acid pools (no levels of its own)
-  {id:'fungal',name:'The Sporeshroom Lands',levels:0,ground:'#A3A846',ground2:'#7A8232',pathCol:'#5E7468',decor:'fungal',oldGrounds:['#2F4B47','#76813A'],
+  {id:'fungal',name:'The Sporeshroom Lands',levels:0,ground:'#8DA83A',ground2:'#64802A',pathCol:'#5E7468',decor:'fungal',oldGrounds:['#2F4B47','#76813A','#A3A846'],
    density:9,tints:['#3FB3A0','#4CC2AE','#2FA08C'],
    poly:[[1838,912],[1905,884],[1958,892],[1962,918],[1914,1004],[1800,1052],[1786,1030],[1815,985]],nodes:[],clear:[[1880,975]]},
 ];
@@ -6377,6 +6377,10 @@ function sbxRender(){
   [['C','computer'],['P','phone'],['L','large'],['H','huge']].forEach(([id,o])=>document.getElementById('sbxSize'+id).classList.toggle('on',sbx.orient===o));
   const rb=document.getElementById('sbxRoutesBtn'); if(rb){ rb.classList.toggle('on',sbxShowRoutes); rb.textContent=sbxShowRoutes?'Routes: shown':'Routes: hidden'; }
   const pc=PATH_COLORS[sbx.pathIdx], gc=GRASS_COLORS[sbx.grassIdx];
+  // a map saved while the Sporeshroom Lands had older colours picks up its current ones
+  { const fr=SHROOM_REGIONS.find(r=>r.id==='fungal'), low=x=>String(x||'').toLowerCase();
+    if(!sbx.grassCustom&&gc&&gc.c===fr.ground&&fr.oldGrounds.some(o=>low(o)===low(sbx.ground)))sbx.ground=fr.ground;
+    if(!sbx.pathCustom&&pc&&pc.c===fr.pathCol&&low(sbx.pathCol)!==low(fr.pathCol))sbx.pathCol=fr.pathCol; }
   document.getElementById('sbxPathSw').style.background=sbx.pathCol;
   document.getElementById('sbxGrassSw').style.background=sbx.ground;
   document.getElementById('sbxPathName').textContent=sbx.pathCustom?'Custom '+sbx.pathCol:pc.name+' '+pc.c;
