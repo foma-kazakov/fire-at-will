@@ -5486,7 +5486,7 @@ function sbxApply(r,c,first){
   const onRoad=()=>sHas(sbx.path,r,c)||sHas(sbx.bridges,r,c);
   if(t==='path'){ clearProps(); if(!onRoad())sbx.path.push([r,c]); }
   else if(t==='spawn'){ if(!first)return; clearProps(); if(!onRoad())sbx.path.push([r,c]); sDel(sbx.bases,r,c);
-    if(sHas(sbx.spawns,r,c))sDel(sbx.spawns,r,c); else { if(sbx.spawns.length>=4)sbx.spawns.shift(); sbx.spawns.push([r,c]); } }
+    if(sHas(sbx.spawns,r,c))sDel(sbx.spawns,r,c); else sbx.spawns.push([r,c]); }
   else if(t==='base'){ if(!first)return; clearProps(); if(!onRoad())sbx.path.push([r,c]); sDel(sbx.spawns,r,c);
     if(sHas(sbx.bases,r,c))sDel(sbx.bases,r,c); else { if(sbx.bases.length>=4)sbx.bases.shift(); sbx.bases.push([r,c]); } }
   else if(t==='tree'){ if(onRoad())return;
@@ -6019,6 +6019,25 @@ function sbxDraw(){
       sbxR.spiderRoutes.forEach(wp=>dash(wp,'rgba(255,130,120,.75)'));
       sbxR.nests.forEach(n=>n.routes.forEach(wp=>dash(wp,'rgba(255,130,120,.75)')));
       (sbxR.wells||[]).forEach(n=>n.routes.forEach(wp=>dash(wp,'rgba(170,230,190,.8)')));
+      (sbxR.eggs||[]).forEach(n=>n.routes.forEach(wp=>dash(wp,'rgba(255,130,120,.75)')));
+      // every other enemy spawner (graves, graveyards, crypts, houses, jack o' lanterns, bones, sewers, glowshroom houses and paths):
+      // what comes out walks to the closest bit of road and follows it to the base, just as in the game (roadFrom)
+      const polys=[].concat(...sbxR.groups).map(wp=>wp.map(p=>Object.assign(pt(p),{jump:!!p[2]})));
+      const fromHere=(x,y)=>{ let best=null;
+        polys.forEach(P=>{ for(let i=0;i<P.length-1;i++){ const a=P[i],b=P[i+1]; if(b.jump)continue;
+          const dx=b.x-a.x, dy=b.y-a.y, L=dx*dx+dy*dy, t=L?Math.max(0,Math.min(1,((x-a.x)*dx+(y-a.y)*dy)/L)):0;
+          const px=a.x+dx*t, py=a.y+dy*t, d=Math.hypot(px-x,py-y); if(!best||d<best.d)best={d,pt:{x:px,y:py},P,i}; } });
+        return best?[{x,y},best.pt].concat(best.P.slice(best.i+1)):null; };
+      const ctr=([r,c])=>[c*S+S/2,r*S+S/2];
+      const spawners=[].concat(sbx.graves.map(ctr),sbx.openGraves.map(ctr),sbx.bones.map(ctr),sbx.jacks.map(ctr),sbx.sewers.map(ctr),sbx.shroomPaths.map(ctr),
+        sbx.graveyards.map(([r,c,d])=>{ const o={d:[0,1.2],u:[0,-1.2],l:[-1.2,0],r:[1.2,0]}[d]||[0,1.2]; return [(c+1+o[0])*S,(r+1+o[1])*S]; }),
+        sbx.crypts.map(([r,c,d])=>d==='d'?[c*S+S/2,(r+2)*S+4]:[(c+2)*S+4,r*S+S*0.7]),
+        sbx.houses.map(([r,c])=>[(c+1)*S,(r+2)*S+4]),
+        sbx.shroomHouses.map(([r,c])=>[c*S+S,r*S+2*S-4]));
+      spawners.forEach(([x,y])=>{ const R=fromHere(x,y); if(!R)return;
+        ctx.save(); ctx.strokeStyle='rgba(205,175,255,.85)'; ctx.lineWidth=2; ctx.setLineDash([6,6]); ctx.lineDashOffset=-sbxFrame*0.5;
+        ctx.beginPath(); R.forEach((q,i)=>i&&!q.jump?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y)); ctx.stroke();
+        ctx.setLineDash([]); ctx.fillStyle='rgba(205,175,255,.95)'; ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fill(); ctx.restore(); });
     }
   } finally {
     ({ctx,CELL,COLS,ROWS,CW,CH,paths,path,pathSet,pathCells,lake,grove,trees,sewers,lab,theme,themeB,splitEdge,
