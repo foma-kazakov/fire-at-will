@@ -1503,6 +1503,7 @@ let thiefKills=0;  // resets every level
 let powers={arrowRain:false,fireRain:false,heavyForce:false,backup:false,iceAge:false,poisonLake:false,lightning:false};
 let gems=0;
 let completed={};   // declared before loadProgress() runs, so saved level progress loads
+let progressFlags={};   // one-time fixes already applied to this save
 let savedVol=null, savedLang=null, pendingOrient=null, pendingDevice=false, pendingBoost=0;
 let loadout=['gun','cannon','sniper'];
 let maxSlots=5;   // expandable to 7 with gems
@@ -1535,7 +1536,9 @@ const POWERS={
 };
 
 function saveProgress(){
-  try{ localStorage.setItem(PROGRESS_KEY,JSON.stringify({unlocked,achievements,powers,gems,loadout,equippedPowers,vol,lang:currentLang,completed,chosenOrient,deviceChosen,goldBoost,maxSlots,maxPowerSlots,suspended})); }catch(e){}
+  // beaten levels are never taken back (only Reset does that, by removing the save), so a save can never lose one
+  try{ const old=JSON.parse(localStorage.getItem(PROGRESS_KEY)||'null'); if(old&&old.completed)for(const k in old.completed)if(old.completed[k])completed[k]=true; }catch(e){}
+  try{ localStorage.setItem(PROGRESS_KEY,JSON.stringify({unlocked,achievements,powers,gems,loadout,equippedPowers,vol,lang:currentLang,completed,chosenOrient,deviceChosen,goldBoost,maxSlots,maxPowerSlots,suspended,progressFlags})); }catch(e){}
 }
 function loadProgress(){
   try{
@@ -1552,6 +1555,7 @@ function loadProgress(){
     if(Array.isArray(d.loadout))loadout=d.loadout.filter(k=>unlocked[k]).slice(0,7);
     if(Array.isArray(d.equippedPowers))equippedPowers=d.equippedPowers.filter(k=>powers[k]).slice(0,3);
     if(d.completed)completed=d.completed;
+    if(d.progressFlags)progressFlags=d.progressFlags;
     if(d.suspended)suspended=d.suspended;
     if(typeof d.goldBoost==='number')pendingBoost=d.goldBoost;
     if(d.chosenOrient)pendingOrient=d.chosenOrient;
@@ -2975,6 +2979,20 @@ ISLE_REGIONS.forEach(r=>{ for(let i=0;i<r.levels;i++){
   ISLE_IDX.push(gi); } });
 // Mourners' Crossing's reward came after some players had beaten it
 if(completed[ISLE_IDX[1]]&&!unlocked.footmen){ unlocked.footmen=true; if(loadout.length<maxSlots)loadout.push('footmen'); }
+// Builds before 22 Oct 2026 lost completed levels on every restart (they kept units and gems). Once per save,
+// win back the campaign up to the furthest level whose reward unit is unlocked. Skipped when every unit is
+// unlocked (the TDH code), since that says nothing about levels.
+(function recoverCompleted(){
+  if(!progressFlags.levelsRecovered){
+    progressFlags.levelsRecovered=true;
+    if(!Object.keys(TOWER_TYPES).every(k=>unlocked[k])){
+      let upTo=-1;
+      LEVELS.forEach((L,i)=>{ const rw=L.def&&L.def.reward; if(rw&&!L.bonus&&!L.isle&&unlocked[rw])upTo=Math.max(upTo,i); });
+      for(let i=0;i<=upTo;i++)if(!LEVELS[i].bonus&&!LEVELS[i].isle)completed[i]=true;
+    }
+    setTimeout(saveProgress,0);   // after the rest of the page has loaded
+  }
+})();
 const TEST_SLOT=LEVELS.length;          // a hidden level the testing modes fill in
 LEVELS.push({region:REGIONS[0],regionIndex:0,indexInRegion:0,def:null,name:'Test',waves:1,boss:false,
   hpMul:1,speedMul:1,startGold:0,lives:20,test:true});
