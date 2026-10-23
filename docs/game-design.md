@@ -53,7 +53,7 @@ A tower defense game. You place towers on grass tiles beside the road, and enemi
 - **Pause menu:** Resume, Settings, Shop ("coming soon"), and Save & Exit, which saves the run so you can continue it later from the main menu.
 - **DLC:** extra level packs as JSON files, loaded on the DLC screen; the desktop app reads `Documents/Fire at Will/DLC` by itself. Format and details in [dlc.md](dlc.md). Added 21 Oct 2026.
 - **Languages:** English, Russian (full), Spanish, Hindi, Chinese, French, Arabic and Ukrainian (the last six cover menu basics only).
-- **Music:** generated in code. It starts on load, or on the first tap if the browser blocks sound.
+- **Music:** generated in code. It starts on load, or on the first tap if the browser blocks sound. The Testing app has its own two tracks: a calm electric-piano "lab" groove on its screens and a faster E-minor synth drive in test battles.
 
 ### Regions, in order
 1. **The Fields**

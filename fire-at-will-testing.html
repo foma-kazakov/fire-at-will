@@ -1241,6 +1241,7 @@ function scheduleChordPad(){
   musicTimers.push(id);
 }
 function startMenuMusic(){
+  if(TESTING_APP){ startLabMusic(); return; }   // the testing app has its own tracks
   if(!actx||musicActive==='menu')return;
   stopMusic(); musicActive='menu';
   chordIndex=0; scheduleChordPad();
@@ -1253,6 +1254,7 @@ function startMenuMusic(){
   musicTimers.push(id);
 }
 function startBattleMusic(){
+  if(TESTING_APP){ startTestRunMusic(); return; }
   if(!actx||musicActive==='battle')return;
   stopMusic(); musicActive='battle';
   let step=0;
@@ -1294,6 +1296,95 @@ function startBattleMusic(){
     }
     step++;
   },220);
+  musicTimers.push(id);
+}
+/* testing app music: a calm "lab" groove for its screens and a synth drive for test battles */
+let musicNoiseBuf=null;
+function musicNote(freq,t0,dur,type,peak,attack,cutoff){
+  const o=actx.createOscillator(), g=actx.createGain();
+  o.type=type; o.frequency.value=freq;
+  g.gain.setValueAtTime(0.0001,t0);
+  g.gain.exponentialRampToValueAtTime(peak,t0+(attack||0.01));
+  g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+  let out=g;
+  if(cutoff){ const f=actx.createBiquadFilter(); f.type='lowpass'; f.frequency.value=cutoff; g.connect(f); out=f; }
+  o.connect(g); out.connect(musicGainNode);
+  o.start(t0); o.stop(t0+dur+0.02);
+}
+function musicNoise(t0,dur,peak,hp){
+  if(!musicNoiseBuf){
+    musicNoiseBuf=actx.createBuffer(1,Math.floor(actx.sampleRate*0.3),actx.sampleRate);
+    const d=musicNoiseBuf.getChannelData(0); for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+  }
+  const n=actx.createBufferSource(), f=actx.createBiquadFilter(), g=actx.createGain();
+  n.buffer=musicNoiseBuf; f.type='highpass'; f.frequency.value=hp;
+  g.gain.setValueAtTime(peak,t0); g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+  n.connect(f); f.connect(g); g.connect(musicGainNode);
+  n.start(t0); n.stop(t0+dur+0.02);
+}
+function musicKick(t0){
+  const o=actx.createOscillator(), g=actx.createGain();
+  o.type='sine'; o.frequency.setValueAtTime(140,t0); o.frequency.exponentialRampToValueAtTime(45,t0+0.12);
+  g.gain.setValueAtTime(0.55,t0); g.gain.exponentialRampToValueAtTime(0.0001,t0+0.2);
+  o.connect(g); g.connect(musicGainNode); o.start(t0); o.stop(t0+0.22);
+}
+function startLabMusic(){
+  if(!actx||musicActive==='lab')return;
+  stopMusic(); musicActive='lab';
+  // Dm9 - G13 - Cmaj9 - A7sus: soft electric piano arpeggios with a walking bass
+  const chords=[
+    {bass:73.42, arp:[293.66,349.23,440.00,523.25,659.25,523.25,440.00,349.23]},
+    {bass:98.00, arp:[246.94,349.23,392.00,493.88,659.25,493.88,392.00,349.23]},
+    {bass:65.41, arp:[261.63,329.63,392.00,493.88,587.33,493.88,392.00,329.63]},
+    {bass:110.00,arp:[293.66,392.00,440.00,587.33,659.25,587.33,440.00,392.00]},
+  ];
+  const beeps=[1318.5,1568,1760,2093];
+  let step=0;
+  const id=setInterval(()=>{
+    if(musicActive!=='lab')return;
+    const now=actx.currentTime, c=chords[Math.floor(step/16)%chords.length], s=step%16;
+    if(s%2===0){
+      const f=c.arp[(s/2)%8];
+      musicNote(f,now,0.9,'sine',0.13,0.008);
+      musicNote(f*2,now,0.25,'triangle',0.03,0.004);   // the "tine" of the electric piano
+    }
+    if(s===0)musicNote(c.bass,now,1.4,'triangle',0.32,0.02,600);
+    if(s===10)musicNote(c.bass*1.5,now,0.6,'triangle',0.2,0.02,600);
+    if(s%4===2)musicNoise(now,0.04,0.05,7000);       // quiet ticking hat
+    if(s===8&&Math.random()<0.45){                   // a little lab computer chirping to itself
+      const b=beeps[Math.floor(Math.random()*beeps.length)];
+      musicNote(b,now,0.08,'sine',0.06,0.003);
+      musicNote(b*(Math.random()<0.5?1.25:0.75),now+0.11,0.08,'sine',0.05,0.003);
+    }
+    step++;
+  },170);
+  musicTimers.push(id);
+}
+function startTestRunMusic(){
+  if(!actx||musicActive==='testrun')return;
+  stopMusic(); musicActive='testrun';
+  // E minor synth drive: Em - C - D - B, octave-jumping bass, kick/snare/hats, a filtered lead every other bar
+  const roots=[82.41,65.41,73.42,61.74];
+  const leads=[
+    [659.25,0,587.33,659.25,783.99,0,739.99,659.25],
+    [523.25,0,587.33,659.25,587.33,0,523.25,493.88],
+    [587.33,0,659.25,739.99,880.00,0,783.99,739.99],
+    [739.99,0,659.25,622.25,493.88,0,622.25,739.99],
+  ];
+  let step=0;
+  const id=setInterval(()=>{
+    if(musicActive!=='testrun')return;
+    const now=actx.currentTime, bar=Math.floor(step/16)%4, s=step%16, r=roots[bar];
+    musicNote(s%2?r*2:r,now,0.12,'sawtooth',0.2,0.005,420);
+    if(s%4===0)musicKick(now);
+    if(s===4||s===12)musicNoise(now,0.14,0.22,1500);
+    if(s%2===1)musicNoise(now,0.03,0.06,8000);
+    if(Math.floor(step/16)%2===1&&s%2===0){
+      const f=leads[bar][s/2];
+      if(f)musicNote(f,now,0.2,'sawtooth',0.09,0.01,2400);
+    }
+    step++;
+  },115);
   musicTimers.push(id);
 }
 function refreshVolumes(){
