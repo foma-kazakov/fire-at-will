@@ -2414,7 +2414,8 @@ let totalWaves=10, theme=null, themeB=null, splitCol=-1, splitEdge=null, deviceC
 function levelUnlocked(i){
   const L=LEVELS[i]; if(!L)return false;
   if(L.bonus)return !!L.def&&!!completed[L.prev];
-  if(L.isle)return !!L.def&&halloweenOn()&&(L.prev==null||!!completed[L.prev]);   // the island's first level is open as soon as the DLC is in
+  if(L.isle)return !!L.def&&halloweenOn()&&(L.prev==null||!!completed[L.prev]);
+  if(L.shroom)return !!L.def&&shroomedOn()&&(L.prev==null||!!completed[L.prev]);   // the valley opens with its DLC   // the island's first level is open as soon as the DLC is in
   return !!L.def&&(i===0||!!completed[i-1]);
 }
 function bonusVisible(i){ const L=LEVELS[i]; return !!L&&L.bonus&&!!completed[BONUS.find(b=>b.idx.includes(i)).after]; }
@@ -2987,15 +2988,12 @@ if(completed[ISLE_IDX[1]]&&!unlocked.footmen){ unlocked.footmen=true; if(loadout
     progressFlags.levelsRecovered=true;
     if(!Object.keys(TOWER_TYPES).every(k=>unlocked[k])){
       let upTo=-1;
-      LEVELS.forEach((L,i)=>{ const rw=L.def&&L.def.reward; if(rw&&!L.bonus&&!L.isle&&unlocked[rw])upTo=Math.max(upTo,i); });
-      for(let i=0;i<=upTo;i++)if(!LEVELS[i].bonus&&!LEVELS[i].isle)completed[i]=true;
+      LEVELS.forEach((L,i)=>{ const rw=L.def&&L.def.reward; if(rw&&!L.bonus&&!L.isle&&!L.shroom&&unlocked[rw])upTo=Math.max(upTo,i); });
+      for(let i=0;i<=upTo;i++)if(!LEVELS[i].bonus&&!LEVELS[i].isle&&!LEVELS[i].shroom)completed[i]=true;
     }
     setTimeout(saveProgress,0);   // after the rest of the page has loaded
   }
 })();
-const TEST_SLOT=LEVELS.length;          // a hidden level the testing modes fill in
-LEVELS.push({region:REGIONS[0],regionIndex:0,indexInRegion:0,def:null,name:'Test',waves:1,boss:false,
-  hpMul:1,speedMul:1,startGold:0,lives:20,test:true});
 function wretchedOpen(){ return false; }   // hook: return true once the unlock rule is met
 fitNodes(ISLE_REGIONS);
 
@@ -3012,6 +3010,32 @@ const SHROOM_REGIONS=[
 const SHROOM_SLOT=SHROOM_REGIONS[0].clear[0];                // the extra level: its spot is kept free and marked
 function shroomExtraOpen(){ return false; } // hook: return true once the unlock rule is met
 fitNodes(SHROOM_REGIONS);
+// the valley's levels, in valley order; like the island they sit after every other level so saved progress never shifts
+const SHROOM_DEFS={
+  glowshroom:[
+    {name:'Glowcap Hollow',startGold:450,lives:20,hpMul:1.5,speedMul:1.05,
+     code:{"v":3,"orient":"computer","COLS":19,"ROWS":12,"ground":"#1B2B52","pathCol":"#455C92","routeGroups":[[[[3,0],[3,9],[8,9],[8,6],[11,6]]],[[[0,6],[3,6],[3,9],[8,9],[8,6],[11,6]]],[[[0,12],[2,12],[2,14],[5,14],[5,9],[8,9],[8,6],[11,6]]],[[[5,18],[5,9],[8,9],[8,6],[11,6]]]],"lakeExits":[],"spiderRoutes":[],"nests":[],"trees":[[0,0,"glowshelf"],[1,2,"glowtwin"],[2,3,"glowshelf"],[4,1,"glowcap"],[6,2,"glowtwin"],[4,6,"glowcap"],[7,7,"glowshelf"],[8,3,"glowcap"],[11,5,"glowshelf"],[11,0,"glowshelf"],[9,1,"glowtwin"],[9,8,"glowtwin"],[11,7,"glowshelf"],[2,8,"glowshelf"],[0,7,"glowtwin"],[1,11,"glowtwin"],[4,10,"glowshelf"],[3,13,"glowcap"],[0,14,"glowtwin"],[1,16,"glowtwin"],[0,18,"glowshelf"],[4,17,"glowtwin"],[8,18,"glowcap"],[7,14,"glowcap"],[6,10,"glowcap"],[9,12,"glowshelf"],[10,11,"glowtwin"],[11,15,"glowshelf"],[10,17,"glowshelf"],[9,15,"glowcap"],[6,16,"glowcap"],[6,5,"glowshelf"]],"lake":[],"lakeSpawns":[],"forest":[],"spiderDens":[],"spiderNests":[],"webs":[],"solidWebs":[],"bridges":[],"webPaths":[],"bushes":[],"bigBushes":[],"queens":[],"webWalls":[],"cocoons":[],"eggSacs":[],"bones":[],"ruins":[],"silkBridges":[],"tunnelIns":[],"tunnelOuts":[],"sewers":[],"graves":[],"graveyards":[],"crypts":[],"houses":[],"pumpkins":[],"jacks":[],"barns":[],"thornPaths":[],"corns":[],"wells":[],"candles":[],"openGraves":[],"shroomPaths":[[0,6],[1,6],[2,6],[3,6],[3,5],[3,4],[3,7],[5,9],[4,9],[5,10],[5,11],[6,9],[7,9],[8,7],[8,6],[9,6],[10,6],[5,16],[5,15],[5,14],[4,14],[0,12],[3,1],[3,0],[2,13],[2,14],[5,18]],"shroomHouses":[[2,15],[1,0],[7,10]],"corpses":[[1,9,0],[7,15,1],[10,9,1],[7,4,1],[5,7,1],[10,2,0],[2,4,0],[1,17,0],[3,18,0],[9,18,1]],"glowPools":[],"puffballs":[],"myceliums":[],"road":[[3,0],[3,1],[3,2],[3,3],[3,4],[3,5],[0,6],[1,6],[2,6],[3,6],[3,7],[3,8],[3,9],[4,9],[5,9],[6,9],[7,9],[10,6],[11,6],[8,6],[9,6],[8,7],[8,8],[8,9],[5,10],[5,11],[5,12],[5,13],[5,14],[5,15],[5,16],[5,17],[5,18],[4,14],[3,14],[2,14],[2,13],[2,12],[1,12],[0,12]],"spawns":[[3,0],[0,6],[0,12],[5,18]],"bases":[[11,6]]},
+     waves:[
+      [W('fungling',10,700)],
+      [W('fungling',14,550),W('shroomwarrior',2,1500)],
+      [W('shroomwarrior',6,1000),W('fungling',12,500)],
+      [W('fungling',22,380),W('shroomwarrior',4,1100)],
+      [W('shroomwarrior',8,850),W('fungling',16,450)],
+      [W('abomination',1,1000),W('fungling',18,420),W('shroomwarrior',5,900)],
+      [W('shroomwarrior',10,750),W('abomination',2,1800),W('fungling',20,380)],
+      [W('flatcap',2,1600),W('fungling',24,340),W('shroomwarrior',6,850)],
+      [W('abomination',3,1500),W('flatcap',3,1400),W('shroomwarrior',10,700)],
+      [W('flatcap',4,1300),W('abomination',4,1400),W('shroomwarrior',12,650),W('fungling',30,300)]]}]};
+const SHROOM_IDX=[];
+SHROOM_REGIONS.forEach(r=>{ for(let i=0;i<r.levels;i++){
+  const gi=LEVELS.length, def=(SHROOM_DEFS[r.id]||[])[i]||null;
+  LEVELS.push({region:r,regionIndex:-1,indexInRegion:i,def,name:def?def.name:null,waves:def?def.waves.length:8,boss:false,
+    shroom:true,prev:SHROOM_IDX.length?SHROOM_IDX[SHROOM_IDX.length-1]:null,
+    hpMul:def&&def.hpMul||1.6,speedMul:def&&def.speedMul||1.05,startGold:def?def.startGold:450,lives:def?def.lives:20});
+  SHROOM_IDX.push(gi); } });
+const TEST_SLOT=LEVELS.length;          // a hidden level the testing modes fill in
+LEVELS.push({region:REGIONS[0],regionIndex:0,indexInRegion:0,def:null,name:'Test',waves:1,boss:false,
+  hpMul:1,speedMul:1,startGold:0,lives:20,test:true});
 // a valley map (its dark blue grass) plays at night
 const isNightGround=g=>String(g||'').toLowerCase()===SHROOM_GROUND.toLowerCase();
 // which DLC location a grass colour belongs to, so its ground gets that place's own little details and ambience
@@ -3224,18 +3248,22 @@ function buildMap(){
       <path d="M${(p.x-rad*0.55).toFixed(0)},${(p.y-rad*0.45).toFixed(0)} a${(rad*0.75).toFixed(0)},${(rad*0.75).toFixed(0)} 0 0 1 ${(rad*1.1).toFixed(0)},0" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="3" stroke-linecap="round"/>
       ${mark}</g>`;
   });
-  // Glowshroom Valley levels: not built yet either, ringed in mushroom blue
+  // Glowshroom Valley levels: a built one plays like any level (open once the one before it is beaten), the rest show an X; ringed in mushroom blue
   shroomPts.forEach(p=>{
-    const rad=20;
-    svg+=`<g class="lvNode locked" data-shroom="${p.k}">
+    const rad=20, gi=SHROOM_IDX[p.k], lv=LEVELS[gi], built=!!(lv&&lv.def), done=built&&!!completed[gi], open=built&&levelUnlocked(gi);
+    const fill=built?(done?'url(#nodeGold)':(open?'#2c7fc0':'url(#nodeGrey)')):'#46506e';
+    const mark=!built?`<path d="M${p.x-7},${p.y-7} L${p.x+7},${p.y+7} M${p.x+7},${p.y-7} L${p.x-7},${p.y+7}" stroke="#E6E2D8" stroke-width="4" stroke-linecap="round"/>`
+      :!open?`<path d="M${p.x-7},${p.y-2} v-5 a7,7 0 0 1 14,0 v5" fill="none" stroke="#E6E2D8" stroke-width="3"/><rect x="${p.x-9}" y="${p.y-2}" width="18" height="13" rx="3" fill="#E6E2D8"/>`
+      :`<text x="${p.x}" y="${p.y+7}" text-anchor="middle" font-family="Bungee,'Russo One',sans-serif" font-size="16" fill="#F6EFD8">${done?'✓':(p.k+1)}</text>`;
+    svg+=`<g class="lvNode${open?'':' locked'}" ${built?'data-i="'+gi+'"':'data-shroom="'+p.k+'"'}>
       <circle cx="${p.x}" cy="${p.y}" r="${rad+8}" fill="none" stroke="#7fe3ff" stroke-width="3" stroke-dasharray="5 7" opacity=".8"/>
       <ellipse cx="${p.x}" cy="${p.y+rad+7}" rx="${(rad*0.85).toFixed(0)}" ry="${(rad*0.3).toFixed(0)}" fill="#000" opacity=".3"/>
       <circle cx="${p.x}" cy="${p.y}" r="${rad+6}" fill="#0d1530"/>
-      <circle cx="${p.x}" cy="${p.y}" r="${rad+3}" fill="#2c3550"/>
-      <circle cx="${p.x}" cy="${p.y}" r="${rad+1}" fill="#46506e"/>
+      <circle cx="${p.x}" cy="${p.y}" r="${rad+3}" fill="${done?'#7a5512':(open?'#16416e':'#2c3550')}"/>
+      <circle cx="${p.x}" cy="${p.y}" r="${rad+1}" fill="${fill}"/>
       <circle cx="${p.x}" cy="${p.y}" r="${rad-4}" fill="none" stroke="#000" stroke-opacity=".18" stroke-width="2"/>
       <path d="M${(p.x-rad*0.55).toFixed(0)},${(p.y-rad*0.45).toFixed(0)} a${(rad*0.75).toFixed(0)},${(rad*0.75).toFixed(0)} 0 0 1 ${(rad*1.1).toFixed(0)},0" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="3" stroke-linecap="round"/>
-      <path d="M${p.x-7},${p.y-7} L${p.x+7},${p.y+7} M${p.x+7},${p.y-7} L${p.x-7},${p.y+7}" stroke="#E6E2D8" stroke-width="4" stroke-linecap="round"/></g>`;
+      ${mark}</g>`;
   });
   if(shroomSlot){ const p=shroomSlot, rad=14, open=shroomExtraOpen();
     svg+=`<g class="lvNode locked" data-shroomx="0" opacity="${open?1:.6}">
@@ -3283,7 +3311,7 @@ function buildMap(){
   inner.querySelectorAll('.lvNode').forEach(n=>{
     n.addEventListener('click',()=>{
       if(n.hasAttribute('data-isle')){ document.getElementById('mapMsg').textContent='That level has not been built yet.'; return; }
-      if(n.hasAttribute('data-shroom')){ document.getElementById('mapMsg').textContent='The Glowshroom Valley is coming soon.'; return; }
+      if(n.hasAttribute('data-shroom')){ document.getElementById('mapMsg').textContent='That level has not been built yet.'; return; }
       if(n.hasAttribute('data-shroomx')){ document.getElementById('mapMsg').textContent='A faint glow flickers deep in the valley…'; return; }
       if(n.hasAttribute('data-slot')){ document.getElementById('mapMsg').textContent='Something stirs in the Wretched Woodland…'; return; }
       const i=+n.getAttribute('data-i');
