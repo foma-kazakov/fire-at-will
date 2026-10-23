@@ -3053,7 +3053,7 @@ const SHROOM_REGIONS=[
    density:18,tints:['#F2F4F8','#E6EAF2','#FFFFFF'],
    poly:SHROOM_COAST,nodes:[[1680,790],[1800,750],[1900,840],[1800,925],[1685,960]],clear:[[1880,975]]},
   // the valley's far corner around the extra level: misty greenish-yellow fungal ground (like Hollow Knight's Fungal Wastes), bent turquoise-capped mushrooms and acid pools (no levels of its own)
-  {id:'fungal',name:'The Sporeshroom Lands',levels:0,ground:'#76813A',ground2:'#4E5826',pathCol:'#6B5A3E',decor:'fungal',
+  {id:'fungal',name:'The Sporeshroom Lands',levels:0,ground:'#A3A846',ground2:'#7A8232',pathCol:'#6B5A3E',decor:'fungal',oldGrounds:['#2F4B47','#76813A'],
    density:9,tints:['#3FB3A0','#4CC2AE','#2FA08C'],
    poly:[[1838,912],[1905,884],[1958,892],[1962,918],[1914,1004],[1800,1052],[1786,1030],[1815,985]],nodes:[],clear:[[1880,975]]},
 ];
@@ -3088,7 +3088,7 @@ LEVELS.push({region:REGIONS[0],regionIndex:0,indexInRegion:0,def:null,name:'Test
 const isNightGround=g=>String(g||'').toLowerCase()===SHROOM_GROUND.toLowerCase();
 // which DLC location a grass colour belongs to, so its ground gets that place's own little details and ambience
 function groundRegion(g){ const k=String(g||'').toLowerCase();
-  const r=ISLE_REGIONS.concat(SHROOM_REGIONS).find(o=>o.ground.toLowerCase()===k||(o.ground2&&o.ground2.toLowerCase()===k));
+  const r=ISLE_REGIONS.concat(SHROOM_REGIONS).find(o=>o.ground.toLowerCase()===k||(o.ground2&&o.ground2.toLowerCase()===k)||(o.oldGrounds||[]).some(c=>c.toLowerCase()===k));
   return r?r.id:null; }
 
 // a winding trail from level a to level b: the straight line is bent side to side in a few smooth swings
@@ -7797,6 +7797,14 @@ function buildTerrain(){
     g.addColorStop(0,lite?'rgba(255,250,200,.07)':'rgba(0,20,0,.08)'); g.addColorStop(1,'rgba(0,0,0,0)');
     ctx.fillStyle=g; ctx.fillRect(x-R,y-R,R*2,R*2);
   }
+  // the Sporeshroom Lands lie under a slight yellow spore haze (it drifts too, see drawAmbience)
+  for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
+    if(groundRegion(groundAt(r,c))!=='fungal')continue;
+    ctx.fillStyle='rgba(240,232,120,.07)'; ctx.fillRect(c*CELL,r*CELL,CELL,CELL);
+    if(hashAt(r*5.3+1,c*3.9+2)<0.4){ const x=c*CELL+CELL*hashAt(c,r*2.2), y=r*CELL+CELL*hashAt(r,c*1.7), R=CELL*(1.1+hashAt(r+c,3.3));
+      const g=ctx.createRadialGradient(x,y,0,x,y,R); g.addColorStop(0,'rgba(246,240,150,.2)'); g.addColorStop(1,'rgba(246,240,150,0)');
+      ctx.fillStyle=g; ctx.fillRect(x-R,y-R,R*2,R*2); }
+  }
   ctx.restore();
   // small decorations on open ground: flowers in the fields, mushrooms and leaves in dark woods, pebbles anywhere,
   // and each DLC location its own (bones, hay, embers, brambles, glowing fungi)
@@ -10042,9 +10050,9 @@ function drawAmbience(){
       const a=fade*0.07*(1+Math.sin(frameCount*0.01+i));
       ctx.fillStyle='rgba(215,222,214,'+a.toFixed(3)+')'; ctx.beginPath();ctx.ellipse(m.x,m.y,16+m.r*8,4+m.r*1.5,0,0,Math.PI*2);ctx.fill();
     } else if(reg==='fungal'){         // a slight greenish-yellow spore fog drifting low, with a few floating spores
-      const a=fade*0.11*(1.2+Math.sin(frameCount*0.008+i)), fx=m.x+Math.sin(frameCount*0.004+i)*24;
+      const a=fade*0.16*(1.2+Math.sin(frameCount*0.008+i)), fx=m.x+Math.sin(frameCount*0.004+i)*24;
       const g=ctx.createRadialGradient(fx,m.y,0,fx,m.y,34+m.r*10);
-      g.addColorStop(0,'rgba(222,236,140,'+a.toFixed(3)+')'); g.addColorStop(1,'rgba(222,236,140,0)');
+      g.addColorStop(0,'rgba(244,238,140,'+a.toFixed(3)+')'); g.addColorStop(1,'rgba(244,238,140,0)');
       ctx.save(); ctx.translate(fx,m.y); ctx.scale(2.2,1); ctx.translate(-fx,-m.y);
       ctx.fillStyle=g; ctx.beginPath();ctx.arc(fx,m.y,34+m.r*10,0,Math.PI*2);ctx.fill(); ctx.restore();
       if(i%3===0){ ctx.fillStyle='rgba(240,250,180,'+(fade*0.55).toFixed(3)+')'; ctx.beginPath();ctx.arc(m.x,m.y,1.1,0,Math.PI*2);ctx.fill(); }
