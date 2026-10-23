@@ -8121,47 +8121,33 @@ function drawPuffball(k,t){
 }
 function drawMyceliums(t,glow){
   if(!myceliums.length)return;
-  const mk=new Set(myceliums.map(k=>k.row+','+k.col)), road=(r,c)=>{ try{ return pathSet.has(r+','+c); }catch(e){ return false; } };
   ctx.save(); ctx.lineCap='round'; ctx.lineJoin='round';
-  myceliums.forEach(k=>{ const cx=k.col*CELL+CELL/2, cy=k.row*CELL+CELL/2, h=(a,b)=>((Math.sin(k.row*41.3+k.col*17.9+a*7.1+b*3.7)*43758.5)%1+1)%1;
-    // the roots run to every neighbouring mycelium tile, so tiles join into one network; a lone tile follows the road
-    const dirs=[[0,-1],[1,0],[0,1],[-1,0]];
-    let arms=dirs.filter(([dc,dr])=>mk.has((k.row+dr)+','+(k.col+dc)));
-    if(arms.length<2){ const rd=dirs.filter(([dc,dr])=>road(k.row+dr,k.col+dc)&&!arms.some(a=>a[0]===dc&&a[1]===dr)); arms=arms.concat(rd).slice(0,Math.max(2,arms.length)); }
-    if(arms.length<2)arms=[[-1,0],[1,0]];
-    const pl=0.6+0.4*Math.sin(t*0.05+k.row*1.3+k.col*0.7);
-    // two braided strands per arm, crossing where tiles meet so the braid carries on into the next tile
-    // three roots per arm twist round each other, bulging apart between the tile edge and the knot (where they bundle up)
-    const strand=(dc,dr,ph,A,f)=>{ const pts=[], ex=cx+dc*CELL/2, ey=cy+dr*CELL/2;
-      for(let i=0;i<=12;i++){ const u=i/12, off=A*Math.sin(u*Math.PI*f+ph)*Math.sin(u*Math.PI);
-        pts.push([ex+(cx-ex)*u-dr*off, ey+(cy-ey)*u+dc*off]); } return pts; };
-    const lines=[]; arms.forEach(([dc,dr],j)=>{ const f=1.5+h(j,30)*1.5;
-      for(let q=0;q<3;q++)lines.push(strand(dc,dr,q*2.1+h(j,31)*2,CELL*(0.1+0.1*h(j,32+q)),f)); });
-    const path=pts=>{ ctx.beginPath(); ctx.moveTo(pts[0][0],pts[0][1]); for(let i=1;i<pts.length-1;i++){ const mx=(pts[i][0]+pts[i+1][0])/2, my=(pts[i][1]+pts[i+1][1])/2; ctx.quadraticCurveTo(pts[i][0],pts[i][1],mx,my); } ctx.lineTo(pts[pts.length-1][0],pts[pts.length-1][1]); };
-    if(glow){ ctx.strokeStyle='rgba(127,227,255,'+(0.18*pl)+')'; ctx.lineWidth=5; lines.forEach(p=>{ path(p); ctx.stroke(); });
-      const g=ctx.createRadialGradient(cx,cy,0,cx,cy,CELL*0.45); g.addColorStop(0,'rgba(127,227,255,'+(0.4*pl)+')'); g.addColorStop(1,'rgba(127,227,255,0)');
-      ctx.fillStyle=g; ctx.beginPath();ctx.arc(cx,cy,CELL*0.45,0,Math.PI*2);ctx.fill(); return; }
-    // fine hairs fanning off the strands
-    ctx.strokeStyle='rgba(190,230,250,.35)'; ctx.lineWidth=0.7;
-    lines.forEach((p,li)=>{ for(let q=0;q<2;q++){ const i=2+Math.floor(h(li,q)*8), [x,y]=p[i], a=h(li,q+5)*Math.PI*2, L=3+h(li,q+9)*4;
-      ctx.beginPath();ctx.moveTo(x,y);ctx.quadraticCurveTo(x+Math.cos(a)*L*0.6+1,y+Math.sin(a)*L*0.6,x+Math.cos(a)*L,y+Math.sin(a)*L);ctx.stroke(); } });
-    // the strands: a dark rind with a pale glowing core
-    lines.forEach(p=>{ path(p); ctx.strokeStyle='rgba(20,28,56,.75)'; ctx.lineWidth=3.4; ctx.stroke();
-      ctx.strokeStyle='#7f9fbe'; ctx.lineWidth=2; ctx.stroke(); ctx.strokeStyle='rgba(200,245,255,'+(0.45+0.4*pl)+')'; ctx.lineWidth=0.8; ctx.stroke(); });
-    // light pulses creeping along the roots towards the knot
-    lines.forEach((p,li)=>{ const u=((t*0.012+h(li,3))%1), i=Math.min(11,Math.floor(u*12)), f=u*12-i, x=p[i][0]+(p[i+1][0]-p[i][0])*f, y=p[i][1]+(p[i+1][1]-p[i][1])*f;
-      ctx.fillStyle='rgba(127,227,255,.35)'; ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fill();
-      ctx.fillStyle='rgba(230,252,255,.95)'; ctx.beginPath();ctx.arc(x,y,1.3,0,Math.PI*2);ctx.fill(); });
-    // the knot where the roots meet, with glowing nodules and a couple of pinhead mushrooms
-    ctx.fillStyle='#55708a'; ctx.strokeStyle='rgba(20,28,56,.85)'; ctx.lineWidth=1.4;
-    ctx.beginPath();ctx.ellipse(cx,cy,CELL*0.11,CELL*0.085,h(1,1)*3,0,Math.PI*2);ctx.fill();ctx.stroke();
-    for(let i=0;i<3;i++){ const a=h(i,12)*Math.PI*2, d=CELL*(0.06+0.08*h(i,13)), x=cx+Math.cos(a)*d, y=cy+Math.sin(a)*d, r=1.4+h(i,14)*1.2;
-      ctx.fillStyle='rgba(127,227,255,'+(0.3*pl)+')'; ctx.beginPath();ctx.arc(x,y,r*2.2,0,Math.PI*2);ctx.fill();
-      ctx.fillStyle='rgba(200,248,255,'+(0.7+0.3*pl)+')'; ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill(); }
-    for(let i=0;i<2;i++){ if(h(i,20)<0.35)continue; const x=cx+(h(i,21)-0.5)*CELL*0.6, y=cy+(h(i,22)-0.5)*CELL*0.6, sz=2.2+h(i,23)*1.2;
-      ctx.strokeStyle='#c4cad9'; ctx.lineWidth=1; ctx.beginPath();ctx.moveTo(x,y+sz*1.6);ctx.lineTo(x,y);ctx.stroke();
-      ctx.fillStyle='#eef4fb'; ctx.beginPath();ctx.ellipse(x,y,sz,sz*0.6,0,Math.PI,0);ctx.fill();
-      ctx.fillStyle='rgba(150,236,255,.9)'; ctx.beginPath();ctx.arc(x,y-sz*0.25,0.7,0,Math.PI*2);ctx.fill(); }
+  myceliums.forEach(k=>{ const x0=k.col*CELL, y0=k.row*CELL, h=(a,b)=>((Math.sin(k.row*41.3+k.col*17.9+a*7.13+b*3.71)*43758.5)%1+1)%1;
+    const pl=0.65+0.35*Math.sin(t*0.04+k.row*1.3+k.col*0.7);
+    // a mat of roots spread over the whole tile: three long roots from edge to edge, forking into finer and finer threads
+    const segs=[], knots=[];
+    const wander=(x,y,a,len,n,w,seed,depth)=>{ const pts=[[x,y]];
+      for(let i=0;i<n;i++){ a+=(h(seed,i)-0.5)*0.9; x+=Math.cos(a)*len/n; y+=Math.sin(a)*len/n;
+        x=Math.max(x0-2,Math.min(x0+CELL+2,x)); y=Math.max(y0-2,Math.min(y0+CELL+2,y)); pts.push([x,y]); }
+      segs.push({pts,w,depth});
+      if(depth<2)for(let j=0;j<(depth?2:3);j++){ const i=1+Math.floor(h(seed+20,j)*(n-1)), [bx,by]=pts[i], sd=h(seed+30,j)<0.5?-1:1;
+        if(!depth&&j<2)knots.push([bx,by,1.3+h(seed,j+40)*1.1]);
+        wander(bx,by,a+sd*(0.7+h(seed+40,j)*0.8),len*(depth?0.35:0.42),depth?3:4,w*0.55,seed*3+j+7,depth+1); } };
+    for(let i=0;i<3;i++){ const side=Math.floor(h(i,1)*4), u=0.15+0.7*h(i,2);
+      const st=[[x0+u*CELL,y0],[x0+CELL,y0+u*CELL],[x0+u*CELL,y0+CELL],[x0,y0+u*CELL]][side], ang=[Math.PI/2,Math.PI,-Math.PI/2,0][side]+(h(i,3)-0.5)*0.8;
+      wander(st[0],st[1],ang,CELL*(0.95+0.25*h(i,4)),6,2.2,i*11+3,0); }
+    const line=pts=>{ ctx.beginPath(); ctx.moveTo(pts[0][0],pts[0][1]);
+      for(let i=1;i<pts.length-1;i++){ const mx=(pts[i][0]+pts[i+1][0])/2, my=(pts[i][1]+pts[i+1][1])/2; ctx.quadraticCurveTo(pts[i][0],pts[i][1],mx,my); }
+      const e=pts[pts.length-1]; ctx.lineTo(e[0],e[1]); };
+    if(glow){ ctx.strokeStyle='rgba(127,227,255,'+(0.22*pl)+')';
+      segs.forEach(sg=>{ if(sg.depth>1)return; ctx.lineWidth=sg.w*2.6; line(sg.pts); ctx.stroke(); }); return; }
+    segs.forEach(sg=>{ line(sg.pts); ctx.strokeStyle='rgba(16,22,48,'+(sg.depth?0.45:0.6)+')'; ctx.lineWidth=sg.w+1.4; ctx.stroke(); });
+    segs.forEach(sg=>{ line(sg.pts); ctx.strokeStyle=sg.depth===2?'rgba(160,205,230,'+(0.45+0.25*pl)+')':'rgba(150,200,226,.95)'; ctx.lineWidth=sg.w; ctx.stroke();
+      if(sg.depth<2){ ctx.strokeStyle='rgba(215,248,255,'+(0.35+0.45*pl)+')'; ctx.lineWidth=sg.w*0.4; ctx.stroke(); } });
+    // little swellings where the roots fork, breathing softly with the light
+    knots.forEach(([x,y,r])=>{ ctx.fillStyle='rgba(127,227,255,'+(0.25*pl)+')'; ctx.beginPath();ctx.arc(x,y,r*2.1,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#9ec6dc'; ctx.strokeStyle='rgba(16,22,48,.6)'; ctx.lineWidth=0.8; ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.stroke();
+      ctx.fillStyle='rgba(225,250,255,'+(0.5+0.4*pl)+')'; ctx.beginPath();ctx.arc(x-r*0.25,y-r*0.25,r*0.45,0,Math.PI*2);ctx.fill(); });
   });
   ctx.restore();
 }
