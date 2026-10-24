@@ -98,10 +98,12 @@ A tower defense game. You place towers on grass tiles beside the road, and enemi
 | 9 | Rotwood Thicket | 15 | 420 | Unlocks Scorchwood |
 | 10 | The Foul Pool | 9 | 460 | Lake, tumorlings |
 | 11 | The Webbed Trail | 12 | 480 | 9 spiders at wave 7, big spider at wave 12 |
-| 12 | The Mire Crossing | 14 | 700 | Dark Forest boss: 4 spawns, lake spawn, the Drowned from wave 3. Unlocks Triple Gunner |
+| 12 | The Mire Crossing | 14 | 700 | Dark Forest boss: 4 spawns, lake spawn, the Drowned from wave 3, the Tumor Mother in the last wave. Unlocks Triple Gunner |
 | B1 | Twin Dens | 12 | 560 | Bonus; 19×12; 2 spider dens, ruins |
 | B2 | The Silk Warren | 14 | 1000 | Bonus; 25×16; 5 dens, 2 spider nests, egg sacs, 2 bases |
 | B3 | The Queen's Lair | 15 | 900 | Bonus; 31×20; spider queen (decoration for now), lakes with lake spawns, silk bridge |
+
+**Tumor Mother (24 Oct 2026, designed by foma; first of the boss update):** the Dark Forest boss, arriving about a third of the way into the final wave of The Mire Crossing. A huge heaving mound of flesh with pustules, a cluster of eyes and tumorlings budding off its back. foma set 3000 HP, slow, spawns tumors, jumps to the opposite road, spits slime that stuns a tower for 7 s. Claude's picks (`MOTHER` in the code, `updateTumorMother`): speed 0.3 (slower than a Tumor), reward 120; every 8 s it stops and births 3 tumorlings, every third birth one full Tumor instead; every 12–20 s it leaps (about a second in the air) to the road furthest from it, landing at the same distance from the base, so the jump never gains or loses ground; every 6 s it spits a slime ball at the nearest tower within 4 tiles (not Farms or Menders), which drips with slime while stunned. Immune to poison, can't be infected or swallowed by Scorchwood.
 
 **Harder waves (23 Oct 2026, foma):** levels 4–5 of the Fields and every Dark Forest level (bonus levels too) get about 12% more enemies in each group (rounded, so small groups of 1–4 barely change). Done in one line right after `LEVEL_DEFS`; the counts in the code are the old ones.
 
@@ -164,6 +166,7 @@ You start with 2 power slots, which can be raised to 3 with gems.
 | Spider | 75 | Fast; leaves webs that drag down your units |
 | Big Spider | 120 | Leaves webs |
 | Grassmer | 2600 | Boss; sprouts grunts |
+| Tumor Mother | 3000 | Dark Forest boss; births tumorlings and Tumors, leaps to another road, spits slime that stuns a tower for 7 s |
 
 ### Achievements
 - **Make it Rain:** click the gray cloud on the main menu.
