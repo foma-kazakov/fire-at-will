@@ -3041,7 +3041,21 @@ const ISLE_DEFS={
       [W('skeleton',18,430),W('skeletonknight',7,850),W('pumpkinbomber',4,1200)],
       [W('zombie',22,400),W('zombiegrunt',16,400),W('gravedigger',2,1400)],
       [W('skeletonknight',9,750),W('skeleton',16,420),W('pumpkinbomber',5,1100)],
-      [W('gravedigger',3,1300),W('skeletonknight',10,700),W('zombie',24,380),W('skeleton',16,400),W('pumpkinbomber',6,1000)]]}]};
+      [W('gravedigger',3,1300),W('skeletonknight',10,700),W('zombie',24,380),W('skeleton',16,400),W('pumpkinbomber',6,1000)]]}],
+  pumpkin:[
+    {name:'Harvest Moon',startGold:500,lives:20,hpMul:1.8,speedMul:1.05,
+     code:{"v":3,"orient":"computer","COLS":19,"ROWS":12,"ground":"#8B611F","pathCol":"#8a6a3e","routeGroups":[[[[4,18],[4,12],[8,12],[8,7],[11,7]]],[[[0,4],[6,4],[6,7],[11,7]]]],"lakeExits":[],"spiderRoutes":[],"nests":[],"trees":[],"lake":[],"lakeSpawns":[],"forest":[],"spiderDens":[],"spiderNests":[],"webs":[],"solidWebs":[],"bridges":[],"webPaths":[],"bushes":[],"bigBushes":[],"queens":[],"webWalls":[],"cocoons":[],"eggSacs":[],"bones":[],"ruins":[],"silkBridges":[],"tunnelIns":[],"tunnelOuts":[],"sewers":[],"graves":[],"graveyards":[],"crypts":[],"houses":[],"pumpkins":[[2,0,0],[7,3,0],[1,6,1],[4,8,1],[9,15,2],[11,12,1],[10,18,1]],"jacks":[[3,2],[10,10],[5,9],[7,16]],"barns":[],"thornPaths":[[6,12],[7,12],[8,12],[8,11],[8,10],[0,4],[1,4],[2,4],[3,4],[4,4]],"corns":[[3,18],[4,18],[5,18],[5,17],[4,17],[3,17],[3,16],[4,16],[5,16],[5,15],[4,15],[3,15],[3,14],[4,14],[5,14],[5,13],[4,13],[3,13],[3,12],[4,12],[4,11],[5,11],[5,12],[3,11],[2,11],[1,11],[1,12],[2,12],[0,12],[0,11],[0,13],[1,13],[2,13],[2,14],[1,14],[0,14],[0,15],[1,15],[2,15],[2,16],[1,16],[1,17],[0,17],[0,16],[1,18],[2,17],[2,18],[0,18],[11,2],[10,2],[9,2],[8,2],[7,2],[7,1],[7,0],[8,0],[9,0],[10,0],[11,0],[10,1],[9,1],[8,1],[11,1]],"wells":[[8,4]],"candles":[],"openGraves":[],"shroomPaths":[],"shroomHouses":[],"corpses":[],"glowPools":[],"puffballs":[],"myceliums":[],"road":[[1,4],[2,4],[0,4],[4,18],[4,17],[4,16],[4,15],[4,14],[8,7],[9,7],[10,7],[11,7],[8,8],[8,9],[8,10],[8,11],[8,12],[7,12],[6,12],[5,12],[4,12],[4,13],[3,4],[4,4],[6,7],[7,7],[6,6],[6,5],[6,4],[5,4]],"spawns":[[4,18],[0,4]],"bases":[[11,7]]},
+     waves:[
+      [W('zombie',10,850)],
+      [W('zombie',10,750),W('pumpkinbomber',2,1600)],
+      [W('zombiegrunt',10,650),W('skeleton',4,1100)],
+      [W('pumpkinbomber',5,1100),W('zombie',12,600)],
+      [W('jack',2,1800),W('zombiegrunt',12,550)],
+      [W('skeleton',12,600),W('pumpkinbomber',5,1000)],
+      [W('jack',4,1300),W('zombie',14,520),W('skeletonknight',2,1500)],
+      [W('pumpkinbomber',8,800),W('zombiegrunt',14,480)],
+      [W('jack',5,1100),W('skeletonknight',4,1100),W('pumpkinbomber',6,900)],
+      [W('jack',6,1000),W('pumpkinbomber',10,700),W('zombie',18,420),W('skeletonknight',4,1100)]]}]};
 const ISLE_IDX=[];
 ISLE_REGIONS.forEach(r=>{ for(let i=0;i<r.levels;i++){
   const gi=LEVELS.length, def=(ISLE_DEFS[r.id]||[])[i]||null, last=ISLE_IDX.length===8;
