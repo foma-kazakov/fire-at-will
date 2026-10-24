@@ -105,6 +105,10 @@ A tower defense game. You place towers on grass tiles beside the road, and enemi
 
 **Tumor Mother (24 Oct 2026, designed by foma; first of the boss update):** the Dark Forest boss, arriving about a third of the way into the final wave of The Mire Crossing. A huge heaving mound of flesh with pustules, a cluster of eyes and tumorlings budding off its back. foma set 3000 HP, slow, spawns tumors, jumps to the opposite road, spits slime that stuns a tower for 7 s. Claude's picks (`MOTHER` in the code, `updateTumorMother`): speed 0.3 (slower than a Tumor), reward 120; every 8 s it stops and births 3 tumorlings, every third birth one full Tumor instead; every 12–20 s it leaps (about a second in the air) to the road furthest from it, landing at the same distance from the base, so the jump never gains or loses ground; every 6 s it spits a slime ball at the nearest tower within 4 tiles (not Farms or Menders), which drips with slime while stunned. Immune to poison, can't be infected or swallowed by Scorchwood.
 
+**Zombie Husk (24 Oct 2026, designed by foma; second boss):** the Graveyard boss, about a third of the way into the final wave of The Last Vigil (Graveyard 3). Half rotting zombie, half bare skeleton, with a glowing hole in its ribs. foma set 1500 HP, pulls an enemy of the location out of its ribs and throws it to a random place, bursts into many enemies on death that must be killed before the level is won. Claude's picks (`HUSK` in the code, `updateZombieHusk`, `huskBurst`): speed 0.55, reward 100; every 9 s (first after 6 s) it stops for 2/3 s, reaches into its ribs and throws a random Graveyard enemy (zombie, skeleton, zombie grunt, skeleton knight or gravedigger) onto a random road spot, never in the last 30% of a road before the base; on death 10 of the dead spill out (4 zombies, 2 zombie grunts, 3 skeletons, 1 skeleton knight). The level can't be won while a thrown enemy is still in the air.
+
+**Bosses end the battle (24 Oct 2026, foma):** any boss (anything with `boss:true`: Grassmer, Tumor Mother, Zombie Husk and later ones) that reaches the base sets lives to 0 and the level is lost at once.
+
 **Harder waves (23 Oct 2026, foma):** levels 4–5 of the Fields and every Dark Forest level (bonus levels too) get about 12% more enemies in each group (rounded, so small groups of 1–4 barely change). Done in one line right after `LEVEL_DEFS`; the counts in the code are the old ones.
 
 The bonus levels unlock in order, top → middle → bottom. In code their level indexes are 42, 43 and 44, and the bonus levels are built straight from their sandbox level codes.
@@ -166,6 +170,7 @@ You start with 2 power slots, which can be raised to 3 with gems.
 | Spider | 75 | Fast; leaves webs that drag down your units |
 | Big Spider | 120 | Leaves webs |
 | Grassmer | 2600 | Boss; sprouts grunts |
+| Zombie Husk | 1500 | Graveyard boss; throws Graveyard enemies onto the road, bursts into 10 of the dead when it dies |
 | Tumor Mother | 3000 | Dark Forest boss; births tumorlings and Tumors, leaps to another road, spits slime that stuns a tower for 7 s |
 
 ### Achievements
