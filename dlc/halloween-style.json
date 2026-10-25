@@ -1,0 +1,10 @@
+{
+ "fireAtWillDLC": 1,
+ "id": "halloween-style",
+ "name": "Halloween Style",
+ "author": "foma",
+ "version": "1.0",
+ "description": "A Halloween look for the whole game: towers, enemies, trees and the ground. Switch it on and off above the campaign map.",
+ "style": "halloween",
+ "levels": []
+}

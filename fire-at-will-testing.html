@@ -336,6 +336,15 @@
     box-shadow:0 4px 0 rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.12);}
   .mapTitle{font-family:'Bungee','Russo One',sans-serif;color:var(--brass);font-size:1.15rem;letter-spacing:1px;text-shadow:2px 2px 0 #000;}
   #mapHead>*{white-space:nowrap;}
+  #styleBar{display:flex;justify-content:center;margin:0 auto 8px;max-width:640px;width:100%;}
+  #styleBar .styleDl{background:linear-gradient(180deg,#f08a2c,#c95a14);color:#fff7e6;border-color:#2a1632;font-weight:700;text-shadow:1px 1px 0 #2a1632;}
+  .styleSwitch{display:inline-flex;align-items:center;gap:10px;cursor:pointer;user-select:none;font-weight:700;color:#ffe6c4;
+    background:linear-gradient(180deg,#3a2146,#22122b);border:2px solid #f08a2c;border-radius:12px;padding:6px 14px;box-shadow:0 4px 0 rgba(0,0,0,.35);}
+  .styleSwitch input{position:absolute;opacity:0;width:0;height:0;}
+  .styleSwitch .knob{position:relative;width:42px;height:22px;border-radius:11px;background:#5b5163;border:2px solid #120a16;transition:background .2s;flex:none;}
+  .styleSwitch .knob::after{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#e8e2d4;transition:left .2s;}
+  .styleSwitch input:checked+.knob{background:#f08a2c;} .styleSwitch input:checked+.knob::after{left:22px;background:#fff7e6;}
+  .styleSwitch input:focus-visible+.knob{outline:2px solid #fff;outline-offset:2px;}
   @media (max-width:700px){ #mapHead{gap:6px;padding:5px 7px;} .mapBack{padding:4px 8px;font-size:.74rem;} .mapGems{padding:2px 8px;font-size:.78rem;} }
   .mapGems{font-family:'Bungee','Russo One',sans-serif;color:var(--paper);font-size:.9rem;background:rgba(0,0,0,.35);border-radius:20px;padding:3px 12px;}
   .mapBack{font-family:'Rubik',sans-serif;font-weight:700;background:var(--khaki);color:var(--ink);border:2px solid var(--ink);border-radius:9px;
@@ -794,6 +803,7 @@
       <span class="mapTitle">Campaign</span>
       <span class="mapGems">💎 <span id="gemCount3">0</span></span>
     </div>
+    <div id="styleBar" style="display:none"></div>
     <div id="mapScroll"><div id="mapInner"></div></div>
     <div id="mapMsg" style="color:var(--paper);font-size:.8rem;margin-top:6px;min-height:1.1em;text-shadow:1px 1px 0 var(--ink)"></div>
   </div>
@@ -3443,6 +3453,7 @@ function twistPath(a,b,seed){
   return d;
 }
 function buildMap(){
+  buildStyleBar();
   // portrait phones get the same world transposed into a tall continent
   const host=document.getElementById('mapScroll');
   const portrait=host?(host.clientHeight>host.clientWidth*1.05)
@@ -4065,7 +4076,9 @@ const FARM_KINDS=['maple','goldbirch','hollowoak'], ASH_KINDS=['charred','ashpin
 const FARM_SWAP={oak:'hollowoak',birch:'goldbirch',apple:'maple',pine:'goldbirch',rotten:'hollowoak',gnarled:'maple',deadtree:'hollowoak',willow:'maple',cypress:'goldbirch',charred:'hollowoak',ashpine:'goldbirch',stonetree:'maple'};
 const ASH_SWAP={oak:'charred',birch:'stonetree',apple:'charred',pine:'ashpine',rotten:'charred',gnarled:'stonetree',deadtree:'charred',willow:'stonetree',cypress:'ashpine',maple:'charred',goldbirch:'stonetree',hollowoak:'charred'};
 function treeKindHere(kind,r,c){ if(DECOR_KINDS.includes(kind))return kind; const g=r!=null?groundAt(r,c):theme&&theme.ground, reg=groundRegion(g);
-  return reg==='graveyard'&&GRAVE_SWAP[kind]||reg==='beach'&&BEACH_SWAP[kind]||reg==='pumpkin'&&FARM_SWAP[kind]||reg==='ashen'&&ASH_SWAP[kind]||kind; }
+  return reg==='graveyard'&&GRAVE_SWAP[kind]||reg==='beach'&&BEACH_SWAP[kind]||reg==='pumpkin'&&FARM_SWAP[kind]||reg==='ashen'&&ASH_SWAP[kind]||!reg&&HSTYLE&&HSTYLE_TREES[kind]||kind; }
+// Halloween style: the ordinary trees grow as autumn and graveyard trees
+const HSTYLE_TREES={oak:'hollowoak',apple:'maple',birch:'goldbirch',pine:'cypress',rotten:'deadtree',gnarled:'willow'};
 // the Graveyard's three trees
 function drawGraveTree(g,kind,sw){
   g.fillStyle='rgba(0,0,0,.26)'; g.beginPath();g.ellipse(1,14,13,4.6,0,0,Math.PI*2);g.fill();
@@ -7230,7 +7243,7 @@ function sbxDraw(){
     lakeExitPts=sbxR.lakeExits.map(e=>pt(e.exit));
     lavaSpawnPts=sbx.lavaSpawns.map(pt); lavaExitPts=(sbxR.lavaExits||[]).map(e=>pt(e.exit));
     frameCount=sbxFrame;
-    const key=JSON.stringify([sbx.COLS,sbx.ROWS,sbx.ground,sbx.pathCol,sbx.path,sbx.biomes,sbx.seas,sbx.lavas]);
+    const key=JSON.stringify([sbx.COLS,sbx.ROWS,sbx.ground,sbx.pathCol,sbx.path,sbx.biomes,sbx.seas,sbx.lavas,HSTYLE]);
     if(key!==sbxTerrainKey||!sbxTerrain){ buildTerrain(); sbxTerrain=terrainCache; sbxTerrainKey=key; }
     ctx.clearRect(0,0,CW,CH);
     ctx.drawImage(sbxTerrain,0,0,CW,CH);
@@ -7432,10 +7445,10 @@ function layoutFromCode(code){
    DLC levels never touch campaign progress: only which DLC levels are beaten is stored, in the same 'fireAtWill.dlc'. */
 const DLC_KEY='fireAtWill.dlc';
 // the Testing app carries every DLC in the repo's dlc/ folder; scripts/make-testing.js fills this in
-const BUILTIN_DLC=["{\"fireAtWillDLC\":1,\"id\":\"example-pack\",\"name\":\"Example Pack\",\"author\":\"foma\",\"version\":\"1.0\",\"description\":\"Two small levels that show how a DLC file works.\",\"levels\":[{\"name\":\"Zig Zag\",\"region\":\"fields\",\"startGold\":250,\"lives\":20,\"waves\":[[[\"grunt\",8,600]],[[\"grunt\",10,520],[\"runner\",4,400]],[[\"husker\",3,900],[\"grunt\",8,500]],[[\"runner\",12,330]],[[\"brute\",2,1100],[\"grunt\",10,450]]],\"code\":{\"COLS\":19,\"ROWS\":12,\"ground\":\"#83A84E\",\"pathCol\":\"#c2a46a\",\"road\":[[0,3],[1,3],[2,3],[3,3],[4,3],[5,3],[6,3],[7,3],[8,3],[8,4],[8,5],[8,6],[8,7],[8,8],[7,8],[6,8],[5,8],[4,8],[3,8],[3,9],[3,10],[3,11],[3,12],[3,13],[4,13],[5,13],[6,13],[7,13],[8,13],[9,13],[10,13],[11,13]],\"spawns\":[[0,3]],\"bases\":[[11,13]],\"trees\":[[1,1],[10,1],[6,16],[1,17],[10,17],[6,10]]}},{\"name\":\"Two Roads\",\"region\":\"forest\",\"startGold\":330,\"lives\":20,\"hpMul\":1.3,\"code\":{\"COLS\":19,\"ROWS\":12,\"ground\":\"#3e5230\",\"pathCol\":\"#6b5a42\",\"road\":[[5,0],[5,1],[5,2],[5,3],[5,4],[5,5],[5,6],[4,6],[3,6],[2,6],[1,6],[1,7],[1,8],[1,9],[1,10],[1,11],[1,12],[2,12],[3,12],[4,12],[5,12],[5,13],[5,14],[5,15],[5,16],[5,17],[5,18],[11,4],[10,4],[9,4],[8,4],[8,5],[8,6],[8,7],[8,8],[8,9],[8,10],[8,11],[8,12],[7,12],[6,12],[5,12]],\"spawns\":[[5,0],[11,4]],\"bases\":[[5,18]],\"trees\":[[9,1],[10,16],[3,3]],\"bushes\":[[7,9]]}}]}","{\"fireAtWillDLC\":1,\"id\":\"halloween\",\"name\":\"Halloween\",\"author\":\"foma\",\"version\":\"0.1\",\"description\":\"A dead-land island west of the Dark Forest: The Graveyard, Pumpkin Farm, Ashen Wastes and the Wretched Woodland. Levels are coming soon.\",\"map\":\"halloween\",\"levels\":[]}","{\"fireAtWillDLC\":1,\"id\":\"shroomed\",\"name\":\"Shroomed\",\"author\":\"foma\",\"version\":\"0.1\",\"description\":\"The Glowshroom Valley: a night island off the bottom-right corner of the map, with dark blue grass and big glowing mushrooms. 5 levels and 1 extra are coming soon.\",\"map\":\"shroomed\",\"levels\":[]}"];
+const BUILTIN_DLC=["{\"fireAtWillDLC\":1,\"id\":\"example-pack\",\"name\":\"Example Pack\",\"author\":\"foma\",\"version\":\"1.0\",\"description\":\"Two small levels that show how a DLC file works.\",\"levels\":[{\"name\":\"Zig Zag\",\"region\":\"fields\",\"startGold\":250,\"lives\":20,\"waves\":[[[\"grunt\",8,600]],[[\"grunt\",10,520],[\"runner\",4,400]],[[\"husker\",3,900],[\"grunt\",8,500]],[[\"runner\",12,330]],[[\"brute\",2,1100],[\"grunt\",10,450]]],\"code\":{\"COLS\":19,\"ROWS\":12,\"ground\":\"#83A84E\",\"pathCol\":\"#c2a46a\",\"road\":[[0,3],[1,3],[2,3],[3,3],[4,3],[5,3],[6,3],[7,3],[8,3],[8,4],[8,5],[8,6],[8,7],[8,8],[7,8],[6,8],[5,8],[4,8],[3,8],[3,9],[3,10],[3,11],[3,12],[3,13],[4,13],[5,13],[6,13],[7,13],[8,13],[9,13],[10,13],[11,13]],\"spawns\":[[0,3]],\"bases\":[[11,13]],\"trees\":[[1,1],[10,1],[6,16],[1,17],[10,17],[6,10]]}},{\"name\":\"Two Roads\",\"region\":\"forest\",\"startGold\":330,\"lives\":20,\"hpMul\":1.3,\"code\":{\"COLS\":19,\"ROWS\":12,\"ground\":\"#3e5230\",\"pathCol\":\"#6b5a42\",\"road\":[[5,0],[5,1],[5,2],[5,3],[5,4],[5,5],[5,6],[4,6],[3,6],[2,6],[1,6],[1,7],[1,8],[1,9],[1,10],[1,11],[1,12],[2,12],[3,12],[4,12],[5,12],[5,13],[5,14],[5,15],[5,16],[5,17],[5,18],[11,4],[10,4],[9,4],[8,4],[8,5],[8,6],[8,7],[8,8],[8,9],[8,10],[8,11],[8,12],[7,12],[6,12],[5,12]],\"spawns\":[[5,0],[11,4]],\"bases\":[[5,18]],\"trees\":[[9,1],[10,16],[3,3]],\"bushes\":[[7,9]]}}]}","{\"fireAtWillDLC\":1,\"id\":\"halloween-style\",\"name\":\"Halloween Style\",\"author\":\"foma\",\"version\":\"1.0\",\"description\":\"A Halloween look for the whole game: towers, enemies, trees and the ground. Switch it on and off above the campaign map.\",\"style\":\"halloween\",\"levels\":[]}","{\"fireAtWillDLC\":1,\"id\":\"halloween\",\"name\":\"Halloween\",\"author\":\"foma\",\"version\":\"0.1\",\"description\":\"A dead-land island west of the Dark Forest: The Graveyard, Pumpkin Farm, Ashen Wastes and the Wretched Woodland. Levels are coming soon.\",\"map\":\"halloween\",\"levels\":[]}","{\"fireAtWillDLC\":1,\"id\":\"shroomed\",\"name\":\"Shroomed\",\"author\":\"foma\",\"version\":\"0.1\",\"description\":\"The Glowshroom Valley: a night island off the bottom-right corner of the map, with dark blue grass and big glowing mushrooms. 5 levels and 1 extra are coming soon.\",\"map\":\"shroomed\",\"levels\":[]}"];
 const DESK=window.fireAtWillDesktop||null;
 let dlcStore={packs:[],beaten:{}}, dlcFolder=[], dlcPlaying=null;
-try{ const d=JSON.parse(localStorage.getItem(DLC_KEY)||'null'); if(d&&Array.isArray(d.packs))dlcStore={packs:d.packs,beaten:d.beaten||{}}; }catch(e){}
+try{ const d=JSON.parse(localStorage.getItem(DLC_KEY)||'null'); if(d&&Array.isArray(d.packs))dlcStore={packs:d.packs,beaten:d.beaten||{},style:d.style}; }catch(e){}
 function dlcSave(){ try{ localStorage.setItem(DLC_KEY,JSON.stringify(dlcStore)); }catch(e){} }
 // read and check one DLC file; throws a message the player can read
 function dlcParse(text){
@@ -7444,10 +7457,12 @@ function dlcParse(text){
   if(!d.id||!d.name)throw 'This DLC has no id or name.';
   const map=(d.map==='halloween'||d.map==='shroomed')?d.map:null;   // a pack can switch on extra land on the campaign map
   if(d.map&&!map)throw 'This DLC needs a newer version of the game.';
+  const style=d.style==='halloween'?d.style:null;                    // or a new look for the whole game (a skin pack)
+  if(d.style&&!style)throw 'This DLC needs a newer version of the game.';
   if(!Array.isArray(d.levels))d.levels=[];
-  if(!d.levels.length&&!map)throw 'This DLC has no levels.';
+  if(!d.levels.length&&!map&&!style)throw 'This DLC has no levels.';
   const pack={id:String(d.id).slice(0,60),name:String(d.name).slice(0,60),author:d.author?String(d.author).slice(0,40):'',
-    version:d.version?String(d.version).slice(0,20):'',description:d.description?String(d.description).slice(0,300):'',levels:[],map};
+    version:d.version?String(d.version).slice(0,20):'',description:d.description?String(d.description).slice(0,300):'',levels:[],map,style};
   d.levels.forEach((lv,i)=>{
     const code=lv&&(typeof lv.code==='string'?(()=>{ try{return JSON.parse(lv.code);}catch(e){return null;} })():lv.code);
     if(!code||!code.COLS||!code.ROWS)throw 'Level '+(i+1)+' has no map (level code).';
@@ -7482,19 +7497,59 @@ function dlcAll(){
   BUILTIN_DLC.forEach(raw=>{ try{ const p=dlcParse(raw); if(ids.has(p.id))return; ids.add(p.id); p.builtin=true; out.push(p); }catch(e){} });
   return out;
 }
+/* ---------- Halloween style (a skin pack) ----------
+   Once the Halloween DLC is in, a button above the campaign map downloads this pack. Dropped on the DLC screen like any DLC,
+   it turns that button into an on/off switch; while it is on, towers, enemies, trees and the ground get a Halloween look.
+   The art is in the game; the file only switches it on. The switch is kept in 'fireAtWill.dlc', never in progress. */
+const HSTYLE_PACK={fireAtWillDLC:1,id:'halloween-style',name:'Halloween Style',author:'foma',version:'1.0',
+  description:'A Halloween look for the whole game: towers, enemies, trees and the ground. Switch it on and off above the campaign map.',style:'halloween',levels:[]};
+var HSTYLE=false;   // var: tower icons are drawn before this line runs
+function hStyleInstalled(){ try{ return dlcAll().some(p=>p.style==='halloween'); }catch(e){ return false; } }
+// on by default once installed; the Testing app has it built in, so there it starts off
+function refreshStyle(){ const on=hStyleInstalled()&&(dlcStore.style?dlcStore.style==='on':!TESTING_APP);
+  if(on!==HSTYLE){ HSTYLE=on; towerIconCache=null; } return on; }
+function setStyle(on){ dlcStore.style=on?'on':'off'; dlcSave(); refreshStyle(); }
+function downloadStyle(){
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify(HSTYLE_PACK,null,1)],{type:'application/json'}));
+  a.download='halloween-style.json'; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },500);
+  const m=document.getElementById('mapMsg'); if(m)m.textContent=t('Now drop halloween-style.json on the DLC screen (Main menu → DLC).');
+}
+// the strip above the campaign map: a download button, or the switch once the pack is installed
+function buildStyleBar(){
+  const bar=document.getElementById('styleBar'); if(!bar)return;
+  bar.innerHTML=''; refreshStyle();
+  if(!halloweenOn()){ bar.style.display='none'; return; }
+  bar.style.display='';
+  if(!hStyleInstalled()){
+    const b=document.createElement('button'); b.className='toolBtn styleDl'; b.textContent='🎃 Download Halloween style'; b.onclick=downloadStyle; bar.appendChild(b);
+  } else {
+    const m=document.getElementById('mapMsg'); if(m&&/halloween-style/.test(m.textContent))m.textContent='';
+    const l=document.createElement('label'); l.className='styleSwitch';
+    const c=document.createElement('input'); c.type='checkbox'; c.checked=HSTYLE; c.onchange=()=>setStyle(c.checked);
+    const k=document.createElement('span'); k.className='knob';
+    const tx=document.createElement('span'); tx.textContent='🎃 Halloween style';
+    l.append(c,k,tx); bar.appendChild(l);
+  }
+  trNode(bar);
+}
+Object.assign(I18N.ru,{"🎃 Download Halloween style":"🎃 Скачать стиль Хэллоуина","🎃 Halloween style":"🎃 Стиль Хэллоуина",
+  "Now drop halloween-style.json on the DLC screen (Main menu → DLC).":"Теперь перетащите halloween-style.json на экран DLC (Главное меню → DLC).",
+  "Switches the game to the Halloween style":"Переключает игру на стиль Хэллоуина","Halloween style: on":"Стиль Хэллоуина: вкл.","Halloween style: off":"Стиль Хэллоуина: выкл.",
+  "A Halloween look for the whole game: towers, enemies, trees and the ground. Switch it on and off above the campaign map.":"Хэллоуинский вид для всей игры: башни, враги, деревья и земля. Включается и выключается над картой кампании."});
 function dlcMsg(m,bad){ const st=document.getElementById('dlcStatus'); if(!st)return; st.textContent=m; st.classList.toggle('bad',!!bad); }
 async function dlcRefreshFolder(){
   if(!DESK)return;
   try{ dlcFolder=await DESK.listDLC(); }catch(e){ dlcFolder=[]; }
   if(document.getElementById('dlcScreen').classList.contains('active'))renderDLC();
   if(document.getElementById('mapScreen').classList.contains('active'))buildMap();
+  refreshStyle();
 }
 function openDLC(){ goTo('dlcScreen'); dlcMsg(''); renderDLC(); dlcRefreshFolder(); }
 function renderDLC(){
   const box=document.getElementById('dlcFolderBox');
   if(DESK){ box.style.display='flex'; document.getElementById('dlcFolderPath').textContent=DESK.dlcFolder; }
   const list=document.getElementById('dlcList'); list.innerHTML='';
-  const all=dlcAll();
+  const all=dlcAll(); refreshStyle();
   if(!all.length){ const e=document.createElement('div'); e.className='dlcEmpty';
     e.textContent=DESK?'No DLC yet. Put a DLC file in the DLC folder, or drop it above.':'No DLC yet. Drop a DLC file above.'; list.appendChild(e); }
   all.forEach(p=>{
@@ -7507,12 +7562,14 @@ function renderDLC(){
     const h=document.createElement('h3'); h.textContent=p.name; h.setAttribute('data-notr',''); c.appendChild(h);
     const done=p.levels.filter((_,i)=>dlcStore.beaten[p.id+'/'+i]).length;
     const meta=document.createElement('div'); meta.className='dlcMeta';
-    const mt=document.createElement('span'); mt.textContent=p.levels.length?'beaten '+done+'/'+p.levels.length:(p.map==='halloween'?(TESTING_APP?'Adds the Halloween map pieces to the Sandbox':'Adds the Halloween island to the campaign map'):p.map==='shroomed'?(TESTING_APP?'Adds the Glowshroom Valley pieces to the Sandbox':'Adds the Glowshroom Valley to the campaign map'):''); meta.appendChild(mt);
+    const mt=document.createElement('span'); mt.textContent=p.levels.length?'beaten '+done+'/'+p.levels.length:p.style==='halloween'?'Switches the game to the Halloween style':(p.map==='halloween'?(TESTING_APP?'Adds the Halloween map pieces to the Sandbox':'Adds the Halloween island to the campaign map'):p.map==='shroomed'?(TESTING_APP?'Adds the Glowshroom Valley pieces to the Sandbox':'Adds the Glowshroom Valley to the campaign map'):''); meta.appendChild(mt);
     if(p.author){ const au=document.createElement('span'); au.textContent=' · ✎ '+p.author; au.setAttribute('data-notr',''); meta.appendChild(au); }
     if(p.file){ const fl=document.createElement('span'); fl.textContent=' · from the DLC folder'; meta.appendChild(fl); }
     if(p.builtin){ const fl=document.createElement('span'); fl.textContent=' · built into Testing'; meta.appendChild(fl); }
     c.appendChild(meta);
-    if(p.description){ const d=document.createElement('p'); d.textContent=p.description; d.setAttribute('data-notr',''); c.appendChild(d); }
+    if(p.description){ const d=document.createElement('p'); d.textContent=p.description; if(!p.style)d.setAttribute('data-notr',''); c.appendChild(d); }
+    if(p.style==='halloween'){ const b=document.createElement('button'); b.className='toolBtn'+(HSTYLE?' done':'');
+      b.textContent=HSTYLE?'Halloween style: on':'Halloween style: off'; b.onclick=()=>{ setStyle(!HSTYLE); renderDLC(); }; c.appendChild(b); }
     const lv=document.createElement('div'); lv.className='dlcLevels';
     p.levels.forEach((L,i)=>{ const b=document.createElement('button'); b.className='toolBtn'+(dlcStore.beaten[p.id+'/'+i]?' done':'');
       b.setAttribute('data-notr',''); b.textContent=(dlcStore.beaten[p.id+'/'+i]?'✓ ':'')+L.name; b.onclick=()=>playDLC(p,i); lv.appendChild(b); });
@@ -7583,6 +7640,7 @@ function playDLC(p,i){
 }
 
 function startGame(){
+  refreshStyle();
   const D0=LEVELS[currentLevel].def; if(D0&&D0.code&&!D0.layout)D0.layout=layoutFromCode(D0.code);
   const defL=LEVELS[currentLevel].def&&LEVELS[currentLevel].def.layout;
   const L=defL?defL[chosenOrient]:LAYOUTS[chosenOrient][currentLevel%LAYOUTS[chosenOrient].length];
@@ -8654,6 +8712,30 @@ function buildTerrain(){
     }
   }
   ctx.restore();
+  if(HSTYLE){                                      // Halloween style: a purple dusk over the ground, with little pumpkins and candles about
+    ctx.save();
+    ctx.globalCompositeOperation='multiply'; ctx.fillStyle='rgba(150,110,190,.55)'; ctx.fillRect(0,0,CW,CH);
+    ctx.globalCompositeOperation='source-over'; ctx.fillStyle='rgba(60,20,80,.12)'; ctx.fillRect(0,0,CW,CH);
+    const dg=ctx.createRadialGradient(CW/2,CH/2,Math.min(CW,CH)*0.2,CW/2,CH/2,Math.max(CW,CH)*0.75);
+    dg.addColorStop(0,'rgba(255,140,40,.06)'); dg.addColorStop(1,'rgba(20,6,30,.22)'); ctx.fillStyle=dg; ctx.fillRect(0,0,CW,CH);
+    for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
+      const h=hashAt(r*5.3+11,c*3.1+7); if(h<0.88)continue;
+      const th=themeAt(r,c); if(th&&groundRegion(th.ground))continue;
+      const x=c*CELL+8+hashAt(c*1.7,r*2.3)*(CELL-16), y=r*CELL+10+hashAt(r*3.3,c*0.7)*(CELL-18);
+      ctx.strokeStyle='#2a1632'; ctx.lineWidth=1;
+      if(h<0.95){ const sz=2.6+hashAt(c,r*2)*1.6;
+        ctx.fillStyle='rgba(0,0,0,.25)'; ctx.beginPath();ctx.ellipse(x+0.5,y+sz*0.8,sz*1.2,sz*0.4,0,0,Math.PI*2);ctx.fill();
+        ctx.fillStyle='#e07b22'; ctx.beginPath();ctx.ellipse(x,y,sz*1.2,sz,0,0,Math.PI*2);ctx.fill();ctx.stroke();
+        ctx.fillStyle='#4f6a2a'; ctx.fillRect(x-0.5,y-sz-1.6,1.2,1.8);
+      } else {
+        const gl=ctx.createRadialGradient(x,y-4,0,x,y-4,8); gl.addColorStop(0,'rgba(255,190,90,.35)'); gl.addColorStop(1,'rgba(255,190,90,0)');
+        ctx.fillStyle=gl; ctx.beginPath();ctx.arc(x,y-4,8,0,Math.PI*2);ctx.fill();
+        ctx.fillStyle='#ece3cc'; ctx.fillRect(x-1.3,y-4,2.6,6);
+        ctx.fillStyle='#ffcf5a'; ctx.beginPath();ctx.ellipse(x,y-5.6,1,1.8,0,0,Math.PI*2);ctx.fill();
+      }
+    }
+    ctx.restore();
+  }
 }
 
 // one small ground detail in a DLC location (painted once into the terrain)
@@ -8789,9 +8871,10 @@ function drawBigBush(x,y){            // x,y = top-left corner of its 2x2 block
   ctx.fillStyle='rgba(0,0,0,.25)'; ctx.beginPath();ctx.ellipse(cx,cy+CELL*0.72,CELL*0.95,CELL*0.3,0,0,Math.PI*2);ctx.fill();
   ctx.strokeStyle='#1d2a1c'; ctx.lineWidth=2.2;
   const lobes=[[-0.62,0.3,0.42],[0.62,0.32,0.42],[-0.3,0.48,0.4],[0.3,0.5,0.4],[0,0.2,0.48],[-0.55,-0.2,0.38],[0.55,-0.18,0.38],[-0.2,-0.45,0.4],[0.25,-0.42,0.4],[0,-0.1,0.45]];
-  lobes.forEach(([fx,fy,fr],i)=>{ ctx.fillStyle=i<5?'#245623':'#2f6b2c';
+  const H=HSTYLE; if(H)ctx.strokeStyle='#2a1612';   // Halloween style: autumn leaves
+  lobes.forEach(([fx,fy,fr],i)=>{ ctx.fillStyle=H?(i<5?'#7a2e18':'#a8481c'):(i<5?'#245623':'#2f6b2c');
     ctx.beginPath();ctx.arc(cx+fx*CELL+sw*(i%2?1:-1),cy+fy*CELL,fr*CELL,0,Math.PI*2);ctx.fill();ctx.stroke(); });
-  ctx.fillStyle='#3d8235';
+  ctx.fillStyle=H?'#d9782a':'#3d8235';
   [[-0.35,-0.3,0.22],[0.3,-0.25,0.2],[0,0.05,0.24],[-0.45,0.3,0.18],[0.45,0.35,0.18]].forEach(([fx,fy,fr])=>{ ctx.beginPath();ctx.arc(cx+fx*CELL,cy+fy*CELL,fr*CELL,0,Math.PI*2);ctx.fill(); });
   ctx.fillStyle='rgba(255,255,255,.12)';
   [[-0.3,-0.5],[0.3,-0.48],[0.05,-0.2]].forEach(([fx,fy])=>{ ctx.beginPath();ctx.arc(cx+fx*CELL,cy+fy*CELL,CELL*0.1,0,Math.PI*2);ctx.fill(); });
@@ -10866,9 +10949,12 @@ function clearRuin(r,c){
 }
 function wallAt(r,c){ return webWalls.find(w=>w.hp>0&&w.row===r&&w.col===c); }
 function drawBushAt(x,y){
-  ctx.fillStyle='#2f6b2c'; ctx.strokeStyle='#1d2a1c'; ctx.lineWidth=2;
+  const H=HSTYLE;                                  // Halloween style: autumn red and orange leaves
+  ctx.fillStyle=H?'#8a3a1c':'#2f6b2c'; ctx.strokeStyle=H?'#2a1612':'#1d2a1c'; ctx.lineWidth=2;
   ctx.beginPath();ctx.arc(x-6,y+2,8,0,Math.PI*2);ctx.fill();ctx.stroke();
+  if(H)ctx.fillStyle='#b8541f';
   ctx.beginPath();ctx.arc(x+6,y+3,7,0,Math.PI*2);ctx.fill();ctx.stroke();
+  if(H)ctx.fillStyle='#d9782a';
   ctx.beginPath();ctx.arc(x,y-4,9,0,Math.PI*2);ctx.fill();ctx.stroke();
 }
 let roadCache=null;
@@ -11039,7 +11125,133 @@ function drawTriplePit(px,py,ang,fl,k){
   ctx.beginPath();ctx.arc(-0.6,0,2.2,0,Math.PI*2);ctx.fill();ctx.stroke();
   ctx.restore();
 }
+/* ---------- Halloween style art ----------
+   Towers keep their shapes but are repainted: army greens turn witchy purple, sandbags and wood turn pumpkin orange,
+   skin turns ghoul green and blues burn ghost-fire green. Each tower also gets a lit jack o' lantern, buildings get a cobweb. */
+const hColCache=new Map();
+var hPaint=false;
+function hCol(c){ let o=hColCache.get(c); if(o!==undefined)return o; o=hShift(c)||c; if(hColCache.size<5000)hColCache.set(c,o); return o; }
+function hShift(c){
+  let r,g,b,a=1,m;
+  if(c[0]==='#'){ let h=c.slice(1); if(h.length===3||h.length===4)h=h.split('').map(x=>x+x).join('');
+    r=parseInt(h.slice(0,2),16); g=parseInt(h.slice(2,4),16); b=parseInt(h.slice(4,6),16); if(h.length===8)a=parseInt(h.slice(6,8),16)/255; }
+  else if((m=c.match(/^rgba?\(([^)]+)\)$/))){ const q=m[1].split(',').map(Number); [r,g,b]=q; if(q.length>3)a=q[3]; }
+  else return null;
+  if([r,g,b,a].some(v=>isNaN(v)))return null;
+  r/=255; g/=255; b/=255;
+  const mx=Math.max(r,g,b), mn=Math.min(r,g,b); let h=0, s=0, l=(mx+mn)/2;
+  if(mx!==mn){ const d=mx-mn; s=l>0.5?d/(2-mx-mn):d/(mx+mn);
+    h=mx===r?((g-b)/d+(g<b?6:0)):mx===g?((b-r)/d+2):((r-g)/d+4); h*=60; }
+  if(s<0.1){ if(l>0.06&&l<0.93){ h=275; s=0.16; } }                         // greys and steel: a ghostly violet
+  else if(h>=55&&h<175){ h=272+(h-55)*0.12; s=Math.min(1,s*1.15); l*=0.9; } // army greens: witchy purple
+  else if(h>=18&&h<55){
+    if(l>0.62&&s<0.8){ h=95; s=0.32; l*=0.92; }                             // skin: ghoul green
+    else if(l>=0.3){ h=25; s=Math.max(s,0.72); l=Math.min(0.58,l+0.05); }    // sandbags, wood, brass: pumpkin orange
+    else { h=16; s=Math.min(s,0.35); l*=0.75; }                             // dark wood: charred
+  }
+  else if(h>=175&&h<262&&s>0.22){ h=128; s=Math.min(0.8,s+0.1); }            // blues: ghost-fire green
+  const f=n=>{ const k=(n+h/30)%12, q=s*Math.min(l,1-l); return Math.round(255*(l-q*Math.max(-1,Math.min(k-3,9-k,1)))); };
+  return 'rgba('+f(0)+','+f(8)+','+f(4)+','+(+a.toFixed(3))+')';
+}
+// every canvas the towers are drawn on runs its colours through hCol while hPaint is set
+function hHook(g){
+  if(g.__hHooked)return; g.__hHooked=true;
+  const P=CanvasRenderingContext2D.prototype;
+  ['fillStyle','strokeStyle'].forEach(k=>{ const d=Object.getOwnPropertyDescriptor(P,k);
+    Object.defineProperty(g,k,{configurable:true,get(){ return d.get.call(this); },set(v){ d.set.call(this,hPaint&&typeof v==='string'?hCol(v):v); }}); });
+}
 function drawTowerSprite(t){
+  if(!HSTYLE){ drawTowerBody(t); return; }
+  hHook(ctx); hPaint=true;
+  try{ drawTowerBody(t); } finally { hPaint=false; }
+  drawTowerSpook(t);
+}
+// a small carved pumpkin by each tower, and a cobweb on the buildings
+function drawTowerSpook(t){
+  const k=t.spawnT||1; if(k<0.3)return;
+  ctx.save(); ctx.translate(t.x,t.y); ctx.scale(k*1.18,k*1.18);
+  if(t.disabled>0)ctx.globalAlpha=0.45;
+  const building=t.isFarm||t.factory||t.isWorkshop||t.isFootmen||t.isPolice||t.isMender||t.type==='pumpkinfarm';
+  if(building){
+    ctx.strokeStyle='rgba(235,235,245,.75)'; ctx.lineWidth=0.7;
+    const ox=-15, oy=-12, R=[4,7,10];
+    for(let i=0;i<4;i++){ const a=i/3*Math.PI/2; ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(ox+Math.cos(a)*11,oy+Math.sin(a)*11);ctx.stroke(); }
+    R.forEach(rr=>{ ctx.beginPath(); for(let i=0;i<4;i++){ const a=i/3*Math.PI/2, x=ox+Math.cos(a)*rr, y=oy+Math.sin(a)*rr; i?ctx.quadraticCurveTo(ox+Math.cos(a-0.26)*rr*0.8,oy+Math.sin(a-0.26)*rr*0.8,x,y):ctx.moveTo(x,y); } ctx.stroke(); });
+  }
+  if(t.type!=='pumpkinfarm'){
+    const px=11.5, py=10.5, fl=0.75+0.25*Math.sin(frameCount*0.15+t.x*0.37);
+    const gl=ctx.createRadialGradient(px,py,0,px,py,10); gl.addColorStop(0,'rgba(255,170,60,'+(0.35*fl).toFixed(3)+')'); gl.addColorStop(1,'rgba(255,140,40,0)');
+    ctx.fillStyle=gl; ctx.beginPath();ctx.arc(px,py,10,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='#2a1632'; ctx.lineWidth=1.2;
+    ctx.fillStyle='#e8761f'; ctx.beginPath();ctx.ellipse(px,py,5.2,4.2,0,0,Math.PI*2);ctx.fill();ctx.stroke();
+    ctx.beginPath();ctx.ellipse(px,py,2,4.2,0,0,Math.PI*2);ctx.stroke();
+    ctx.fillStyle='#3d5a22'; ctx.fillRect(px-0.7,py-6,1.6,2.2);
+    ctx.fillStyle='rgba(255,'+(200+40*fl|0)+',90,'+(0.7+0.3*fl).toFixed(2)+')';
+    ctx.beginPath();ctx.moveTo(px-3,py-1.4);ctx.lineTo(px-1.6,py-0.2);ctx.lineTo(px-3.2,py-0.1);ctx.closePath();ctx.fill();
+    ctx.beginPath();ctx.moveTo(px+3,py-1.4);ctx.lineTo(px+1.6,py-0.2);ctx.lineTo(px+3.2,py-0.1);ctx.closePath();ctx.fill();
+    ctx.beginPath();ctx.moveTo(px-3,py+1);ctx.lineTo(px-1.5,py+2.6);ctx.lineTo(px,py+1.4);ctx.lineTo(px+1.5,py+2.6);ctx.lineTo(px+3,py+1);ctx.lineTo(px,py+3.4);ctx.closePath();ctx.fill();
+  }
+  ctx.restore(); ctx.globalAlpha=1;
+}
+// which costume an enemy wears in the Halloween style; the island's own monsters, bosses and creatures wear none
+function hCostumeKind(e){
+  const D=ENEMIES[e.type]||{};
+  if(D.region==='halloween'||e.boss||e.mindless||e.webs||e.type==='drowned'||e.type==='crab'||e.type==='grassmer'||
+     ASHEN.includes(e.type)||SHROOMS.includes(e.type)||UNDEAD.includes(e.type))return null;
+  if(e.type==='rat')return 'rat';
+  if(e.type==='runner')return 'witch';
+  if(e.shoots)return 'skull';
+  if(e.steals)return 'vampire';
+  if(e.maxShield)return 'frank';
+  return 'pumpkin';
+}
+function drawCostume(kind,rad,idx){
+  const g=ctx, ink='#22261c';
+  g.save(); g.strokeStyle=ink; g.lineWidth=1.6;
+  if(kind==='pumpkin'){                         // a jack o' lantern for a head
+    const cy=-rad*1.0, fl=0.75+0.25*Math.sin(frameCount*0.17+idx);
+    g.fillStyle='#e8761f'; g.beginPath();g.ellipse(0,cy,rad*0.62,rad*0.52,0,0,Math.PI*2);g.fill();g.stroke();
+    g.beginPath();g.ellipse(0,cy,rad*0.24,rad*0.52,0,0,Math.PI*2);g.stroke();
+    g.fillStyle='#3d5a22'; g.fillRect(-1,cy-rad*0.52-3,2.4,3.4);
+    g.fillStyle='rgba(255,'+(196+50*fl|0)+',90,1)';
+    [[0.08,0.3],[0.42,0.62]].forEach(([a,b])=>{ g.beginPath();g.moveTo(rad*a,cy-rad*0.08);g.lineTo(rad*(a+b)/2,cy-rad*0.3);g.lineTo(rad*b,cy-rad*0.08);g.closePath();g.fill(); });
+    g.beginPath();g.moveTo(-rad*0.05,cy+rad*0.12);g.lineTo(rad*0.55,cy+rad*0.12);g.lineTo(rad*0.4,cy+rad*0.32);g.lineTo(rad*0.1,cy+rad*0.32);g.closePath();g.fill();
+  } else if(kind==='witch'){                    // a tall crooked witch hat
+    const cy=-rad*1.22;
+    g.fillStyle='#2b1838';
+    g.beginPath();g.ellipse(2,cy,rad*0.85,rad*0.2,0,0,Math.PI*2);g.fill();g.stroke();
+    g.beginPath();g.moveTo(2-rad*0.45,cy-1);g.lineTo(2-rad*0.15,cy-rad*1.1);g.lineTo(2-rad*0.65,cy-rad*1.45);g.lineTo(2+rad*0.45,cy-1);g.closePath();g.fill();g.stroke();
+    g.fillStyle='#8a4fc0'; g.fillRect(2-rad*0.43,cy-rad*0.3,rad*0.86,rad*0.18);
+  } else if(kind==='skull'){                    // a grinning skull
+    const cy=-rad*0.98;
+    g.fillStyle='#ece6d4'; g.beginPath();g.arc(0,cy,rad*0.5,0,Math.PI*2);g.fill();g.stroke();
+    g.beginPath();g.roundRect(-rad*0.08,cy+rad*0.2,rad*0.5,rad*0.36,2);g.fill();g.stroke();
+    g.fillStyle='#1a1420';
+    g.beginPath();g.arc(rad*0.08,cy-rad*0.05,rad*0.13,0,Math.PI*2);g.arc(rad*0.34,cy-rad*0.05,rad*0.11,0,Math.PI*2);g.fill();
+    g.fillStyle='rgba(140,255,120,.9)'; g.beginPath();g.arc(rad*0.08,cy-rad*0.05,rad*0.05,0,Math.PI*2);g.arc(rad*0.34,cy-rad*0.05,rad*0.045,0,Math.PI*2);g.fill();
+    g.strokeStyle='#1a1420'; g.lineWidth=1; [0.05,0.17,0.29].forEach(x=>{ g.beginPath();g.moveTo(rad*x,cy+rad*0.24);g.lineTo(rad*x,cy+rad*0.5);g.stroke(); });
+  } else if(kind==='vampire'){                  // pale face, slicked hair, a high red collar and fangs
+    const cy=-rad*0.95;
+    g.fillStyle='#7a1020';
+    g.beginPath();g.moveTo(-rad*0.75,cy+rad*0.75);g.lineTo(-rad*0.6,cy-rad*0.1);g.lineTo(-rad*0.15,cy+rad*0.45);g.closePath();g.fill();g.stroke();
+    g.fillStyle='#dfe0ea'; g.beginPath();g.arc(0,cy,rad*0.46,0,Math.PI*2);g.fill();g.stroke();
+    g.fillStyle='#120a16'; g.beginPath();g.moveTo(-rad*0.48,cy);g.arc(0,cy,rad*0.48,Math.PI,0);g.lineTo(rad*0.2,cy-rad*0.22);g.lineTo(0,cy-rad*0.05);g.lineTo(-rad*0.2,cy-rad*0.22);g.closePath();g.fill();
+    g.fillStyle='#e0263a'; g.beginPath();g.arc(rad*0.24,cy+rad*0.02,1.3,0,Math.PI*2);g.fill();
+    g.fillStyle='#fff'; g.beginPath();g.moveTo(rad*0.12,cy+rad*0.24);g.lineTo(rad*0.17,cy+rad*0.4);g.lineTo(rad*0.22,cy+rad*0.24);g.closePath();g.fill();
+  } else if(kind==='frank'){                    // a flat-topped green head with neck bolts
+    const cy=-rad*1.05;
+    g.fillStyle='#8fbf6a'; g.beginPath();g.roundRect(-rad*0.45,cy-rad*0.45,rad*0.9,rad*0.85,3);g.fill();g.stroke();
+    g.fillStyle='#1c1f16'; g.fillRect(-rad*0.5,cy-rad*0.55,rad*1.0,rad*0.3);
+    g.fillStyle='#9aa0a8'; g.fillRect(-rad*0.62,cy+rad*0.12,rad*0.18,rad*0.2); g.fillRect(rad*0.44,cy+rad*0.12,rad*0.18,rad*0.2);
+    g.strokeStyle='#22261c'; g.lineWidth=1.1; g.beginPath();g.moveTo(-rad*0.3,cy+rad*0.02);g.lineTo(-rad*0.05,cy+rad*0.02);g.stroke();
+    for(let i=0;i<3;i++){ g.beginPath();g.moveTo(-rad*0.28+i*rad*0.1,cy-0.8);g.lineTo(-rad*0.28+i*rad*0.1,cy+1.8);g.stroke(); }   // stitches
+    g.fillStyle='#1c1f16'; g.beginPath();g.arc(rad*0.2,cy-rad*0.05,1.4,0,Math.PI*2);g.fill();
+  } else if(kind==='rat'){                      // glowing red eyes
+    g.fillStyle='rgba(255,60,60,.95)'; g.beginPath();g.arc(rad*0.95,-2,1.9,0,Math.PI*2);g.fill();
+  }
+  g.restore();
+}
+function drawTowerBody(t){
     const k=t.spawnT, flash=t.flash>0?t.flash/8:0;
     // footprint pad grounds the tower on its tile
     ctx.save();
@@ -11341,7 +11553,8 @@ function drawTowerSprite(t){
 var towerIconCache;   // var: the build bar asks for icons before this line has run
 function towerIcon(type){
   if(!towerIconCache)towerIconCache={};
-  if(towerIconCache[type])return towerIconCache[type];
+  const ck=type+(HSTYLE?'|h':'');
+  if(towerIconCache[ck])return towerIconCache[ck];
   const S=72, cv=document.createElement('canvas'); cv.width=cv.height=S;
   let keep, ok=false;
   try{ keep=ctx; ctx=cv.getContext('2d');
@@ -11355,10 +11568,11 @@ function towerIcon(type){
   }catch(e){}
   try{ if(keep)ctx=keep; }catch(e){}
   if(!ok)return '';
-  return towerIconCache[type]=cv.toDataURL();
+  return towerIconCache[ck]=cv.toDataURL();
 }
 function draw(){
   if(!document.getElementById('gameScreen').classList.contains('active'))return;
+  hPaint=false;
   ctx.setTransform(RS,0,0,RS,0,0);
   ctx.clearRect(0,0,CW,CH);
   if(shake>0)ctx.translate((Math.random()-.5)*shake*2,(Math.random()-.5)*shake*2);
@@ -11492,7 +11706,7 @@ function draw(){
     ctx.beginPath();ctx.moveTo(tx,ty);ctx.lineTo(px,py+arc);ctx.stroke();
     if(p.boom){ ctx.fillStyle='rgba(0,0,0,.25)'; ctx.beginPath();ctx.ellipse(px,py+4,4,2,0,0,Math.PI*2);ctx.fill(); }
     ctx.fillStyle='rgba(255,236,170,.45)'; ctx.beginPath();ctx.arc(px,py+arc,p.boom?6:5,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle=p.boom?'#3a352a':'#fff6dc'; ctx.beginPath();ctx.arc(px,py+arc,p.boom?3.6:2.4,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle=p.boom?'#3a352a':(HSTYLE?'#c8ff7a':'#fff6dc'); ctx.beginPath();ctx.arc(px,py+arc,p.boom?3.6:2.4,0,Math.PI*2);ctx.fill();
   });
   enemies.forEach((e,idx)=>{
     if(e.inCorn)return;                            // out of sight in the corn
@@ -11512,6 +11726,7 @@ function draw(){
     ctx.scale(dir,1);
     ctx.strokeStyle='#22261c'; ctx.lineWidth=2;
     const step=Math.sin(frameCount*0.28+idx)*2.4;
+    const hc=HSTYLE?hCostumeKind(e):null;           // Halloween style: the ordinary soldiers come in costume
 
     if(e.type==='magmatitan'){
       drawTitanShape(ctx,rad,base,e.frozen>0?idx*7:frameCount+idx*7,(e.frozen>0||e.held>0)?0:step,e.rage||0,e.roarFx||0,e.throwFx||0,e.chomp||0);
@@ -11681,6 +11896,7 @@ function draw(){
       ctx.strokeStyle='#22261c'; ctx.lineWidth=2;
       soldierBits(rad,step,'#e7b98a',base);
     }
+    if(hc)drawCostume(hc,rad,idx);
     if(e.infected){
       const pz=Math.sin(frameCount*0.11+idx)*0.9;
       ctx.fillStyle='#7c5a86';
@@ -11801,6 +12017,16 @@ function drawAmbience(){
     const g=ctx.createRadialGradient(0,0,0,0,0,R);
     g.addColorStop(0,'rgba(10,20,30,'+(dark?0.05:0.09)+')'); g.addColorStop(1,'rgba(10,20,30,0)');
     ctx.fillStyle=g; ctx.beginPath();ctx.arc(0,0,R,0,Math.PI*2);ctx.fill(); ctx.restore();
+  }
+  if(HSTYLE)for(let k=0;k<4;k++){                  // Halloween style: bats flitting across the sky
+    const span=CW+200, x=((frameCount*(0.9+k*0.25)+k*span*0.29)%span)-100, y=CH*(0.12+0.22*k)+Math.sin(frameCount*0.03+k*2)*26;
+    const flap=Math.sin(frameCount*0.45+k*1.3), sz=5+k%2*1.5;
+    ctx.save(); ctx.translate(x,y); ctx.fillStyle='rgba(22,10,28,.85)';
+    ctx.beginPath();ctx.ellipse(0,0,sz*0.45,sz*0.6,0,0,Math.PI*2);ctx.fill();
+    [-1,1].forEach(sd=>{ ctx.beginPath();ctx.moveTo(0,-sz*0.2);ctx.quadraticCurveTo(sd*sz*1.1,-sz*(0.9+flap*0.8),sd*sz*2.2,-sz*flap*0.6);
+      ctx.quadraticCurveTo(sd*sz*1.5,sz*0.1,sd*sz*1.2,sz*0.35);ctx.quadraticCurveTo(sd*sz*0.8,0,0,sz*0.3);ctx.closePath();ctx.fill(); });
+    ctx.fillStyle='rgba(255,90,60,.9)'; ctx.fillRect(-1.6,-sz*0.25,1,1); ctx.fillRect(0.6,-sz*0.25,1,1);
+    ctx.restore();
   }
   // sunlight from the top left, cooler shade bottom right
   const lg=ctx.createLinearGradient(0,0,CW,CH);

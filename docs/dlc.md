@@ -42,8 +42,9 @@ DLC levels never touch campaign progress (`fireAtWill.progress`). They give no g
 | `id` | yes | Unique name for the pack. Two files with the same id count as one (the DLC folder wins). |
 | `name` | yes | Shown on the DLC card. |
 | `author`, `version`, `description` | no | Shown on the card (version is stored for later). |
-| `levels` | yes | One or more levels, played in any order. May be empty (`[]`) when `map` is set. |
+| `levels` | yes | One or more levels, played in any order. May be empty (`[]`) when `map` or `style` is set. |
 | `map` | no | Extra land the pack switches on in the campaign map. `"halloween"`: the Halloween island west of the Dark Forest. `"shroomed"`: the Glowshroom Valley, a night island off the bottom-right corner (its art, like the Halloween island's, is in the game itself). |
+| `style` | no | A new look for the whole game (a skin pack). `"halloween"`: the Halloween style. Towers are repainted in purple and pumpkin orange with a lit jack o' lantern each, ordinary enemies wear costumes (pumpkin heads, witch hats, skulls, vampires, Frankenstein heads), field and forest trees grow as autumn and graveyard trees, bushes turn autumn red, the ground gets a purple dusk with little pumpkins and candles, and bats fly over. Once the Halloween DLC is in, a button above the campaign map downloads this pack ([dlc/halloween-style.json](../dlc/halloween-style.json)); after it is dropped on the DLC screen, the button becomes an on/off switch (the DLC card has one too). The switch is kept in `fireAtWill.dlc`. In the Testing app the pack is built in and starts off. |
 
 Each level:
 
