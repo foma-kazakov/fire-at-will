@@ -3239,7 +3239,23 @@ if(completed[ISLE_IDX[1]]&&!unlocked.footmen){ unlocked.footmen=true; if(loadout
   }
 })();
 function wretchedOpen(){ return false; }   // hook: return true once the unlock rule is met
-function pumpkinExtraOpen(){ return false; } // hook: return true once the unlock rule is met
+function pumpkinExtraOpen(){ return halloweenOn()&&!!completed[ISLE_IDX[5]]; }   // the extra level shows up once Old Barn Road is beaten
+// the Pumpkin Farm's extra level (map by foma)
+const PUMPKIN_EXTRA_DEF={name:'The Lantern Field',startGold:750,lives:25,hpMul:1.75,speedMul:1.05,   // softer than Old Barn Road: most of the road runs through corn and there are only ~64 tiles to build on
+  code:{"v":3,"orient":"large","COLS":25,"ROWS":16,"ground":"#8B611F","pathCol":"#8a6a3e","routeGroups":[[[[3,24],[3,20],[15,20]],[[3,24],[3,17],[2,17],[2,14],[8,14],[8,12],[15,12]],[[3,24],[3,17],[2,17],[2,7],[3,7],[3,4],[15,4]]],[[[0,17],[3,17],[3,20],[15,20]],[[0,17],[2,17],[2,14],[8,14],[8,12],[15,12]],[[0,17],[2,17],[2,7],[3,7],[3,4],[15,4]]],[[[0,12],[2,12],[2,17],[3,17],[3,20],[15,20]],[[0,12],[2,12],[2,14],[8,14],[8,12],[15,12]],[[0,12],[2,12],[2,7],[3,7],[3,4],[15,4]]],[[[0,7],[2,7],[2,17],[3,17],[3,20],[15,20]],[[0,7],[2,7],[2,10],[8,10],[8,12],[15,12]],[[0,7],[3,7],[3,4],[15,4]]],[[[3,0],[3,7],[2,7],[2,17],[3,17],[3,20],[15,20]],[[3,0],[3,7],[2,7],[2,10],[8,10],[8,12],[15,12]],[[3,0],[3,4],[15,4]]]],"lakeExits":[],"spiderRoutes":[],"nests":[],"trees":[[12,9,"scarecrow"],[9,1,"scarecrow"]],"lake":[],"lakeSpawns":[],"forest":[],"spiderDens":[],"spiderNests":[],"webs":[],"solidWebs":[],"bridges":[],"webPaths":[],"bushes":[],"bigBushes":[],"queens":[],"webWalls":[],"cocoons":[],"eggSacs":[],"bones":[],"ruins":[],"silkBridges":[],"tunnelIns":[],"tunnelOuts":[],"sewers":[],"graves":[],"graveyards":[],"crypts":[],"houses":[],"pumpkins":[],"jacks":[[5,6],[6,7],[4,8],[8,17],[7,15],[6,16],[5,19],[3,13],[1,11],[0,13]],"barns":[],"thornPaths":[],"corns":[[10,14],[11,14],[12,14],[13,14],[14,14],[15,14],[10,10],[11,10],[12,10],[13,10],[14,10],[15,10],[9,14],[9,13],[9,12],[9,11],[9,10],[9,9],[9,8],[9,7],[9,6],[9,5],[9,4],[9,3],[9,0],[9,15],[9,16],[9,17],[9,18],[9,19],[9,20],[9,21],[9,22],[9,23],[9,24],[10,22],[11,22],[12,22],[13,22],[14,22],[15,22],[15,23],[14,23],[13,23],[13,24],[12,24],[11,24],[10,24],[10,23],[11,23],[12,23],[14,24],[15,24],[10,18],[11,18],[12,18],[13,18],[14,18],[15,18],[14,17],[13,17],[12,17],[11,17],[10,17],[10,16],[10,15],[11,15],[12,15],[12,16],[13,16],[14,16],[15,16],[13,15],[14,15],[15,15],[11,16],[15,17],[10,9],[10,8],[10,7],[10,6],[11,6],[12,6],[13,6],[14,6],[15,6],[15,7],[15,8],[14,8],[13,8],[12,8],[11,8],[13,7],[14,7],[13,9],[12,9],[11,9],[11,7],[12,7],[14,9],[15,9],[11,2],[10,2],[10,1],[11,1],[12,2],[13,2],[9,1],[13,1],[14,1],[15,1],[15,2],[14,2],[12,1],[10,0],[11,0],[12,0],[13,0],[14,0],[15,0],[8,24],[8,23],[8,22],[8,21],[8,20],[8,19],[8,15],[8,14],[8,13],[8,12],[8,11],[8,10],[8,9],[8,8],[8,7],[8,6],[8,5],[8,4],[8,3],[8,2],[8,1],[8,0],[2,22],[1,20],[1,19],[0,18],[1,23],[0,24],[1,24],[2,23],[2,24],[2,20],[2,21],[2,19],[2,18],[1,18],[3,9],[3,8],[4,7],[4,6],[4,5],[5,5],[6,6],[7,7],[7,8],[6,9],[4,9],[5,9],[7,9],[7,5],[7,6],[9,2],[6,10],[6,11],[6,12],[6,13],[6,14],[7,14],[7,13],[7,12],[7,11],[7,10],[6,15],[6,20],[7,20],[7,21],[7,22],[7,23],[7,24],[6,24],[6,23],[6,22],[6,21],[6,4],[6,3],[6,2],[6,1],[6,5],[7,4],[7,3],[7,2],[7,1],[7,0],[6,0],[4,4],[5,4],[5,3],[4,3],[4,2],[4,1],[4,0],[5,0],[5,2],[5,1],[3,2],[2,2],[1,2],[0,2],[0,1],[1,1],[2,1],[3,1],[1,0],[2,0],[3,0],[0,0],[3,3],[3,4],[3,5],[2,5],[1,5],[1,4],[0,4],[2,4],[0,5],[0,3],[1,3],[2,3],[3,6],[3,7],[2,7],[1,7],[0,7],[0,6],[1,6],[2,6],[2,9],[1,9],[0,9],[0,8],[1,8],[2,8],[8,18],[7,19],[4,19],[3,19],[3,20],[4,20],[5,20],[5,21],[4,21],[4,22],[3,21],[3,22],[4,23],[3,23],[5,22],[5,23],[4,24],[3,24],[5,24],[1,17],[1,16],[2,16],[2,15],[3,15],[4,15],[5,14],[5,13],[0,14],[0,15],[0,16],[0,17],[1,15],[4,12],[0,11],[1,10],[2,10],[3,10],[3,11],[4,10],[5,10],[5,11],[4,11],[5,12],[0,10],[4,14]],"wells":[[0,21]],"candles":[],"openGraves":[],"shroomPaths":[],"shroomHouses":[],"corpses":[],"glowPools":[],"puffballs":[],"myceliums":[],"road":[[0,17],[1,17],[2,17],[3,17],[3,18],[3,19],[3,20],[3,21],[3,22],[3,23],[3,24],[2,16],[2,15],[2,14],[2,13],[2,12],[1,12],[2,11],[2,10],[2,9],[2,8],[2,7],[3,6],[3,5],[3,4],[3,3],[3,2],[3,1],[3,0],[0,12],[3,7],[1,7],[0,7],[3,14],[4,14],[5,14],[6,14],[3,10],[4,10],[5,10],[6,10],[7,10],[8,10],[8,11],[8,12],[8,13],[8,14],[7,14],[9,12],[10,12],[11,12],[12,12],[13,12],[14,12],[15,12],[4,20],[5,20],[6,20],[7,20],[8,20],[9,20],[10,20],[11,20],[12,20],[13,20],[14,20],[15,20],[4,4],[5,4],[6,4],[7,4],[8,4],[9,4],[11,4],[10,4],[14,4],[15,4],[12,4],[13,4]],"spawns":[[3,24],[0,17],[0,12],[0,7],[3,0]],"bases":[[15,20],[15,12],[15,4]]},
+  waves:[
+   [W('zombie',14,750)],
+   [W('zombie',12,650),W('pumpkinbomber',4,1300),W('cornrunner',1,1000,0.5)],
+   [W('zombiegrunt',14,580),W('skeleton',6,1000),W('farmer',2,1800,0.4)],
+   [W('jack',3,1500),W('zombie',16,520),W('pumpkinbomber',5,1000)],
+   [W('zombiegrunt',16,480),W('skeleton',8,800),W('farmer',3,1500),W('cornrunner',2,900,0.5)],
+   [W('jack',5,1200),W('skeleton',16,500),W('pumpkinbomber',7,900)],
+   [W('zombie',20,440),W('skeletonknight',4,1300),W('farmer',4,1300),W('cornrunner',2,800,0.6)],
+   [W('jack',6,1000),W('pumpkinbomber',10,700),W('zombiegrunt',18,430)],
+   [W('gravedigger',2,1200),W('skeleton',18,440),W('farmer',5,1200),W('jack',4,1100)],
+   [W('jack',8,900),W('skeletonknight',6,950),W('pumpkinbomber',12,700),W('cornrunner',3,700,0.5)],
+   [W('zombie',24,360),W('farmer',6,1000),W('skeletonknight',6,950),W('jack',6,950)],
+   [W('jack',10,850),W('pumpkinbomber',14,600),W('zombie',24,360),W('skeletonknight',7,900),W('farmer',7,1000),W('cornrunner',4,600,0.5)]]};
 fitNodes(ISLE_REGIONS);
 
 /* ---------- the Shroomed DLC: the Glowshroom Valley, a night island off the bottom-right corner (levels not built yet) ---------- */
@@ -3281,6 +3297,10 @@ SHROOM_REGIONS.forEach(r=>{ for(let i=0;i<r.levels;i++){
     shroom:true,prev:SHROOM_IDX.length?SHROOM_IDX[SHROOM_IDX.length-1]:null,
     hpMul:def&&def.hpMul||1.6,speedMul:def&&def.speedMul||1.05,startGold:def?def.startGold:450,lives:def?def.lives:20});
   SHROOM_IDX.push(gi); } });
+// the Pumpkin Farm's extra level sits after the valley's levels, so saved progress never shifts
+const PUMPKIN_X=LEVELS.length;
+LEVELS.push({region:ISLE_REGIONS[1],regionIndex:-1,indexInRegion:4,def:PUMPKIN_EXTRA_DEF,name:PUMPKIN_EXTRA_DEF.name,waves:PUMPKIN_EXTRA_DEF.waves.length,boss:false,
+  isle:true,extra:true,prev:ISLE_IDX[5],hpMul:PUMPKIN_EXTRA_DEF.hpMul,speedMul:PUMPKIN_EXTRA_DEF.speedMul,startGold:PUMPKIN_EXTRA_DEF.startGold,lives:PUMPKIN_EXTRA_DEF.lives});
 const TEST_SLOT=LEVELS.length;          // a hidden level the testing modes fill in
 LEVELS.push({region:REGIONS[0],regionIndex:0,indexInRegion:0,def:null,name:'Test',waves:1,boss:false,
   hpMul:1,speedMul:1,startGold:0,lives:20,test:true});
@@ -3522,8 +3542,17 @@ function buildMap(){
       <circle cx="${p.x}" cy="${p.y}" r="${rad+5}" fill="#0d1530" opacity=".7"/>
       <circle cx="${p.x}" cy="${p.y}" r="${rad+1.5}" fill="none" stroke="#7fe3ff" stroke-width="2.5" stroke-dasharray="4 5"/>
       <text x="${p.x}" y="${p.y+5}" text-anchor="middle" font-family="Bungee,'Russo One',sans-serif" font-size="13" fill="#cfefff">?</text></g>`; }
-  if(pumpkinSlot){ const p=pumpkinSlot, rad=14, open=pumpkinExtraOpen();
-    svg+=`<g class="lvNode locked" data-pumpkinx="0" opacity="${open?1:.6}">
+  if(pumpkinSlot&&pumpkinExtraOpen()){ const p=pumpkinSlot, rad=17, gi=PUMPKIN_X, done=!!completed[gi];
+    svg+=`<g class="lvNode" data-i="${gi}">
+      <circle cx="${p.x}" cy="${p.y}" r="${rad+8}" fill="none" stroke="#f0a050" stroke-width="3" stroke-dasharray="4 5" opacity=".9"/>
+      <ellipse cx="${p.x}" cy="${p.y+rad+7}" rx="${(rad*0.85).toFixed(0)}" ry="${(rad*0.3).toFixed(0)}" fill="#000" opacity=".3"/>
+      <circle cx="${p.x}" cy="${p.y}" r="${rad+6}" fill="#221E18"/>
+      <circle cx="${p.x}" cy="${p.y}" r="${rad+3}" fill="${done?'#7a5512':'#6a3410'}"/>
+      <circle cx="${p.x}" cy="${p.y}" r="${rad+1}" fill="${done?'url(#nodeGold)':'#e07b24'}"/>
+      <path d="M${(p.x-rad*0.55).toFixed(0)},${(p.y-rad*0.45).toFixed(0)} a${(rad*0.75).toFixed(0)},${(rad*0.75).toFixed(0)} 0 0 1 ${(rad*1.1).toFixed(0)},0" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="3" stroke-linecap="round"/>
+      <text x="${p.x}" y="${p.y+6}" text-anchor="middle" font-family="Bungee,'Russo One',sans-serif" font-size="15" fill="#F6EFD8">${done?'✓':'★'}</text></g>`; }
+  else if(pumpkinSlot){ const p=pumpkinSlot, rad=14;
+    svg+=`<g class="lvNode locked" data-pumpkinx="0" opacity=".6">
       <circle cx="${p.x}" cy="${p.y}" r="${rad+5}" fill="#3a2410" opacity=".7"/>
       <circle cx="${p.x}" cy="${p.y}" r="${rad+1.5}" fill="none" stroke="#f0a050" stroke-width="2.5" stroke-dasharray="4 5"/>
       <text x="${p.x}" y="${p.y+5}" text-anchor="middle" font-family="Bungee,'Russo One',sans-serif" font-size="13" fill="#ffe0b8">?</text></g>`; }
