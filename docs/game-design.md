@@ -74,6 +74,15 @@ A tower defense game. You place towers on grass tiles beside the road, and enemi
   - **Pumpkin Farm tower** (user's design 25 Oct 2026, reward for Old Barn Road): a pumpkin patch with a calm farmer hoeing it, 1.5x the Farm: 3.75 gold every 70 frames and +15 per wave (Farm: 2.5 and +10). Cost 110, max 5 per level (Claude's). Most players get it before the Farm, whose rainy-cloud secret stays hidden.
   - Jack o' lanterns are drawn after the corn, so tall stalks on the tile below never cover them; corn placed on a jack's own tile replaces it.
   - Pumpkin Farm waves (Claude's pick): Harvest Moon has corn runners on waves 3, 6, 8, 10 and farmers from wave 4; Scarecrow Rows has corn runners on waves 2, 5, 8, 11 and farmers from wave 3.
+  - **Ashen Wastes enemies** (user's design 25 Oct 2026; HP and the rules are the user's, speeds and gold Claude's; all `region:'halloween'`, drawn by `drawAshenShape`):
+    - **Phoenix**: 200 hp, speed 1.15, 20 gold, `flies` (Backup, the tank, Footmen and Firework soldiers ignore it and it is never hidden in corn; drawn up in the air with its shadow on the ground). On death it burns to ashes and a **Baby Phoenix** (175 hp, speed 2.3 = twice, 14 gold, also flies) digs out of the same spot.
+    - **Magma Golem**: 1750 hp, speed 0.4, 70 gold, `blastOnly`: only explosions hurt it (Cannon, Artillery, Grenade Throwers, Rocket Launcher, the Heavy Force tank blowing up; `hurt(e,dmg,kind,blast)`). Bullets, arrows, lightning, Fire Rain, poison, fire and soldiers do nothing (Claude's reading: Cannon counts as an explosive, Fire Rain meteors don't). A leak costs 3 lives (`lifeCost`). It crushes Backup soldiers, can't be swallowed by the Scorchwood. Not a boss.
+    - **Undead**: 250 hp, speed 0.85, 18 gold. On death it falls and gets up as a **Risen Undead** (500 hp, speed 1.275 = 1.5x, 22 gold, burning crest and red eyes).
+    - Reborn enemies (`reborn` in ENEMIES, `rebirth()`) keep the parent's HP/speed scaling and wave, and start `down` (baby 80 frames, risen 110): they don't move, can't be targeted or hurt and units pass them, so the wave doesn't end early.
+  - **Pompeii pyramid** (sandbox Ashen Wastes tab, 2×2, door at the bottom): stepped tufa pyramid dusted with ash, temple porch with two columns, ember brazier on top. The only place undead come from: every wave, 1.5–4.5 s in, the door opens and 2–4 Undead walk out to the nearest road, counting towards the wave.
+  - **Location trees** (25 Oct 2026, user's ask): on Pumpkin Farm ground every tree grows as an Autumn maple, Golden birch or Hollow oak (`FARM_SWAP`); on Ashen Wastes ground as a Charred tree (glowing cracks), Ash-covered pine or Petrified tree (`ASH_SWAP`). Scarecrows and fences stay as they are.
+  - **Thrice Loyalty** power (user's design 25 Oct 2026): reward for the last Ashen Wastes level (not built yet, so it can't be earned; the Testing app's enemy tester has it). 15 seconds of chaos: a lightning bolt on a random enemy every 0.5 s for 150, 2 poison puddles (the Poison Lake tiles, Claude's reading of "puddles") on the road every second, and a literal rain of fire drops that keeps every enemy burning (16 hp/s, lasting 3 s after). Cooldown 90 s. Numbers are Claude's.
+  - Note (found 25 Oct 2026): levels with a `def` ignore `hpMul` (`makeEnemy` uses scale 1 for them), so the island/valley levels' hpMul values don't change enemy HP.
   - **Zombie grunt**: pours out of an abandoned house when its door breaks; a grunt (100 hp, 1.0, 11 gold) that looks infected and bites like a zombie.
 - **Map obstacles:** trees and webbed ruins block building and can be cleared for gold: trees 100, ruins 75, webs 25. Solid webs can't be removed.
 - **Pause menu:** Resume, Settings, Shop ("coming soon"), and Save & Exit, which saves the run so you can continue it later from the main menu.
@@ -157,6 +166,7 @@ You start with 5 unit slots, which can be raised to 7 with gems.
 | Arrow Rain | Achievement |
 | Ice Age | Achievement |
 | Lightning | Achievement |
+| Thrice Loyalty | Beat the last Ashen Wastes level (not built yet) |
 
 You start with 2 power slots, which can be raised to 3 with gems.
 
