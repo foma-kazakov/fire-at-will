@@ -7509,10 +7509,15 @@ function hStyleInstalled(){ try{ return dlcAll().some(p=>p.style==='halloween');
 function refreshStyle(){ const on=hStyleInstalled()&&(dlcStore.style?dlcStore.style==='on':!TESTING_APP);
   if(on!==HSTYLE){ HSTYLE=on; towerIconCache=null; } return on; }
 function setStyle(on){ dlcStore.style=on?'on':'off'; dlcSave(); refreshStyle(); }
-function downloadStyle(){
-  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify(HSTYLE_PACK,null,1)],{type:'application/json'}));
+async function downloadStyle(){
+  const text=JSON.stringify(HSTYLE_PACK,null,1), m=document.getElementById('mapMsg');
+  const done=()=>{ if(m)m.textContent=t('Now drop halloween-style.json on the DLC screen (Main menu → DLC).'); };
+  // on the claude.ai play link a page may only hand over files through the viewer's save prompt
+  let dl=null; try{ if(window.claude&&window.claude.use)dl=await window.claude.use('downloads'); }catch(e){}
+  if(dl){ try{ await dl.save({filename:'halloween-style.json',data:text}); done(); }catch(e){} return; }
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([text],{type:'application/json'}));
   a.download='halloween-style.json'; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },500);
-  const m=document.getElementById('mapMsg'); if(m)m.textContent=t('Now drop halloween-style.json on the DLC screen (Main menu → DLC).');
+  done();
 }
 // the strip above the campaign map: a download button, or the switch once the pack is installed
 function buildStyleBar(){
