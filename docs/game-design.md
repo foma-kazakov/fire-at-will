@@ -87,8 +87,9 @@ A tower defense game. You place towers on grass tiles beside the road, and enemi
     - Lava puddles and **magma cracks** (a road overlay like the thorny path) work like the Poison Lake's poison tiles but against you: your units on them (Backup, tanks, Footmen, Firework soldiers) catch fire, losing 12 hp a second until 1.5 s after they step off (`burning`, `UNIT_BURN_DPS`). Enemies aren't hurt (coordinator's reading of the user's "like poison tiles but for you").
     - **Ember brazier**: decor only (a fire bowl on three legs); works like a tree (blocks building, clear for 100 gold). The lava, its puddles, the cracks and braziers glow at night (`drawAshGlows`).
   - **Cinder Crossing** (Ashen Wastes level 1, 25 Oct 2026, the user's map): two roads from the top edge meet just before the base. The west one crosses the lava river on a 2-tile stone bridge with magma cracks on both ends; the east one has a magma crack stretch. Claude's balance: 650 gold, 20 lives, ×2 HP, ×1.05 speed, 11 waves of phoenixes from wave 1, Magma Golems from wave 4 (1, then 2–3), with zombies, grunts, skeletons and skeleton knights mixed in. No undead or lava slimes, since the map has no pyramid or lava spawn.
+  - **Ashfall Citadel** (Ashen Wastes level 2, the island's 9th and boss spot, 25 Oct 2026, the user's large map): 4 spawns (two on the west edge, one top right, one at the bottom), two bases, the bottom road crosses a 3-tile stone bridge, 2 pyramids send undead and 2 lava spawns send lava slimes. Meant as maximum difficulty. Claude's balance: 900 gold, 20 lives, ×1.1 speed, 15 waves building to 42 phoenixes and 10 Magma Golems in the last wave. Beating it unlocks Thrice Loyalty. No boss yet (asked the user).
   - **Location trees** (25 Oct 2026, user's ask): on Pumpkin Farm ground every tree grows as an Autumn maple, Golden birch or Hollow oak (`FARM_SWAP`); on Ashen Wastes ground as a Charred tree (glowing cracks), Ash-covered pine or Petrified tree (`ASH_SWAP`). Scarecrows and fences stay as they are.
-  - **Thrice Loyalty** power (user's design 25 Oct 2026): reward for the last Ashen Wastes level (not built yet, so it can't be earned; the Testing app's enemy tester has it). 15 seconds of chaos: a lightning bolt on a random enemy every 0.5 s for 150, 2 poison puddles (the Poison Lake tiles, Claude's reading of "puddles") on the road every second, and a literal rain of fire drops that keeps every enemy burning (16 hp/s, lasting 3 s after). Cooldown 90 s. Numbers are Claude's.
+  - **Thrice Loyalty** power (user's design 25 Oct 2026): reward for beating Ashfall Citadel, the last Ashen Wastes level (`powerReward:'thriceLoyalty'` on the level def, given in `endGame`). 15 seconds of chaos: a lightning bolt on a random enemy every 0.5 s for 150, 2 poison puddles (the Poison Lake tiles, Claude's reading of "puddles") on the road every second, and a literal rain of fire drops that keeps every enemy burning (16 hp/s, lasting 3 s after). Cooldown 90 s. Numbers are Claude's.
   - Note (found 25 Oct 2026): levels with a `def` ignore `hpMul` (`makeEnemy` uses scale 1 for them), so the island/valley levels' hpMul values don't change enemy HP.
   - **Zombie grunt**: pours out of an abandoned house when its door breaks; a grunt (100 hp, 1.0, 11 gold) that looks infected and bites like a zombie.
 - **Map obstacles:** trees and webbed ruins block building and can be cleared for gold: trees 100, ruins 75, webs 25. Solid webs can't be removed.
@@ -175,7 +176,7 @@ You start with 5 unit slots, which can be raised to 7 with gems.
 | Arrow Rain | Achievement |
 | Ice Age | Achievement |
 | Lightning | Achievement |
-| Thrice Loyalty | Beat the last Ashen Wastes level (not built yet) |
+| Thrice Loyalty | Beat Ashfall Citadel (last Ashen Wastes level) |
 
 You start with 2 power slots, which can be raised to 3 with gems.
 
