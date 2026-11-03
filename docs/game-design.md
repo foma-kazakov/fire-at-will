@@ -226,6 +226,10 @@ You start with 2 power slots, which can be raised to 3 with gems.
 | `BUSS` | Remove the LUSS bonus |
 | `RESET` | Wipe all progress |
 | `TEST` | Says Testing is its own app now |
+| `SOUND` | Switches the Sound Pack music on (works without the DLC file) |
+| `CLASSIC` | Back to the classic music |
+
+**Sound Pack (3 Nov 2026, foma):** new music, made in the game with a small synth (no audio files). 17 tracks: main menu (strings, harp, horn, birds), campaign map, each main land (Fields folk, Dark Forest bells and owls, Deserts oud and hand drums, Cold Mountains choir and glass, Jungle marimba, Scorched Depths driving synth bass and fire, Kingdom brass march), the Halloween lands (Graveyard music-box waltz with crows, Pumpkin Farm swinging fiddle and banjo, Ashen Wastes taiko and choir, Wretched Woodland tritone drone and drips), Shroomed (Glowshroom Valley glassy night arpeggios, Seashroom Shore harp and sea waves), the Beach (steel pan calypso, gulls) and a Boss theme that takes over while any boss is on the field. Sandbox maps pick the track from their ground colour. Tracks are data in `SOUND_PACK` (patterns of 16th notes) and `node scripts/make-testing.js` writes them out as [dlc/sound-pack.json](../dlc/sound-pack.json); an installed pack's tracks win over the built-in ones, so the file can be edited to change the music. The on/off choice is in `fireAtWill.soundtrack` (never in progress); with no choice made it is on when the pack is installed (off in Testing, where it is built in). The track choices are mine; foma can ask for changes per track.
 
 ---
 
