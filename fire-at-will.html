@@ -1253,8 +1253,8 @@ function beep(freq,dur,type,kind){
   o.connect(g); g.connect(actx.destination);
   o.start(); o.stop(actx.currentTime+dur);
 }
-function playShoot(){ beep(880,0.08,'square','sound'); }
-function playDeath(){ beep(180,0.25,'sawtooth','sound'); }
+function playShoot(){ if(typeof sndSfx==='function'&&sndSfx('shoot'))return; beep(880,0.08,'square','sound'); }
+function playDeath(){ if(typeof sndSfx==='function'&&sndSfx('death'))return; beep(180,0.25,'sawtooth','sound'); }
 
 function stopMusic(){
   musicTimers.forEach(id=>clearInterval(id));
@@ -1476,21 +1476,20 @@ function resetProgress(){
   location.reload();
 }
 /* ---------- Sound Pack: new music for the menu, the map, every biome, the DLC lands and bosses ----------
-   Switched on by the Sound Pack DLC (dlc/sound-pack.json) or the code SOUND, and off again with CLASSIC.
-   The tracks are data (below, and in the DLC file, whose tracks win when it is installed), played by a small synth:
+   The music and sounds live only in the Sound Pack DLC (dlc/sound-pack.json): drop it on the DLC screen and the game sounds new.
+   CLASSIC switches it off again and SOUND back on (only while the pack is installed). The file's tracks are played by a small synth:
    each layer is a pattern of 16th notes ('.' rest, '-' hold, 'x'/'o' drum hit/soft hit, 'C4+E4' chord).
    The switch lives in 'fireAtWill.soundtrack', never in saved progress. */
-const SOUND_PACK=/*sound-pack*/{"fireAtWillDLC":1,"id":"sound-pack","name":"Sound Pack","author":"foma","version":"1.0","description":"New music for the menu, the campaign map, every biome, the DLC lands and boss fights. Switch it on and off on the DLC screen, or with the codes SOUND and CLASSIC.","music":"sound","levels":[],"tracks":{"menu":{"name":"Main menu","bpm":88,"rev":0.4,"dly":0.12,"amb":["birds"],"layers":[{"i":"strings","v":1,"p":"D3+F#3+A3 - - - - - - - - - - - - - - - B2+D3+F#3 - - - - - - - - - - - - - - - G2+B2+D3 - - - - - - - - - - - - - - - A2+C#3+E3 - - - - - - - - - - - - - - -"},{"i":"sub","v":0.8,"p":"D2 - - - - - - - - - - - - - - - B1 - - - - - - - - - - - - - - - G1 - - - - - - - - - - - - - - - A1 - - - - - - - - - - - - - - -"},{"i":"harp","v":0.9,"p":"D4 . F#4 . A4 . D5 . A4 . F#4 . D4 . F#4 . B3 . D4 . F#4 . B4 . F#4 . D4 . B3 . D4 . G3 . B3 . D4 . G4 . D4 . B3 . G3 . B3 . A3 . C#4 . E4 . A4 . E4 . C#4 . A3 . C#4 .","d":0.2},{"i":"brass","v":0.8,"p":"A4 - - - F#4 - A4 - D5 - - - - - - - C#5 - - - B4 - - - F#4 - - - - - - - G4 - - - A4 - B4 - D5 - - - B4 - - - A4 - - - - - - - - - - - . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ."},{"i":"flute","v":0.7,"p":". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . F#5 - - - - - E5 - D5 - - - - - - - D5 - - - C#5 - - - B4 - - - - - - - B4 - - - C#5 - - - D5 - - - E5 - - - C#5 - - - - - - - - - - - . . . ."},{"i":"timp","v":0.6,"p":"D2 . . . . . . . A1 . . . . . . . D2 . . . . . . . A1 . . . . . . . D2 . . . . . . . A1 . . . . . . . D2 . . . . . . . A1 . . . . . . ."}]},"map":{"name":"Campaign map","bpm":100,"rev":0.3,"dly":0.18,"amb":["birds"],"layers":[{"i":"pluck","v":0.8,"p":"G3 . D4 . B3 . G4 . D4 . B3 . G3 . D4 . E3 . B3 . G3 . E4 . B3 . G3 . E3 . B3 . C3 . G3 . E3 . C4 . G3 . E3 . C3 . G3 . D3 . A3 . F#3 . D4 . A3 . F#3 . D3 . A3 .","d":0.3},{"i":"warm","v":0.7,"p":"G3+B3+D4 - - - - - - - - - - - - - - - E3+G3+B3 - - - - - - - - - - - - - - - C3+E3+G3 - - - - - - - - - - - - - - - D3+F#3+A3 - - - - - - - - - - - - - - -"},{"i":"bass","v":0.8,"p":"G2 - - . . . G2 - . . . . D2 - - - E2 - - . . . E2 - . . . . B1 - - - C2 - - . . . C2 - . . . . G1 - - - D2 - - . . . D2 - . . . . A1 - - -"},{"i":"flute","v":0.8,"p":"D5 - - - B4 - G4 - A4 - - - B4 - - - G4 - - - - - - - E4 - - - G4 - - - E5 - - - D5 - - - C5 - - - B4 - - - A4 - - - - - G4 - F#4 - - - A4 - - - . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ."},{"i":"celesta","v":0.5,"p":". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . B5 - . . D6 - . . . . . . G5 - - - . . . . . . . . . . . . . . . . C6 - . . E6 - . . . . . . A5 - - - . . . . . . . . . . . . . . . ."},{"i":"shaker","v":0.7,"p":". o . x . o . x . o . x . o . x"},{"i":"kick","v":0.6,"p":"x . . . . . . . x . . . . . . ."}]},"fields":{"name":"The Fields","bpm":116,"rev":0.22,"amb":["birds"],"layers":[{"i":"banjo","v":0.8,"p":"C4 . E4 . G4 . E4 . C5 . E4 . G4 . E4 . A3 . C4 . E4 . C4 . A4 . C4 . E4 . C4 . F3 . A3 . C4 . A3 . F4 . A3 . C4 . A3 . G3 . B3 . D4 . B3 . G4 . B3 . D4 . B3 ."},{"i":"bass","v":0.9,"p":"C2 - - - . . . . G2 - - - . . . . A1 - - - . . . . E2 - - - . . . . F1 - - - . . . . C2 - - - . . . . G1 - - - . . . . D2 - - - . . . ."},{"i":"flute","v":0.8,"p":"E5 - G5 - C6 - - - B5 - A5 - G5 - - - A5 - - - E5 - - - C5 - - - - - - - A4 - C5 - F5 - - - E5 - D5 - C5 - - - D5 - - - - - B4 - G4 - - - - - - - C5 - E5 - G5 - - - G5 - A5 - G5 - - - E5 - - - C5 - - - A4 - - - - - - - F5 - E5 - D5 - C5 - A4 - - - C5 - - - B4 - - - D5 - - - C5 - - - - - - -"},{"i":"kick","v":0.7,"p":"x . . . . . . . x . . . . . . ."},{"i":"clap","v":0.5,"p":". . . . x . . . . . . . x . . ."},{"i":"hat","v":0.5,"p":". . x . . . x . . . x . . . x ."}]},"forest":{"name":"Dark Forest","bpm":80,"rev":0.55,"dly":0.2,"amb":["owl","wind"],"layers":[{"i":"pad","v":0.9,"p":"A2+C3+E3 - - - - - - - - - - - - - - - F2+A2+C3 - - - - - - - - - - - - - - - G2+B2+D3 - - - - - - - - - - - - - - - E2+G2+B2 - - - - - - - - - - - - - - -"},{"i":"sub","v":0.8,"p":"A1 - - - - - - - - - - - - - - - F1 - - - - - - - - - - - - - - - G1 - - - - - - - - - - - - - - - E1 - - - - - - - - - - - - - - -"},{"i":"bell","v":0.7,"p":"E5 - - - - - C5 - - - - - A4 - - - . . . . . . . . . . . . . . . . D5 - - - - - B4 - - - - - G4 - - - . . . . . . . . B4 - - - G#4 - - -","d":0.35},{"i":"tom","v":0.5,"p":"A1 . . . . . . . . . A1 . . . . . A1 . . . . . . . . . A1 . . . . . A1 . . . . . . . . . A1 . . . . . A1 . . . . . . . . . A1 . . . . ."},{"i":"choir","v":0.45,"p":". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . E4 - - - - - - - - - - - - - - - B3 - - - - - - - - - - - - - - -"}]},"desert":{"name":"The Deserts","bpm":96,"rev":0.3,"dly":0.15,"amb":["wind"],"layers":[{"i":"drone","v":1.1,"p":"E2+B2 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"},{"i":"oud","v":1.4,"p":"E4 - F4 - G#4 - - - A4 - G#4 - F4 - E4 - . E4 F4 G#4 B4 - - - A4 - G#4 - A4 - - - F4 - - - E4 - - - - - - - B4 - C5 - B4 - A4 - G#4 - - - A4 - B4 - C5 - - - B4 - A4 - G#4 - - - F4 - G#4 - F4 - E4 - D4 - E4 - - - - - . . . . . . . ."},{"i":"tom","v":1.1,"p":"E2 . . . . . E2 . E2 . . . . . . . E2 . . . . . E2 . E2 . . . . . . . E2 . . . . . E2 . E2 . . . . . . . E2 . . . . . E2 . E2 . . . . . . ."},{"i":"rim","v":0.6,"p":". . . x . x . . . . . x . x x ."},{"i":"shaker","v":0.4,"p":"x . o . x . o . x . o . x . o ."}]},"mountain":{"name":"Cold Mountains","bpm":72,"rev":0.65,"dly":0.3,"amb":["wind"],"layers":[{"i":"choir","v":0.8,"p":"D3+F3+A3 - - - - - - - - - - - - - - - A#2+D3+F3 - - - - - - - - - - - - - - - F2+A2+C3 - - - - - - - - - - - - - - - C3+E3+G3 - - - - - - - - - - - - - - -"},{"i":"glass","v":0.7,"p":"D5 . F5 . A5 . D6 . A5 . F5 . D5 . F5 . A#4 . D5 . F5 . A#5 . F5 . D5 . A#4 . D5 . A4 . C5 . F5 . A5 . F5 . C5 . A4 . C5 . G4 . C5 . E5 . G5 . E5 . C5 . G4 . C5 .","d":0.4},{"i":"sub","v":0.7,"p":"D1 - - - - - - - - - - - - - - - A#0 - - - - - - - - - - - - - - - F1 - - - - - - - - - - - - - - - C1 - - - - - - - - - - - - - - -"},{"i":"timp","v":0.5,"p":"D2 . . . . . . . . . . . . . . . D2 . . . . . . . . . . . . . . . D2 . . . . . . . . . . . . . . . D2 . . . . . . . . . . . . . . ."}]},"jungle":{"name":"The Jungle","bpm":112,"rev":0.25,"amb":["birds","crickets"],"layers":[{"i":"marimba","v":0.9,"p":"G4 . D5 . A#4 G4 . F4 . G4 . D5 C5 . A#4 . G4 . D5 . A#4 G4 . F4 . A#4 . C5 D5 . F5 ."},{"i":"bass","v":0.9,"p":"G2 - . G2 - . A#2 C3 - . C3 - . F2 - ."},{"i":"tom","v":0.6,"p":"D3 . . D3 . . G2 . D3 . G2 . . . G2 ."},{"i":"shaker","v":0.5,"p":"x o x o x o x o x o x o x o x o"},{"i":"kick","v":0.6,"p":"x . . . . . . . x . . x . . . ."},{"i":"flute","v":0.6,"p":". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . D5 - - F5 - - G5 - - - - - - - - - . . . . . . . . . . . . . . . . F5 - - D5 - - C5 - A#4 - - - - - - - G4 - - - - - - - - - - - - - - -"}]},"hell":{"name":"Scorched Depths","bpm":132,"rev":0.2,"amb":["fire"],"layers":[{"i":"synthbass","v":1.3,"p":"C2 . C2 C3 . C2 D#2 . C2 . G2 . F2 . D#2 . G#1 . G#1 G#2 . G#1 C2 . G#1 . D#2 . C2 . G#1 . A#1 . A#1 A#2 . A#1 D2 . A#1 . F2 . D2 . A#1 . G1 . G1 G2 . G1 B1 . G1 . D2 . B1 . D2 ."},{"i":"organ","v":0.6,"p":"C3+D#3+G3 - - - - - - - - - - - - - - - G#2+C3+D#3 - - - - - - - - - - - - - - - A#2+D3+F3 - - - - - - - - - - - - - - - G2+B2+D3 - - - - - - - - - - - - - - -"},{"i":"lead","v":0.7,"p":". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . C5 - D#5 - G5 - - - G#5 - G5 - D#5 - - - F5 - - - D#5 - D5 - C5 - - - - - - - G#4 - - - C5 - - - D#5 - - - D5 - - - B4 - - - - - - - G4 - - - - - - -"},{"i":"kick","v":0.8,"p":"x . . . x . . . x . . . x . . ."},{"i":"snare","v":0.6,"p":". . . . x . . . . . . . x . . ."},{"i":"hat","v":0.4,"p":"x o x o x o x o x o x o x o x o"}]},"kingdom":{"name":"The Kingdom","bpm":108,"rev":0.35,"amb":[],"layers":[{"i":"brass","v":0.9,"p":"F4 - A4 - C5 - - - A4 - C5 - F5 - - - E5 - D5 - C5 - A#4 - A4 - - - G4 - - - F4 - A4 - C5 - - - D5 - C5 - A#4 - - - A4 - G4 - F4 - - - G4 - - - A4 - A#4 - C5 - - - D5 - - - C5 - - - A#4 - A4 - G4 - - - A4 - - - C5 - - - F5 - - - - - E5 - D5 - - - C5 - - - A#4 - - - G4 - - - F4 - - - - - - - . . . ."},{"i":"strings","v":0.7,"p":"F3+A3+C4 - - - - - - - - - - - - - - - A#2+D3+F3 - - - - - - - - - - - - - - - C3+E3+G3 - - - - - - - - - - - - - - - F3+A3+C4 - - - - - - - - - - - - - - - D3+F3+A3 - - - - - - - - - - - - - - - A#2+D3+F3 - - - - - - - - - - - - - - - C3+E3+G3 - - - - - - - - - - - - - - - F2+A2+C3 - - - - - - - - - - - - - - -"},{"i":"bass","v":0.8,"p":"F2 - . . C2 - . . F2 - . . C2 - . . A#1 - . . F2 - . . A#1 - . . F2 - . . C2 - . . G2 - . . C2 - . . G2 - . . F2 - . . C2 - . . F2 - . . C2 - . . F2 - . . C2 - . . F2 - . . C2 - . . A#1 - . . F2 - . . A#1 - . . F2 - . . C2 - . . G2 - . . C2 - . . G2 - . . F2 - . . C2 - . . F2 - . . C2 - . ."},{"i":"snare","v":0.6,"p":"x . o o x . o . x . o o x . x x"},{"i":"timp","v":0.6,"p":"F2 . . . . . . . C2 . . . . . . ."},{"i":"crash","v":0.4,"p":"x . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ."}]},"graveyard":{"name":"The Graveyard","bpm":84,"rev":0.6,"amb":["crows","wind"],"layers":[{"i":"organ","v":1.2,"p":"D2 - - - D3+F3+A3 - - - D3+F3+A3 - - - G1 - - - G2+A#2+D3 - - - G2+A#2+D3 - - - A1 - - - A2+C#3+G3 - - - A2+C#3+G3 - - - D2 - - - D3+F3+A3 - - - D3+F3+A3 - - -"},{"i":"celesta","v":1.4,"p":"A5 - - - F5 - D5 - - - E5 - F5 - - - G5 - A#5 - - - A5 - G5 - - - E5 - C#5 - - - E5 - D5 - - - - - - - - - - - F5 - - - E5 - D5 - - - A4 - A#4 - - - D5 - G5 - - - F5 - E5 - - - G5 - A5 - - - C#5 - D5 - - - - - - - - - - -","d":0.3},{"i":"tick","v":0.3,"p":"x . . . o . . . o . . ."}]},"pumpkin":{"name":"Pumpkin Farm","bpm":126,"swing":0.18,"rev":0.25,"amb":["crickets"],"layers":[{"i":"fiddle","v":0.8,"p":"E4 - G4 - B4 - G4 - A4 - B4 - G4 - - - C5 - B4 - A4 - G4 - E4 - - - . . . . D4 - F#4 - A4 - F#4 - G4 - A4 - F#4 - - - B4 - A4 - G4 - F#4 - D#4 - - - B3 - - -"},{"i":"banjo","v":0.6,"p":"E3 . G4 . E4 . G4 . B3 . G4 . E4 . G4 . C3 . E4 . C4 . E4 . G3 . E4 . C4 . E4 . D3 . F#4 . D4 . F#4 . A3 . F#4 . D4 . F#4 . B2 . D#4 . A3 . D#4 . F#3 . D#4 . A3 . D#4 ."},{"i":"bass","v":0.9,"p":"E2 - . . B2 - . . E2 - . . G2 - . . C2 - . . G2 - . . C2 - . . E2 - . . D2 - . . A2 - . . D2 - . . F#2 - . . B1 - . . F#2 - . . B1 - . . D#2 - . ."},{"i":"kick","v":0.7,"p":"x . . . . . . . x . . . . . . ."},{"i":"clap","v":0.5,"p":". . . . x . . . . . . . x . . ."},{"i":"shaker","v":0.4,"p":"x . o . x . o . x . o . x . o ."}]},"ashen":{"name":"Ashen Wastes","bpm":92,"rev":0.4,"amb":["fire"],"layers":[{"i":"taiko","v":1,"p":"x . . x . . x . x . x . . . x ."},{"i":"choir","v":0.7,"p":"F2+G#2+C3 - - - - - - - - - - - - - - - C#2+F2+G#2 - - - - - - - - - - - - - - - D#2+G2+A#2 - - - - - - - - - - - - - - - C2+E2+G2 - - - - - - - - - - - - - - -"},{"i":"sub","v":0.8,"p":"F1 - - - - - - - - - - - - - - - C#1 - - - - - - - - - - - - - - - D#1 - - - - - - - - - - - - - - - C1 - - - - - - - - - - - - - - -"},{"i":"brass","v":0.7,"p":"F3 - - F3 - - G#3 - C4 - - - - - - - C#4 - - C4 - - G#3 - F3 - - - - - - - D#3 - - G3 - - A#3 - D#4 - - - - - - - E4 - - C4 - - G3 - E3 - - - - - - -"},{"i":"tom","v":0.5,"p":". . . . . . . . . . . . C2 C2 G1 G1"}]},"wretched":{"name":"Wretched Woodland","bpm":58,"rev":0.7,"dly":0.35,"amb":["drips","wind"],"layers":[{"i":"drone","v":1.2,"p":"A1+D#2 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"},{"i":"bell","v":0.6,"p":"A4 - - - - - A#4 - - - - - - - - - . . . . . . . . . . . . . . . . D#5 - - - - - D5 - - - - - - - - - . . . . . . . . . . . . . . . .","d":0.5},{"i":"choir","v":0.35,"p":". . . . . . . . . . . . . . . . E4 - - - - - - - - - - - - - - - . . . . . . . . . . . . . . . . F4 - - - - - - - - - - - - - - -"},{"i":"kick","v":0.5,"p":"x . . x . . . . . . . . . . . . x . . x . . . . . . . . . . . ."}]},"glowshroom":{"name":"The Glowshroom Valley","bpm":84,"rev":0.55,"dly":0.35,"amb":["twinkle","crickets"],"layers":[{"i":"warm","v":0.8,"p":"F#3+A3+C#4 - - - - - - - - - - - - - - - D3+F#3+A3 - - - - - - - - - - - - - - - A2+C#3+E3 - - - - - - - - - - - - - - - E3+G#3+B3 - - - - - - - - - - - - - - -"},{"i":"glass","v":0.7,"p":"F#4 . . C#5 . . A5 . . E5 . . F#4 . . C#5 D4 . . A4 . . F#5 . . C#5 . . D4 . . A4 A3 . . E4 . . C#5 . . B4 . . A3 . . E4 E4 . . B4 . . G#5 . . D#5 . . E4 . . B4","d":0.45},{"i":"sub","v":0.7,"p":"F#1 - - - - - - - - - - - - - - - D1 - - - - - - - - - - - - - - - A1 - - - - - - - - - - - - - - - E1 - - - - - - - - - - - - - - -"},{"i":"hat","v":0.25,"p":". . o . . . o . . . o . . . o ."}]},"fungal":{"name":"The Seashroom Shore","bpm":72,"rev":0.6,"dly":0.3,"amb":["waves","bubbles"],"layers":[{"i":"warm","v":0.7,"p":"D#3+G3+A#3+D4 - - - - - - - - - - - - - - - F3+A3+C4+D#4 - - - - - - - - - - - - - - - C3+D#3+G3+A#3 - - - - - - - - - - - - - - - G#2+C3+D#3+G3 - - - - - - - - - - - - - - -"},{"i":"harp","v":0.8,"p":"D#4 . A#4 . D5 . G5 . D5 . A#4 . D#4 . A#4 . F4 . A4 . C5 . D#5 . C5 . A4 . F4 . A4 . C4 . G4 . A#4 . D#5 . A#4 . G4 . C4 . G4 . G#3 . D#4 . G4 . C5 . G4 . D#4 . G#3 . D#4 .","d":0.35},{"i":"bell","v":0.6,"p":". . . . . . . . G5 - - - - - - - A5 - - - - - - - F5 - - - - - - - G5 - - - - - - - - - - - - - - - D#5 - - - - - - - C5 - - - - - - - . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ."},{"i":"sub","v":0.7,"p":"D#1 - - - - - - - - - - - - - - - F1 - - - - - - - - - - - - - - - C1 - - - - - - - - - - - - - - - G#0 - - - - - - - - - - - - - - -"}]},"beach":{"name":"Beach","bpm":120,"rev":0.2,"amb":["waves","gulls"],"layers":[{"i":"steel","v":0.9,"p":"C5 . A4 . C5 F5 . . E5 . C5 . D5 - - - C5 . A4 . F4 . A4 C5 . A#4 . A4 . G4 - - C5 . A4 . C5 F5 . . G5 . F5 . E5 - - - D5 . C5 . A4 G4 A4 - F4 - - - - - - -"},{"i":"bass","v":0.9,"p":"F2 - . F2 - . C2 - F2 - . A2 - . C3 - A#1 - . A#1 - . F2 - A#1 - . D2 - . F2 - C2 - . C2 - . G2 - C2 - . E2 - . G2 - F2 - . F2 - . C2 - F2 - . A2 - . C3 -"},{"i":"rim","v":0.6,"p":"x . . x . . x . . . x . x . . ."},{"i":"shaker","v":0.5,"p":"x o x o x o x o x o x o x o x o"},{"i":"kick","v":0.6,"p":"x . . . . . . . x . . . . . . ."}]},"boss":{"name":"Boss","bpm":144,"rev":0.25,"amb":[],"layers":[{"i":"synthbass","v":1,"p":"C2 C2 C3 C2 C2 C2 D#2 C2 C2 C2 G2 C2 F2 C2 D#2 D2 C2 C2 C3 C2 C2 C2 D#2 C2 C2 C2 G2 C2 F2 C2 D#2 D2 G#1 G#1 G#2 G#1 G#1 G#1 C2 G#1 A#1 A#1 A#2 A#1 A#1 A#1 D2 A#1 G1 G1 G2 G1 G1 G1 B1 G1 G1 G1 D2 G1 B1 G1 D2 F2"},{"i":"strings","v":0.6,"p":"C4 . D#4 . G4 . D#4 . C4 . D#4 . G4 . D#4 . C4 . D#4 . G4 . C5 . C4 . D#4 . G4 . C5 . C4 . D#4 . G#4 . D#4 . C4 . D#4 . G#4 . D#4 . B3 . D4 . G4 . B4 . B3 . D4 . G4 . B4 ."},{"i":"brass","v":0.8,"p":"C4+D#4+G4 - - . . . C4+D#4+G4 - . . . . . . . . C4+D#4+G4 - - . . . D4+F4+A#4 - . . . . . . . . C4+D#4+G#4 - - . . . C4+D#4+G#4 - . . . D4+F4+A#4 - - - - B3+D4+G4 - - - - - . . B3+D4+F4 - - - - - - -"},{"i":"taiko","v":0.9,"p":"x . . . . . x . x . . . . . . ."},{"i":"kick","v":0.7,"p":"x . . . x . . . x . . . x . . ."},{"i":"snare","v":0.6,"p":". . . . x . . . . . . . x . . x"},{"i":"crash","v":0.4,"p":"x . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ."}]}}}/*/sound-pack*/;
 const SND_KEY='fireAtWill.soundtrack';
 const SND={id:null,home:null,bus:null,rev:null,dly:null,noise:null,next:0,step:0,layers:null,trk:null,stepDur:0.17,loops:[]};
 function sndPackInstalled(){ try{ return dlcAll().find(p=>p.music==='sound')||null; }catch(e){ return null; } }
 function sndStored(){ try{ return localStorage.getItem(SND_KEY); }catch(e){ return null; } }
 // on with the code SOUND or by default once the pack is installed (the Testing app has it built in, so there it starts off)
-function soundOn(){ const s=sndStored(); return s?s==='on':(!!sndPackInstalled()&&!TESTING_APP); }
+function soundOn(){ const p=sndPackInstalled(); if(!p||!p.tracks)return false; const s=sndStored(); return s?s==='on':!TESTING_APP; }
 function setSoundPack(on){ try{ localStorage.setItem(SND_KEY,on?'on':'off'); }catch(e){} restartMusic(); }
 function restartMusic(){ if(!actx)return; stopMusic();
   if(document.getElementById('gameScreen').classList.contains('active'))startBattleMusic(); else startMenuMusic(); }
-function sndTrack(id){ const p=sndPackInstalled(); return (p&&p.tracks&&p.tracks[id])||SOUND_PACK.tracks[id]||SOUND_PACK.tracks.fields; }
+function sndTrack(id){ const p=sndPackInstalled(), T=(p&&p.tracks)||{}; return T[id]||T.fields||{bpm:100,layers:[]}; }
 const SND_NOTE={C:0,D:2,E:4,F:5,G:7,A:9,B:11};
 function sndFreq(tok){ const m=/^([A-G])([#b]?)(-?\d)$/.exec(tok); if(!m)return 0;
   const n=SND_NOTE[m[1]]+(m[2]==='#'?1:m[2]==='b'?-1:0)+12*(+m[3]+1); return 440*Math.pow(2,(n-69)/12); }
@@ -1636,6 +1635,21 @@ function sndStart(id){
   musicStopFns.push(()=>{ const now=actx.currentTime; try{ myBus.gain.cancelScheduledValues(now); myBus.gain.setValueAtTime(myBus.gain.value,now); myBus.gain.linearRampToValueAtTime(0.0001,now+0.6); }catch(e){}
     setTimeout(()=>{ loops.forEach(f=>f()); try{ myBus.disconnect(); }catch(e){} },900); });
 }
+// the pack's sound effects: each is a list of [instrument, note, volume, start (s), length (s)]
+let sndSfxLast={};
+function sndSfx(name){
+  if(!actx||!soundOn())return false;
+  const p=sndPackInstalled(), fx=p&&p.sfx&&p.sfx[name]; if(!Array.isArray(fx))return false;
+  const lvl=gainFor('sound'); if(lvl<=0.0005)return true;
+  const now=actx.currentTime;
+  if(name==='shoot'||name==='death'){ if(now-(sndSfxLast[name]||0)<0.045)return true; sndSfxLast[name]=now; }   // a busy field stays listenable
+  sndSetup();
+  if(!SND.sfx){ SND.sfx=actx.createGain(); SND.sfx.connect(actx.destination); }
+  SND.sfx.gain.value=lvl*1.6;
+  fx.forEach(v=>{ if(!Array.isArray(v))return; const ins=SND_INST[v[0]]; if(!ins)return;
+    try{ ins(sndFreq(String(v[1]||''))||0,now+0.01+Math.max(0,+v[3]||0),Math.max(0.02,+v[4]||0.1),Math.min(2,Math.max(0,v[2]==null?1:+v[2])),SND.sfx); }catch(e){} });
+  return true;
+}
 // which track a battle gets: the land the level is on (sandbox maps by their ground colour)
 function sndBattleId(){
   const th=theme; if(!th)return 'fields';
@@ -1643,7 +1657,7 @@ function sndBattleId(){
   const isle=groundRegion(g); if(isle)return isle;
   const main=REGIONS.find(r=>r.ground.toLowerCase()===g||(r.ground2&&r.ground2.toLowerCase()===g));
   if(main)return main.id;
-  return SOUND_PACK.tracks[th.id]?th.id:'fields';
+  return th.id||'fields';
 }
 // while a boss is on the field the boss theme plays, then the land's own music comes back
 function sndBossCheck(){
@@ -1656,9 +1670,10 @@ function sndBossCheck(){
 function sndMenu(){ SND.home=null; sndStart(document.getElementById('mapScreen').classList.contains('active')?'map':'menu'); }
 function sndBattle(){ setTimeout(()=>{ if(!soundOn()||!document.getElementById('gameScreen').classList.contains('active'))return;
   const id=sndBattleId(); SND.home=id; sndStart(id); },0); }
-Object.assign(I18N.ru,{"Sound pack on: new music for the menu, the map, every land and the bosses.":"Звуковой пакет включён: новая музыка для меню, карты, всех земель и боссов.",
-  "Classic music is back.":"Классическая музыка вернулась.","Sound pack: on":"Звуковой пакет: вкл.","Sound pack: off":"Звуковой пакет: выкл.",
-  "Gives the game new music":"Даёт игре новую музыку",
+Object.assign(I18N.ru,{"Sound pack on: new music and sounds.":"Звуковой пакет включён: новая музыка и звуки.","Drop sound-pack.json on the DLC screen first (Main menu → DLC).":"Сначала перетащите sound-pack.json на экран DLC (Главное меню → DLC).",
+  "Classic music and sounds are back.":"Классическая музыка и звуки вернулись.","Sound pack: on":"Звуковой пакет: вкл.","Sound pack: off":"Звуковой пакет: выкл.",
+  "Gives the game new music and sounds":"Даёт игре новую музыку и звуки",
+  "New sounds for Fire at Will: music for the menu, the campaign map, every land, the DLC lands and boss fights, plus new shooting, hit, building, wave and win/lose sounds. Drop this file on the DLC screen. Switch it off and on with the codes CLASSIC and SOUND.":"Новые звуки для Fire at Will: музыка для меню, карты кампании, всех земель, земель DLC и битв с боссами, а также новые звуки выстрелов, попаданий, постройки, волн, победы и поражения. Перетащите этот файл на экран DLC. Выключается и включается кодами CLASSIC и SOUND.",
   "New music for the menu, the campaign map, every biome, the DLC lands and boss fights. Switch it on and off on the DLC screen, or with the codes SOUND and CLASSIC.":"Новая музыка для меню, карты кампании, всех биомов, земель DLC и битв с боссами. Включается и выключается на экране DLC или кодами SOUND и CLASSIC."});
 function redeemCode(){
   const inp=document.getElementById('redeemInput');
@@ -1699,9 +1714,10 @@ function redeemCode(){
     case 'BUSS':
       goldBoost=0; out='LUSS effect removed.'; break;
     case 'SOUND':
-      initAudio(); setSoundPack(true); out='Sound pack on: new music for the menu, the map, every land and the bosses.'; break;
+      if(!sndPackInstalled()){ out='Drop sound-pack.json on the DLC screen first (Main menu → DLC).'; break; }
+      initAudio(); setSoundPack(true); out='Sound pack on: new music and sounds.'; break;
     case 'CLASSIC':
-      initAudio(); setSoundPack(false); out='Classic music is back.'; break;
+      initAudio(); setSoundPack(false); out='Classic music and sounds are back.'; break;
     case '':
       msg.textContent='Enter a code first.'; return;
     default:
@@ -7653,10 +7669,11 @@ function dlcParse(text){
   const music=d.music==='sound'?d.music:null;                         // or new music (the Sound Pack)
   if(d.music&&!music)throw 'This DLC needs a newer version of the game.';
   const tracks=music&&d.tracks&&typeof d.tracks==='object'?d.tracks:null;
+  const sfx=music&&d.sfx&&typeof d.sfx==='object'?d.sfx:null;
   if(!Array.isArray(d.levels))d.levels=[];
   if(!d.levels.length&&!map&&!style&&!music)throw 'This DLC has no levels.';
   const pack={id:String(d.id).slice(0,60),name:String(d.name).slice(0,60),author:d.author?String(d.author).slice(0,40):'',
-    version:d.version?String(d.version).slice(0,20):'',description:d.description?String(d.description).slice(0,300):'',levels:[],map,style,music,tracks};
+    version:d.version?String(d.version).slice(0,20):'',description:d.description?String(d.description).slice(0,300):'',levels:[],map,style,music,tracks,sfx};
   d.levels.forEach((lv,i)=>{
     const code=lv&&(typeof lv.code==='string'?(()=>{ try{return JSON.parse(lv.code);}catch(e){return null;} })():lv.code);
     if(!code||!code.COLS||!code.ROWS)throw 'Level '+(i+1)+' has no map (level code).';
@@ -7756,12 +7773,12 @@ function renderDLC(){
     if(p.bad){ c.innerHTML='<h3></h3><p></p>'; c.querySelector('h3').textContent=p.file; c.querySelector('h3').setAttribute('data-notr','');
       c.querySelector('p').textContent=p.bad; list.appendChild(c); return; }
     if(p.stored){ const rm=document.createElement('button'); rm.className='dlcRemove'; rm.textContent='Remove';
-      rm.onclick=()=>{ dlcStore.packs=dlcStore.packs.filter(raw=>{ try{ return dlcParse(raw).id!==p.id; }catch(e){ return false; } }); dlcSave(); dlcMsg('DLC removed.'); renderDLC(); };
+      rm.onclick=()=>{ dlcStore.packs=dlcStore.packs.filter(raw=>{ try{ return dlcParse(raw).id!==p.id; }catch(e){ return false; } }); dlcSave(); dlcMsg('DLC removed.'); renderDLC(); if(p.music)restartMusic(); };
       c.appendChild(rm); }
     const h=document.createElement('h3'); h.textContent=p.name; h.setAttribute('data-notr',''); c.appendChild(h);
     const done=p.levels.filter((_,i)=>dlcStore.beaten[p.id+'/'+i]).length;
     const meta=document.createElement('div'); meta.className='dlcMeta';
-    const mt=document.createElement('span'); mt.textContent=p.levels.length?'beaten '+done+'/'+p.levels.length:p.style==='halloween'?'Switches the game to the Halloween style':p.music==='sound'?'Gives the game new music':(p.map==='halloween'?(TESTING_APP?'Adds the Halloween map pieces to the Sandbox':'Adds the Halloween island to the campaign map'):p.map==='shroomed'?(TESTING_APP?'Adds the Glowshroom Valley pieces to the Sandbox':'Adds the Glowshroom Valley to the campaign map'):''); meta.appendChild(mt);
+    const mt=document.createElement('span'); mt.textContent=p.levels.length?'beaten '+done+'/'+p.levels.length:p.style==='halloween'?'Switches the game to the Halloween style':p.music==='sound'?'Gives the game new music and sounds':(p.map==='halloween'?(TESTING_APP?'Adds the Halloween map pieces to the Sandbox':'Adds the Halloween island to the campaign map'):p.map==='shroomed'?(TESTING_APP?'Adds the Glowshroom Valley pieces to the Sandbox':'Adds the Glowshroom Valley to the campaign map'):''); meta.appendChild(mt);
     if(p.author){ const au=document.createElement('span'); au.textContent=' · ✎ '+p.author; au.setAttribute('data-notr',''); meta.appendChild(au); }
     if(p.file){ const fl=document.createElement('span'); fl.textContent=' · from the DLC folder'; meta.appendChild(fl); }
     if(p.builtin){ const fl=document.createElement('span'); fl.textContent=' · built into Testing'; meta.appendChild(fl); }
@@ -7784,11 +7801,11 @@ async function dlcAdd(file){
   const text=await file.text();
   let p; try{ p=dlcParse(text); }catch(e){ dlcMsg(String(e),true); return; }
   if(DESK){
-    try{ await DESK.saveDLC(file.name,text); dlcMsg('DLC added: '+p.name); await dlcRefreshFolder(); return; }catch(e){}
+    try{ await DESK.saveDLC(file.name,text); dlcMsg('DLC added: '+p.name); await dlcRefreshFolder(); if(p.music)restartMusic(); return; }catch(e){}
   }
   dlcStore.packs=dlcStore.packs.filter(raw=>{ try{ return dlcParse(raw).id!==p.id; }catch(e){ return false; } });
   dlcStore.packs.push(text); dlcSave();
-  dlcMsg('DLC added: '+p.name); renderDLC();
+  dlcMsg('DLC added: '+p.name); renderDLC(); if(p.music)restartMusic();
 }
 async function dlcPickFiles(inp){ for(const f of [...inp.files])await dlcAdd(f); inp.value=''; }
 function dlcOpenFolder(){ if(DESK)DESK.openFolder(); }
@@ -8151,6 +8168,7 @@ canvas.addEventListener('click',e=>{
   if(t2.maxPerLevel&&towers.filter(x=>x.type===selectedType).length>=t2.maxPerLevel){
     setMsg('Only '+t2.maxPerLevel+' '+t2.name+' allowed per level.');return;}
   gold-=t2.cost;
+  sndSfx('build');
   towers.push({row,col,x:col*CELL+CELL/2,y:row*CELL+CELL/2,type:selectedType,cd:0,range:t2.range,dmg:t2.dmg,rate:t2.rate,color:t2.color,angle:0,flash:0,spawnT:0,isFarm:!!t2.isFarm,factory:!!t2.factory,isMender:!!t2.isMender,isPolice:!!t2.isPolice,isRocket:!!t2.isRocket,grenade:!!t2.grenade,isTime:!!t2.isTime,timeCd:0,isFirework:!!t2.isFirework,launchCd:0,isScorch:!!t2.isScorch,chew:0,grabFx:0,isWorkshop:!!t2.isWorkshop,isBrazier:!!t2.isBrazier,isTriple:!!t2.isTriple,isFootmen:!!t2.isFootmen,used:false,deployCd:0,aoe:t2.aoe||0,incomeCd:70,disabled:0,healCd:0,healFx:0,builtLimit:0});
   { const tw=towers[towers.length-1]; fxSmoke(tw.x,tw.y+10,6,'190,172,135',6); fxRing(tw.x,tw.y+6,24,'255,250,230',14); }
   updateHud(); setMsg(t('towerPlaced'));
@@ -8220,7 +8238,7 @@ function cleanWaveScript(ws){
 function spawnWave(){
   if(gameOver||wave>=totalWaves)return;
   if(waveActive&&!earlyReady())return;
-  wave++; waveActive=true; waveSpawnDone=false; nextWaveIn=0;
+  wave++; waveActive=true; waveSpawnDone=false; nextWaveIn=0; sndSfx('wave');
   const myWave=wave;
   if(testMode!=='enemy')showWaveBanner(wave,totalWaves);
   { const b=document.getElementById('startWave'); if(b)b.textContent=t('startWave'); }
@@ -8639,6 +8657,7 @@ function confetti(){
 }
 function endGame(won){
   gameOver=true;
+  sndSfx(won?'win':'lose');
   if(testMode==='dlc'){                    // DLC levels only remember that they were beaten
     closePause(); clearSpawners(); armed=null; arrowTarget=null;
     if(won&&dlcPlaying){ dlcStore.beaten[dlcPlaying.id+'/'+dlcPlaying.i]=true; dlcSave(); }

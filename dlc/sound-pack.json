@@ -3,8 +3,8 @@
  "id": "sound-pack",
  "name": "Sound Pack",
  "author": "foma",
- "version": "1.0",
- "description": "New music for the menu, the campaign map, every biome, the DLC lands and boss fights. Switch it on and off on the DLC screen, or with the codes SOUND and CLASSIC.",
+ "version": "1.1",
+ "description": "New sounds for Fire at Will: music for the menu, the campaign map, every land, the DLC lands and boss fights, plus new shooting, hit, building, wave and win/lose sounds. Drop this file on the DLC screen. Switch it off and on with the codes CLASSIC and SOUND.",
  "music": "sound",
  "levels": [],
  "tracks": {
@@ -643,5 +643,166 @@
     }
    ]
   }
+ },
+ "sfx": {
+  "shoot": [
+   [
+    "rim",
+    "",
+    0.9,
+    0,
+    0.05
+   ],
+   [
+    "kick",
+    "",
+    0.25,
+    0,
+    0.1
+   ]
+  ],
+  "death": [
+   [
+    "tom",
+    "G2",
+    0.9,
+    0,
+    0.2
+   ],
+   [
+    "hat",
+    "",
+    0.8,
+    0.02,
+    0.05
+   ]
+  ],
+  "build": [
+   [
+    "marimba",
+    "C5",
+    1,
+    0,
+    0.1
+   ],
+   [
+    "marimba",
+    "G5",
+    1,
+    0.07,
+    0.1
+   ],
+   [
+    "kick",
+    "",
+    0.4,
+    0,
+    0.1
+   ]
+  ],
+  "wave": [
+   [
+    "taiko",
+    "",
+    1,
+    0,
+    0.3
+   ],
+   [
+    "brass",
+    "G4",
+    0.8,
+    0,
+    0.25
+   ],
+   [
+    "brass",
+    "C5",
+    0.8,
+    0.2,
+    0.5
+   ],
+   [
+    "crash",
+    "",
+    0.6,
+    0.2,
+    0.5
+   ]
+  ],
+  "win": [
+   [
+    "brass",
+    "C5",
+    1,
+    0,
+    0.15
+   ],
+   [
+    "brass",
+    "E5",
+    1,
+    0.15,
+    0.15
+   ],
+   [
+    "brass",
+    "G5",
+    1,
+    0.3,
+    0.15
+   ],
+   [
+    "brass",
+    "C6",
+    1,
+    0.45,
+    0.7
+   ],
+   [
+    "bell",
+    "C6",
+    0.8,
+    0.45,
+    1
+   ],
+   [
+    "crash",
+    "",
+    0.5,
+    0.45,
+    1
+   ]
+  ],
+  "lose": [
+   [
+    "strings",
+    "G4",
+    1,
+    0,
+    0.35
+   ],
+   [
+    "strings",
+    "D#4",
+    1,
+    0.35,
+    0.35
+   ],
+   [
+    "strings",
+    "C4",
+    1,
+    0.7,
+    0.9
+   ],
+   [
+    "timp",
+    "C2",
+    1,
+    0.7,
+    0.9
+   ]
+  ]
  }
 }
