@@ -4317,6 +4317,7 @@ let bridges=[], webPaths=[], bigBushes=[], queens=[], webWalls=[], cocoons=[];
 let grove=[], webs=[], webRolled=new Map(), forestPathIdx=-1, spiderDone=false, bigSpiderDone=false, pendingForest=0;
 const WEB_COST=25, WEB_MAX=60, WEB_REROLL=180;   // a tile can be rolled again after 3 seconds
 const TREE_COST=100;
+function treeCost(tr){ return tr&&ERUIN_KINDS.includes(tr.kind)?ERUIN_COST:TREE_COST; }   // Egyptian ruins are heavier work
 function placeTrees(n){
   trees=[];
   const free=[];
@@ -4341,10 +4342,10 @@ function placeTrees(n){
 function chopTree(row,col){
   const i=trees.findIndex(t=>t.row===row&&t.col===col);
   if(i<0)return;
-  if(gold<TREE_COST){ setMsg('Clearing a tree costs '+TREE_COST+' gold.'); return; }
-  const tr=trees[i];
-  gold-=TREE_COST; trees.splice(i,1); updateHud();
-  setMsg('Tree cleared — the ground is free.');
+  const tr=trees[i], cost=treeCost(tr), ru=ERUIN_KINDS.includes(tr.kind);
+  if(gold<cost){ setMsg(ru?'Clearing a ruin costs '+cost+' gold.':'Clearing a tree costs '+cost+' gold.'); return; }
+  gold-=cost; trees.splice(i,1); updateHud();
+  setMsg(ru?'Ruin cleared — the ground is free.':'Tree cleared — the ground is free.');
   hideTowerInfo();
   if(!testMode){
     // fences, scarecrows, braziers and beach rocks are not trees
@@ -4376,9 +4377,12 @@ const TREE_KINDS={
   rock:{name:'Rock',region:'Beach'}, rock2:{name:'Rock',region:'Beach'}, rock3:{name:'Rock',region:'Beach'},
   scarecrow:{name:'Scarecrow',region:'Pumpkin Farm'}, fence:{name:'Fence',region:'Pumpkin Farm'},
   maple:{name:'Autumn maple',region:'Pumpkin Farm'}, goldbirch:{name:'Golden birch',region:'Pumpkin Farm'}, hollowoak:{name:'Hollow oak',region:'Pumpkin Farm'},
-  charred:{name:'Charred tree',region:'Ashen Wastes'}, brazier:{name:'Ember brazier',region:'Ashen Wastes'}, ashpine:{name:'Ash-covered pine',region:'Ashen Wastes'}, stonetree:{name:'Petrified tree',region:'Ashen Wastes'}};
+  charred:{name:'Charred tree',region:'Ashen Wastes'}, brazier:{name:'Ember brazier',region:'Ashen Wastes'},
+  tumbleweed:{name:'Tumbleweed',region:'The Deserts'}, eruin1:{name:'Broken columns',region:'The Deserts'}, eruin2:{name:'Obelisk',region:'The Deserts'},
+  eruin3:{name:'Sphinx head',region:'The Deserts'}, eruin4:{name:'Statue ruins',region:'The Deserts'}, eruin5:{name:'Temple wall',region:'The Deserts'}, ashpine:{name:'Ash-covered pine',region:'Ashen Wastes'}, stonetree:{name:'Petrified tree',region:'Ashen Wastes'}};
 // Pumpkin Farm decor placed like trees; it never turns into another location's tree
-const DECOR_KINDS=['scarecrow','fence','brazier'];
+const DECOR_KINDS=['scarecrow','fence','brazier','tumbleweed','eruin1','eruin2','eruin3','eruin4','eruin5'];
+const ERUIN_KINDS=['eruin1','eruin2','eruin3','eruin4','eruin5'], ERUIN_COST=125;
 const SHROOM_KINDS=['glowcap','glowshelf','glowtwin'];
 const GRAVE_KINDS=['deadtree','willow','cypress'];
 // on graveyard grass the ordinary trees grow as the graveyard's own: oak -> dead tree, apple -> weeping willow, birch -> cypress
@@ -4590,6 +4594,8 @@ function drawFarmAshTree(g,kind,sw){
 function drawTreeSprite(g,kind,sw){
   if(FARM_KINDS.includes(kind)||ASH_KINDS.includes(kind)){ drawFarmAshTree(g,kind,sw); return; }
   if(kind==='scarecrow'){ drawScarecrow(g,sw); return; }
+  if(kind==='tumbleweed'){ drawTumbleweed(g,0,sw); return; }
+  if(ERUIN_KINDS.includes(kind)){ drawEgyptRuin(g,kind); return; }
   if(kind==='brazier'){ drawBrazier(g,false); return; }
   if(kind==='fence'){ drawFence(g,false,false,false,false); return; }
   if(SHROOM_CAPS[kind]){ drawShroomTree(g,kind,sw); return; }
@@ -5636,6 +5642,150 @@ function drawSandMound(e,idx){
   ctx.restore();
 }
 // rocks: what trees become on the Beach's sand (they block building and clear like a tree)
+/* ---------- The Deserts: tumbleweeds, Egyptian ruins, sandy and ancient paths ---------- */
+// a tumbleweed: a loose ball of dry, tangled twigs; rot turns it as it rolls
+function drawTumbleweed(g,rot,sw,noShadow){
+  if(!noShadow){ g.fillStyle='rgba(0,0,0,.22)'; g.beginPath();g.ellipse(1,11,10,3.4,0,0,Math.PI*2);g.fill(); }
+  g.save(); g.translate(0,1); g.rotate(rot+sw*0.02);
+  g.fillStyle='rgba(150,112,58,.35)'; g.beginPath();g.arc(0,0,10,0,Math.PI*2);g.fill();
+  g.lineCap='round';
+  [['#5b4224',2.2],['#8a6a3a',1.5],['#b8955a',1]].forEach(([col,w],li)=>{ g.strokeStyle=col; g.lineWidth=w;
+    for(let i=0;i<7;i++){ const a=i*0.9+li*0.55, r1=3+((i*37+li*11)%6), a2=a+1.6+((i*13)%5)*0.3;
+      g.beginPath(); g.moveTo(Math.cos(a)*r1,Math.sin(a)*r1);
+      g.quadraticCurveTo(Math.cos(a+0.8)*11,Math.sin(a+0.8)*11,Math.cos(a2)*(6+(i%3)*1.6),Math.sin(a2)*(6+(i%3)*1.6)); g.stroke(); } });
+  g.strokeStyle='#4a361d'; g.lineWidth=1.1;                                   // little snapped-off twig ends sticking out
+  [0.4,1.9,3.3,4.6,5.6].forEach(a=>{ g.beginPath();g.moveTo(Math.cos(a)*8.5,Math.sin(a)*8.5);g.lineTo(Math.cos(a+0.15)*11.5,Math.sin(a+0.15)*11.5);g.stroke(); });
+  g.restore(); g.lineCap='butt'; g.lineWidth=2;
+}
+// five Egyptian ruins in weathered sandstone, each half buried in a drift of sand
+function drawEgyptRuin(g,kind){
+  const ink='#4a3a22', st='#d9b77a', dk='#b48f55', lt='#ecd3a0';
+  g.lineJoin='round'; g.strokeStyle=ink; g.lineWidth=2;
+  g.fillStyle='rgba(0,0,0,.24)'; g.beginPath();g.ellipse(1,13,16,4.6,0,0,Math.PI*2);g.fill();
+  const drift=(w,y)=>{ g.fillStyle='#e6c98d'; g.beginPath();g.moveTo(-w,y+3);g.quadraticCurveTo(-w*0.5,y-3,0,y-1);g.quadraticCurveTo(w*0.55,y-4,w,y+3);g.closePath();g.fill();
+    g.strokeStyle='rgba(150,110,60,.5)'; g.lineWidth=1; g.beginPath();g.moveTo(-w*0.6,y+1);g.quadraticCurveTo(-w*0.2,y-1.5,w*0.2,y);g.stroke(); g.strokeStyle=ink; g.lineWidth=2; };
+  const glyphs=(x,y,h)=>{ g.save(); g.strokeStyle='rgba(110,78,40,.8)'; g.fillStyle='rgba(110,78,40,.8)'; g.lineWidth=0.9;   // a column of tiny carved signs
+    for(let k=0;k<h;k++){ const yy=y+k*4, m=k%4;
+      if(m===0){ g.beginPath();g.ellipse(x,yy,1.3,0.9,0,0,Math.PI*2);g.stroke(); g.fillRect(x-0.3,yy-0.3,0.7,0.7); }
+      else if(m===1){ g.beginPath();g.moveTo(x-1.4,yy+1);g.lineTo(x,yy-1.2);g.lineTo(x+1.4,yy+1);g.stroke(); }
+      else if(m===2){ g.beginPath();g.moveTo(x-1.5,yy);g.quadraticCurveTo(x,yy-1.6,x+1.5,yy);g.stroke(); }
+      else { g.beginPath();g.moveTo(x,yy-1.4);g.lineTo(x,yy+1.4);g.moveTo(x-1.2,yy-0.4);g.lineTo(x+1.2,yy-0.4);g.stroke(); } }
+    g.restore(); };
+  if(kind==='eruin1'){                       // broken columns: one standing with a papyrus capital, one snapped short, a fallen drum
+    g.fillStyle=st; g.beginPath();g.rect(-12,-14,7,26);g.fill();g.stroke();
+    g.fillStyle=lt; g.beginPath();g.moveTo(-14,-14);g.quadraticCurveTo(-8.5,-21,-3,-14);g.closePath();g.fill();g.stroke();
+    g.fillStyle=dk; g.beginPath();g.rect(-14.5,-24,10,3.4);g.fill();g.stroke();
+    g.strokeStyle='rgba(120,88,45,.55)'; g.lineWidth=1; [-10,-7.5].forEach(x=>{ g.beginPath();g.moveTo(x,-12);g.lineTo(x,11);g.stroke(); });
+    g.strokeStyle=ink; g.lineWidth=2;
+    g.fillStyle=st; g.beginPath();g.moveTo(2,12);g.lineTo(2,-2);g.lineTo(4,-4);g.lineTo(5.5,-1.5);g.lineTo(7.5,-5);g.lineTo(9,-2);g.lineTo(9,12);g.closePath();g.fill();g.stroke();
+    g.fillStyle=dk; g.beginPath();g.ellipse(13,9,3.2,4.4,0,0,Math.PI*2);g.fill();g.stroke();
+    g.fillStyle=st; g.beginPath();g.rect(9.5,4.6,3.5,8.8);g.fill(); g.beginPath();g.moveTo(9.5,4.6);g.lineTo(13,4.6);g.moveTo(9.5,13.4);g.lineTo(13,13.4);g.stroke();
+    g.fillStyle=lt; g.beginPath();g.ellipse(9.5,9,3.2,4.4,0,0,Math.PI*2);g.fill();g.stroke();
+    glyphs(5.5,1,3); drift(15,11);
+  } else if(kind==='eruin2'){                // an obelisk, a little tilted, its gilded tip worn dull
+    g.save(); g.rotate(0.06);
+    g.fillStyle=dk; g.beginPath();g.rect(-8,7,16,6);g.fill();g.stroke();
+    g.fillStyle=st; g.beginPath();g.moveTo(-5.5,7);g.lineTo(-3.6,-20);g.lineTo(3.6,-20);g.lineTo(5.5,7);g.closePath();g.fill();g.stroke();
+    g.fillStyle='rgba(0,0,0,.12)'; g.beginPath();g.moveTo(1,7);g.lineTo(1.2,-20);g.lineTo(3.6,-20);g.lineTo(5.5,7);g.closePath();g.fill();
+    g.fillStyle='#c9a24a'; g.beginPath();g.moveTo(-3.6,-20);g.lineTo(0,-26);g.lineTo(3.6,-20);g.closePath();g.fill();g.stroke();
+    g.fillStyle='rgba(255,240,180,.5)'; g.beginPath();g.moveTo(-2.4,-20.5);g.lineTo(0,-24.5);g.lineTo(-0.6,-20.5);g.closePath();g.fill();
+    glyphs(-1.2,-16,6);
+    g.strokeStyle='rgba(80,60,30,.7)'; g.lineWidth=1; g.beginPath();g.moveTo(3,-8);g.lineTo(1.5,-5);g.lineTo(2.8,-2);g.stroke();
+    g.restore(); g.strokeStyle=ink; g.lineWidth=2; drift(13,11);
+  } else if(kind==='eruin3'){                // the head of a colossal sphinx, sunk to the chin, its nose long gone
+    g.fillStyle='#c9a65f'; g.beginPath();g.moveTo(-14,12);g.lineTo(-13,-4);g.quadraticCurveTo(-11,-17,0,-19);g.quadraticCurveTo(11,-17,13,-4);g.lineTo(14,12);g.closePath();g.fill();g.stroke();   // headdress
+    g.strokeStyle='rgba(60,90,140,.55)'; g.lineWidth=1.6;                     // faded blue stripes of the headdress
+    for(let k=-3;k<=3;k++){ g.beginPath();g.moveTo(k*3.6,-17+Math.abs(k)*0.6);g.lineTo(k*4.4,11);g.stroke(); }
+    g.strokeStyle=ink; g.lineWidth=2;
+    g.fillStyle=st; g.beginPath();g.moveTo(-7.5,12);g.lineTo(-7.5,-8);g.quadraticCurveTo(0,-13,7.5,-8);g.lineTo(7.5,12);g.closePath();g.fill();g.stroke();   // face
+    g.fillStyle='#3a2a18'; g.beginPath();g.ellipse(-3.4,-4,1.8,0.9,0,0,Math.PI*2);g.ellipse(3.4,-4,1.8,0.9,0,0,Math.PI*2);g.fill();
+    g.strokeStyle='#3a2a18'; g.lineWidth=1.2; g.beginPath();g.moveTo(-5.6,-6.2);g.lineTo(-1.6,-6);g.moveTo(5.6,-6.2);g.lineTo(1.6,-6);g.stroke();
+    g.fillStyle=dk; g.beginPath();g.moveTo(-1.5,-2);g.lineTo(1.5,-2);g.lineTo(1,2);g.lineTo(-1,2);g.closePath();g.fill();   // broken-off nose
+    g.beginPath();g.moveTo(-2.6,5);g.quadraticCurveTo(0,6.4,2.6,5);g.stroke();
+    g.strokeStyle='rgba(80,60,30,.7)'; g.beginPath();g.moveTo(5,-10);g.lineTo(3.5,-7);g.lineTo(5.5,-4);g.stroke();
+    g.strokeStyle=ink; g.lineWidth=2; drift(16,10);
+  } else if(kind==='eruin4'){                // all that is left of a seated pharaoh: two great feet and legs on the throne block
+    g.fillStyle=dk; g.beginPath();g.rect(-13,0,26,12);g.fill();g.stroke();
+    g.fillStyle=st; [-1,1].forEach(sd=>{ const x=sd*5.5;
+      g.beginPath();g.moveTo(x-4,0);g.lineTo(x-3.4,-14);g.lineTo(x-1.2,-17);g.lineTo(x+1.4,-15);g.lineTo(x+3.4,-17.5);g.lineTo(x+4,0);g.closePath();g.fill();g.stroke();   // shins snapped off
+      g.beginPath();g.ellipse(x,1,5,3,0,Math.PI,0);g.fill();g.stroke(); });
+    g.strokeStyle='rgba(110,78,40,.7)'; g.lineWidth=0.9; [-7.5,-5.5,-3.5,3.5,5.5,7.5].forEach(x=>{ g.beginPath();g.moveTo(x,-1);g.lineTo(x,1.4);g.stroke(); });   // toes
+    g.strokeStyle=ink; g.lineWidth=2;
+    glyphs(-10,4,2); glyphs(10,4,2);
+    g.fillStyle=st; g.beginPath();g.moveTo(9,12);g.lineTo(11,7);g.lineTo(16,8);g.lineTo(15,12);g.closePath();g.fill();g.stroke();   // a fallen chunk
+    drift(15,11);
+  } else {                                   // a temple wall: a pylon gateway with a winged sun, the top crumbling
+    g.fillStyle=st; g.beginPath();g.moveTo(-15,12);g.lineTo(-13.5,-12);g.lineTo(-10,-14);g.lineTo(-7,-11);g.lineTo(-3,-15);g.lineTo(2,-13);g.lineTo(5,-16);g.lineTo(9,-12.5);g.lineTo(13.5,-14);g.lineTo(15,12);g.closePath();g.fill();g.stroke();
+    g.fillStyle='#3a2a18'; g.beginPath();g.moveTo(-4,12);g.lineTo(-4,-1);g.lineTo(4,-1);g.lineTo(4,12);g.closePath();g.fill();   // the dark doorway
+    g.fillStyle=dk; g.beginPath();g.rect(-6,-3.6,12,2.6);g.fill();g.stroke();
+    g.fillStyle='#c9862f'; g.beginPath();g.arc(0,-8,1.8,0,Math.PI*2);g.fill();                                   // winged sun disk
+    g.strokeStyle='#8a6a3a'; g.lineWidth=1.2; [-1,1].forEach(sd=>{ g.beginPath();g.moveTo(sd*2,-8);g.quadraticCurveTo(sd*5,-10.4,sd*8,-8.4);g.moveTo(sd*2,-7.4);g.quadraticCurveTo(sd*5,-8.6,sd*7.4,-7.2);g.stroke(); });
+    g.strokeStyle=ink; g.lineWidth=2;
+    glyphs(-10,-8,5); glyphs(10,-8,5);
+    g.strokeStyle='rgba(80,60,30,.6)'; g.lineWidth=1; g.beginPath();g.moveTo(-8,-11);g.lineTo(-6.5,-6);g.lineTo(-8,-2);g.stroke(); g.strokeStyle=ink; g.lineWidth=2;
+    drift(16,11);
+  }
+  g.lineJoin='miter';
+}
+// road tiles half drowned in sand (sandy path) or paved with worn sandstone slabs (ancient path)
+function drawDesertPaths(){
+  if(!sandPaths.length&&!oldPaths.length)return;
+  const road=(r,c)=>pathSet.has(r+','+c), C=CELL;
+  const hz=k=>road(k.row,k.col-1)||road(k.row,k.col+1)||!(road(k.row-1,k.col)||road(k.row+1,k.col));
+  sandPaths.forEach(k=>{ const x=k.col*C, y=k.row*C, h=n=>((Math.sin(k.row*12.9+k.col*78.2+n*3.7)*43758.5)%1+1)%1, H=hz(k);
+    ctx.save(); ctx.beginPath(); ctx.rect(x,y,C,C); ctx.clip();
+    for(let i=0;i<4;i++){ const u=h(i)*C, v=h(i+9);                       // soft drifts blown in over the road
+      const cx=H?x+u:x+(v<0.5?C*0.12:C*0.88), cy=H?y+(v<0.5?C*0.12:C*0.88):y+u;
+      ctx.fillStyle='rgba(230,201,141,.85)'; ctx.beginPath();ctx.ellipse(cx,cy,H?C*0.32:C*0.26,H?C*0.26:C*0.32,0,0,Math.PI*2);ctx.fill(); }
+    ctx.fillStyle='rgba(230,201,141,.55)'; ctx.beginPath();ctx.ellipse(x+C*(0.3+h(20)*0.4),y+C*(0.3+h(21)*0.4),C*0.2,C*0.14,h(22)*3,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='rgba(160,122,70,.45)'; ctx.lineWidth=1.2;            // wind ripples
+    for(let i=0;i<3;i++){ const o=C*(0.25+i*0.25+(h(i+30)-0.5)*0.1);
+      ctx.beginPath(); if(H){ ctx.moveTo(x+C*0.1,y+o);ctx.quadraticCurveTo(x+C*0.5,y+o-3,x+C*0.9,y+o); } else { ctx.moveTo(x+o,y+C*0.1);ctx.quadraticCurveTo(x+o-3,y+C*0.5,x+o,y+C*0.9); } ctx.stroke(); }
+    ctx.restore(); });
+  oldPaths.forEach(k=>{ const x=k.col*C, y=k.row*C, h=n=>((Math.sin(k.row*31.7+k.col*11.3+n*5.1)*43758.5)%1+1)%1, H=hz(k);
+    ctx.save(); ctx.beginPath(); ctx.rect(x,y,C,C); ctx.clip();
+    ctx.fillStyle='#b99a66'; ctx.fillRect(x,y,C,C);                         // sand in the joints
+    const rows=3, sl=C/rows;
+    for(let i=0;i<rows;i++){ const off=(i%2)*sl*0.5;
+      for(let j=-1;j<=rows;j++){ const a=j*sl+off, b=i*sl, w=sl-2, t=sl-2, n=i*7+j;
+        const rx=H?x+a+1:x+b+1, ry=H?y+b+1:y+a+1;
+        const shade=0.85+h(n)*0.25;
+        ctx.fillStyle='rgb('+Math.round(214*shade)+','+Math.round(186*shade)+','+Math.round(132*shade)+')';
+        ctx.beginPath();ctx.roundRect(rx,ry,w,t,1.5);ctx.fill();
+        ctx.fillStyle='rgba(255,245,215,.18)'; ctx.fillRect(rx,ry,w,1.4);
+        if(h(n+40)<0.3){ ctx.strokeStyle='rgba(90,66,36,.55)'; ctx.lineWidth=0.9;   // a crack
+          const q1=h(n+41), q2=h(n+42); ctx.beginPath();ctx.moveTo(rx+w*q1,ry);ctx.lineTo(rx+w*(0.3+q2*0.4),ry+t*0.45);ctx.lineTo(rx+w*(1-q1*0.8),ry+t*(0.7+q2*0.3));ctx.stroke(); } } }
+    for(let i=0;i<2;i++){ const u=h(i+60)*C;                                 // sand creeping back over the slabs
+      const cx=H?x+u:x+(i?C*0.9:C*0.1), cy=H?y+(i?C*0.9:C*0.1):y+u;
+      ctx.fillStyle='rgba(230,201,141,.8)'; ctx.beginPath();ctx.ellipse(cx,cy,C*0.28,C*0.2,H?0:Math.PI/2,0,Math.PI*2);ctx.fill(); }
+    ctx.restore(); });
+}
+// breezes: on a map with tumbleweeds a gust blows across every so often; each tumbleweed has a 1 in 2 chance to tear loose and roll away
+const BREEZE_GAP=[900,2100], BREEZE_LEN=180;
+function updateBreeze(){
+  if(breezeFx>0)breezeFx--;
+  for(let i=tumbleRolls.length-1;i>=0;i--){ const t=tumbleRolls[i]; t.x+=t.vx; t.y+=t.vy; t.rot+=t.vx/9; t.hop+=0.16+Math.abs(t.vx)*0.03;
+    if(t.x<-40||t.x>CW+40||t.y<-40||t.y>CH+40)tumbleRolls.splice(i,1); }
+  if(!trees.some(t=>t.kind==='tumbleweed'))return;
+  if(breezeT<=0){ breezeT=BREEZE_GAP[0]+Math.random()*(BREEZE_GAP[1]-BREEZE_GAP[0]); return; }
+  if(--breezeT>0)return;
+  breezeDir=Math.random()<0.5?-1:1; breezeFx=BREEZE_LEN;
+  for(let i=trees.length-1;i>=0;i--){ const t=trees[i]; if(t.kind!=='tumbleweed'||Math.random()>=0.5)continue;
+    trees.splice(i,1);
+    tumbleRolls.push({x:t.col*CELL+CELL/2,y:t.row*CELL+CELL/2,vx:breezeDir*(1.6+Math.random()*1.2)*CELL/40,vy:(Math.random()-0.5)*0.5,rot:0,hop:Math.random()*3,delay:0}); }
+}
+function drawBreeze(){
+  if(breezeFx>0){ const a=Math.min(1,breezeFx/40,(BREEZE_LEN-breezeFx)/30);    // dusty streaks of wind
+    ctx.save(); ctx.lineCap='round';
+    for(let i=0;i<14;i++){ const ph=((frameCount*0.012+i*0.137)%1), y=((i*97.3)%1)*CH+Math.sin(frameCount*0.03+i)*10;
+      const x=breezeDir>0?ph*(CW+200)-100:CW+100-ph*(CW+200), L=40+(i%4)*18;
+      ctx.strokeStyle='rgba(235,215,170,'+(0.35*a).toFixed(3)+')'; ctx.lineWidth=1.6+(i%3)*0.6;
+      ctx.beginPath();ctx.moveTo(x,y);ctx.quadraticCurveTo(x-breezeDir*L*0.5,y-4,x-breezeDir*L,y);ctx.stroke(); }
+    ctx.restore(); }
+  tumbleRolls.forEach(t=>{ const b=Math.abs(Math.sin(t.hop))*CELL*0.25;
+    ctx.save(); ctx.translate(t.x,t.y); ctx.fillStyle='rgba(0,0,0,.18)'; ctx.beginPath();ctx.ellipse(1,11,9*(1-b/CELL),3,0,0,Math.PI*2);ctx.fill();
+    ctx.translate(0,-b); drawTumbleweed(ctx,t.rot,0,true); ctx.restore(); });
+}
 function drawRock(g,kind){
   const stone=(x,y,rx,ry,base,tilt)=>{
     g.fillStyle=base; g.strokeStyle='#3a3630'; g.lineWidth=2;
@@ -6276,6 +6426,7 @@ function moveAllyBack(a){
 function updatePowers(){
   updateChaos();
   updateWorms();
+  updateBreeze();
   // meteors
   for(let i=meteors.length-1;i>=0;i--){
     const m=meteors[i];
@@ -6802,6 +6953,7 @@ const SBX_TOOLS=[['path','Path'],['spawn','Spawn'],['base','Base'],['tree','Tree
   ['spider','Spider den'],['nest','Spider nest'],['queen','Spider queen'],['web','Web'],['solidweb','Solid web'],['webwall','Web wall'],['cocoon','Cocoon'],['eggs','Egg sacs'],['silkbridge','Silk bridge'],
   ['tunnelin','Tunnel in'],['tunnelout','Tunnel out'],['ruin','Webbed ruin'],['bones','Bones'],['grave','Grave'],['graveyard','Graveyard'],['crypt','Crypt'],['house','Abandoned house'],['pumpkin','Pumpkin'],['jack',"Jack o' lantern"],['barn','Barn'],['pyramid','Pyramid'],['thornpath','Thorny path'],['corn','Corn rows'],['well','Well'],['scarecrow','Scarecrow'],['fence','Fence'],['candles','Candle shrine'],['opengrave','Open grave'],['glowshroom','Glowshroom'],['shroompath','Glowshroom path'],['shroomhouse','Glowshroom house'],['corpse','Fungi corpse'],['glowpool','Glow pool'],['puffball','Puffball'],['mycelium','Mycelium path'],
   ['sand','Sand'],['sea','Sea'],['crabnest','Crab nest'],['beachball','Beach ball'],
+  ['tumbleweed','Tumbleweed'],['sandpath','Sandy path'],['oldpath','Ancient path'],['eruin','Egyptian ruin'],
   ['lava','Lava river'],['lavaspawn','Lava spawn'],['magmacrack','Magma crack'],['brazier','Ember brazier'],
   ['bush','Bush'],['bigbush','Big bush'],['sewer','Sewer'],['erase','Eraser'],['biome','Biome brush']];
 const SBX_SIZES={computer:{COLS:19,ROWS:12},phone:{COLS:10,ROWS:18},large:{COLS:25,ROWS:16},huge:{COLS:31,ROWS:20}};
@@ -6810,6 +6962,7 @@ const SBX_SECTIONS={
   tabs:{
     'Plains':['tree','bridge','forest','bush','bigbush'],
     'Dark Forest':['lake','lakespawn','sewer'],
+    'Deserts':['tumbleweed','sandpath','oldpath','eruin'],
     'Spiders':['spider','nest','queen','web','solidweb','webwall','webpath','cocoon','eggs','silkbridge','tunnelin','tunnelout','ruin','bones'],
     'Beach':['sand','sea','bridge','crabnest','beachball']}};
 // the Halloween DLC adds its own tab, and the bones move there because they now let out skeletons
@@ -6895,6 +7048,10 @@ const BLOCK_INFO={
     does:['Decor: a wooden farm fence. Fences next to each other join up into one line. Works like a tree: blocks building until the player clears it for 100 gold.','Декор: деревянный забор фермы. Соседние заборы соединяются в одну линию. Работает как дерево: мешает строить, пока игрок не уберёт его за 100 золота.']},
   brazier:{arr:'trees',match:p=>p[2]==='brazier',size:['1 tile','1 клетка'],where:['On the ground beside the road, not on it.','На земле у дороги, не на ней.'],
     does:['Decor: an iron fire bowl on three legs with a crackling fire, for light and mood. At night it lights up the ground around it. Works like a tree: blocks building until the player clears it for 100 gold.','Декор: железная чаша с огнём на трёх ножках, для света и настроения. Ночью освещает землю вокруг. Работает как дерево: мешает строить, пока игрок не уберёт её за 100 золота.']},
+  tumbleweed:{arr:'trees',match:p=>p[2]==='tumbleweed',size:['1 tile','1 клетка'],where:['On grass or sand, not on the road.','На траве или песке, не на дороге.'],
+    does:['Decor: a ball of dry twigs. Every now and then a breeze blows across the map, and each tumbleweed has a 1 in 2 chance to tear loose and roll away off the map. While it sits there it blocks building like a tree (clear it for 100 gold).','Декор: шар из сухих веточек. Время от времени по карте проносится ветер, и каждое перекати-поле с шансом 1 из 2 срывается и укатывается с карты. Пока лежит, мешает строить, как дерево (убрать за 100 золота).']},
+  eruin:{arr:'trees',match:p=>ERUIN_KINDS.includes(p[2]),size:['1 tile','1 клетка'],where:['On grass or sand, not on the road.','На траве или песке, не на дороге.'],
+    does:['A ruin of ancient Egypt in 5 looks: broken columns, an obelisk, a sphinx head, the feet of a statue, a temple wall. Tap it again for the next look. Blocks building until the player clears it for 125 gold.','Руины Древнего Египта, 5 видов: сломанные колонны, обелиск, голова сфинкса, ступни статуи, стена храма. Нажмите ещё раз, чтобы сменить вид. Мешают строить, пока игрок не уберёт их за 125 золота.']},
   tree:{arr:'trees',size:['1 tile','1 клетка'],where:['On grass, not on the road.','На траве, не на дороге.'],
     does:['Blocks building until the player clears it for 100 gold. Light grass grows Fields trees, dark grass grows Dark Forest trees. On Beach sand it is a big rock instead.','Мешает строить, пока игрок не срубит его за 100 золота. На светлой траве растут деревья Полей, на тёмной — Тёмного леса. На пляжном песке это большой камень.']},
   sewer:{arr:'sewers',size:['1 tile','1 клетка'],where:['Off the road.','Не на дороге.'],
@@ -6907,6 +7064,10 @@ const BLOCK_INFO={
     does:['A bridge over lava is built of grey stone with low walls on both sides. Enemies walk it like a road.','Мост через лаву сложен из серого камня с низкими стенками по бокам. Враги идут по нему, как по дороге.']},
   bridge:{arr:'bridges',size:['1 tile','1 клетка'],where:['Across a lake.','Через озеро.'],
     does:['Carries the road over a lake.','Ведёт дорогу через озеро.']},
+  sandpath:{arr:'sandPaths',size:['1 tile','1 клетка'],where:['On the road (it lays road if there is none).','На дороге (если дороги нет, кладёт её).'],
+    does:['Road half drowned in drifting sand. Decoration only.','Дорога, наполовину занесённая песком. Только украшение.']},
+  oldpath:{arr:'oldPaths',size:['1 tile','1 клетка'],where:['On the road (it lays road if there is none).','На дороге (если дороги нет, кладёт её).'],
+    does:['An old Egyptian road of worn sandstone slabs, with sand creeping back over it. Decoration only.','Старая египетская дорога из стёртых песчаниковых плит, которую снова заносит песок. Только украшение.']},
   thornpath:{arr:'thornPaths',size:['1 tile','1 клетка'],where:['On the road (it lays road if there is none).','На дороге (если дороги нет, кладёт её).'],
     does:['Road tangled in spiky roots. Your units standing on it (Firework soldiers, Backup, machines, tanks) lose 6 health a second. Enemies are not hurt.','Дорога в колючих корнях. Ваши юниты на ней (солдаты фейерверка, подкрепление, машины, танки) теряют 6 здоровья в секунду. Врагам не вредит.']},
   webpath:{arr:'webPaths',size:['1 tile','1 клетка'],where:['On the road (it lays road if there is none).','На дороге (если дороги нет, кладёт её).'],
@@ -6951,6 +7112,7 @@ Object.values(BLOCK_INFO).concat([GRASS_INFO]).forEach(b=>['size','where','does'
 Object.assign(I18N.ru,{"Description":"Описание","Beach":"Пляж","Sand":"Песок","Sea":"Море","Shore":"Берег","Crab nest":"Крабье гнездо","Beach ball":"Пляжный мяч","Rock":"Камень","Crab":"Краб","Sand Digger":"Песчаный копатель","A crab nest has no road to a Base nearby.":"У крабьего гнезда нет дороги к базе рядом.","Crabs scuttle out of the nest!":"Из гнезда выбегают крабы!","The beach ball explodes — 4 towers are stunned!":"Пляжный мяч взорвался — 4 башни оглушены!","Bridges go across a lake or into the sea.":"Мосты ставятся через озеро или в море.","A red beach crab scuttling sideways: 75 health.":"Красный пляжный краб бегает боком: 75 здоровья.","On sand it digs in and runs a few tiles underground, where towers cannot see or shoot it, then pops up further down the road.":"На песке он зарывается и пробегает несколько клеток под землёй, где башни его не видят и не стреляют, а потом вылезает дальше по дороге.","Crawls out of crab nests.":"Вылезает из крабьих гнёзд.","Shoot it while it is above ground: towers by the nest catch it as it comes out.":"Стреляйте, пока он на поверхности: башни у гнезда ловят его на выходе.","Low health — Gunners and splash damage finish it fast.":"Мало здоровья — Пулемётчики и урон по площади быстро его добивают.","It cannot dig on grass or a road with no sand around it.":"На траве и на дороге без песка вокруг он зарыться не может.","Size":"Размер","Where":"Где ставить","What it does":"Что делает","Grass":"Трава",
   "Tap any block on the map, or a tool button, to read about it.":"Нажмите на любой блок на карте или на кнопку инструмента, чтобы прочитать о нём.",
   "No description for this block yet.":"Для этого блока пока нет описания."});
+Object.assign(I18N.ru,{"Tumbleweed":"Перекати-поле","Sandy path":"Песчаная дорога","Ancient path":"Древняя дорога","Egyptian ruin":"Египетские руины","Deserts":"Пустыни","Broken columns":"Сломанные колонны","Obelisk":"Обелиск","Sphinx head":"Голова сфинкса","Statue ruins":"Остатки статуи","Temple wall":"Стена храма","Clearing a ruin costs # gold.":"Убрать руины стоит # золота.","Ruin cleared — the ground is free.":"Руины убраны — место свободно."});
 Object.assign(I18N.ru,{"Bandit":"Бандит","Desert Raider":"Пустынный налётчик","A grunt of the dunes, only tougher: 150 health.":"Пехотинец дюн, только крепче: 150 здоровья.","A little faster than a grunt, too.":"И чуть быстрее пехотинца.","Wrapped head to toe against the sand, a black mask over the face.":"Закутан с головы до ног от песка, на лице чёрная маска.","Nothing special to fear: steady damage does it.":"Ничего особенного: хватит ровного урона.","Gunners and Turrets on the long straight roads.":"Стрелки и Турели на длинных прямых дорогах.","Cannons break up packs of them.":"Пушки разбивают их толпы.","Sand Worm":"Песчаный червь","A massive worm bursts out of the sand and dives in and out along a whole road. Its mouth eats every enemy it touches; its body burns 3 health a second off anyone it brushes.":"Огромный червь вырывается из песка и ныряет туда-обратно вдоль всей дороги. Его пасть съедает каждого врага, которого коснётся, а тело отнимает 3 здоровья в секунду у всех, кого задевает.","🔒 Comes after a Deserts level (coming soon)":"🔒 Появится после уровня Пустынь (скоро)","The Sand Worm rises!":"Песчаный червь поднимается!","Hungry":"Голодный","Eat 20 enemies with the Sand Worm in one level.":"Съешьте 20 врагов Песчаным червём за один уровень."});
 let sbxDescOn=false;
 function sbxToggleDesc(){ sbxDescOn=!sbxDescOn; sbxPainting=false; sbxShowInfo(null); }
@@ -6987,7 +7149,7 @@ function sbxZoomBy(d){ const i=SBX_ZOOMS.indexOf(sbxZoom); sbxZoom=d===0?1:SBX_Z
 let sbx=null, sbxTool='path', sbxPainting=false, sbxNote='', sbxShowRoutes=true, sbxTerrain=null, sbxTerrainKey='', sbxFrame=0, sbxAnimOn=false, sbxR=null;
 function sbxBlank(orient){
   const C=SBX_SIZES[orient]||SBX_SIZES.computer;
-  return {orient,COLS:C.COLS,ROWS:C.ROWS,path:[],spawns:[],bases:[],trees:[],lake:[],lakeSpawns:[],forest:[],spiderDens:[],nests:[],webs:[],solidWebs:[],bridges:[],webPaths:[],bushes:[],bigBushes:[],queens:[],webWalls:[],cocoons:[],eggSacs:[],bones:[],ruins:[],silkBridges:[],tunnelIns:[],tunnelOuts:[],sewers:[],graves:[],graveyards:[],crypts:[],houses:[],pyramids:[],pumpkins:[],jacks:[],barns:[],thornPaths:[],corns:[],wells:[],candles:[],openGraves:[],shroomPaths:[],shroomHouses:[],corpses:[],glowPools:[],puffballs:[],myceliums:[],seas:[],lavas:[],lavaSpawns:[],magmaCracks:[],crabNests:[],beachBalls:[],biomes:[],waveScript:null,night:null,
+  return {orient,COLS:C.COLS,ROWS:C.ROWS,path:[],spawns:[],bases:[],trees:[],lake:[],lakeSpawns:[],forest:[],spiderDens:[],nests:[],webs:[],solidWebs:[],bridges:[],webPaths:[],bushes:[],bigBushes:[],queens:[],webWalls:[],cocoons:[],eggSacs:[],bones:[],ruins:[],silkBridges:[],tunnelIns:[],tunnelOuts:[],sewers:[],graves:[],graveyards:[],crypts:[],houses:[],pyramids:[],pumpkins:[],jacks:[],barns:[],thornPaths:[],sandPaths:[],oldPaths:[],corns:[],wells:[],candles:[],openGraves:[],shroomPaths:[],shroomHouses:[],corpses:[],glowPools:[],puffballs:[],myceliums:[],seas:[],lavas:[],lavaSpawns:[],magmaCracks:[],crabNests:[],beachBalls:[],biomes:[],waveScript:null,night:null,
     pathIdx:1,grassIdx:1,pathCol:PATH_COLORS[1].c,ground:GRASS_COLORS[1].c,pathCustom:false,grassCustom:false};
 }
 function sbxFix(d){                    // fill in anything an older save or code is missing
@@ -7083,7 +7245,15 @@ function sbxApply(r,c,first){
   else if(t==='tree'){ if(onRoad())return;
     if(sHas(sbx.trees,r,c)){ if(first)sDel(sbx.trees,r,c); return; }
     clearProps(); sbx.trees.push([r,c,sbxRandomTree(sbxGroundAt(r,c))]); }
-  else if(t==='scarecrow'||t==='fence'||t==='brazier'){ if(onRoad())return;
+  else if(t==='eruin'){ if(onRoad()||!first)return;                    // tap a ruin again for its next look
+    const was=sbx.trees.find(q=>q[0]===r&&q[1]===c), wi=was?ERUIN_KINDS.indexOf(was[2]):-1;
+    if(wi>=0){ was[2]=ERUIN_KINDS[(wi+1)%ERUIN_KINDS.length]; return; }
+    clearProps(); sbx.trees.push([r,c,ERUIN_KINDS[Math.floor(Math.random()*ERUIN_KINDS.length)]]); }
+  else if(t==='sandpath'||t==='oldpath'){ const A=t==='sandpath'?sbx.sandPaths:sbx.oldPaths, B=t==='sandpath'?sbx.oldPaths:sbx.sandPaths;
+    if(sHas(A,r,c)){ if(first)sDel(A,r,c); return; }
+    if(sHas(sbx.bridges,r,c))return;
+    clearProps(); if(!sHas(sbx.path,r,c))sbx.path.push([r,c]); sDel(B,r,c); A.push([r,c]); }
+  else if(t==='scarecrow'||t==='fence'||t==='brazier'||t==='tumbleweed'){ if(onRoad())return;
     const was=sbx.trees.find(q=>q[0]===r&&q[1]===c);
     if(was&&was[2]===t){ if(first)sDel(sbx.trees,r,c); return; }
     clearProps(); sbx.trees.push([r,c,t]); }
@@ -7297,7 +7467,7 @@ function sbxCoverAt(r,c){
 // the eraser peels off only the topmost thing on a tile: a web before its road, a bridge before its lake
 function sbxEraseTop(r,c){
   const cov=sbxCoverAt(r,c); if(cov){ cov.arr.splice(cov.arr.indexOf(cov.item),1); return; }
-  const layers=[sbx.crabNests,sbx.beachBalls,sbx.puffballs,sbx.glowPools,sbx.myceliums,sbx.corpses,sbx.shroomPaths,sbx.wells,sbx.candles,sbx.openGraves,sbx.corns,sbx.pumpkins,sbx.jacks,sbx.thornPaths,sbx.magmaCracks,sbx.graves,sbx.webWalls,sbx.cocoons,sbx.eggSacs,sbx.bones,sbx.ruins,sbx.tunnelIns,sbx.tunnelOuts,sbx.solidWebs,sbx.webs,sbx.spawns,sbx.bases,sbx.nests,sbx.spiderDens,sbx.lakeSpawns,sbx.lavaSpawns,sbx.bushes,sbx.trees,sbx.sewers,sbx.bridges,sbx.silkBridges,sbx.webPaths,sbx.path,sbx.lake,sbx.forest,sbx.biomes];
+  const layers=[sbx.crabNests,sbx.beachBalls,sbx.puffballs,sbx.glowPools,sbx.myceliums,sbx.corpses,sbx.shroomPaths,sbx.wells,sbx.candles,sbx.openGraves,sbx.corns,sbx.pumpkins,sbx.jacks,sbx.thornPaths,sbx.sandPaths,sbx.oldPaths,sbx.magmaCracks,sbx.graves,sbx.webWalls,sbx.cocoons,sbx.eggSacs,sbx.bones,sbx.ruins,sbx.tunnelIns,sbx.tunnelOuts,sbx.solidWebs,sbx.webs,sbx.spawns,sbx.bases,sbx.nests,sbx.spiderDens,sbx.lakeSpawns,sbx.lavaSpawns,sbx.bushes,sbx.trees,sbx.sewers,sbx.bridges,sbx.silkBridges,sbx.webPaths,sbx.path,sbx.lake,sbx.forest,sbx.biomes];
   for(const L of layers){ if(sHas(L,r,c)){ sDel(L,r,c); if(L===sbx.lake){ sDel(sbx.seas,r,c); sDel(sbx.lavas,r,c); } return; } }
 }
 // breadth-first walk across a set of tiles; returns the tile list from start to the first goal reached
@@ -7538,7 +7708,7 @@ function sbxCode(){
   return JSON.stringify({v:3,orient:sbx.orient,COLS:sbx.COLS,ROWS:sbx.ROWS,ground:sbx.ground,pathCol:sbx.pathCol,
     routeGroups:R.groups,lakeExits:R.lakeExits,spiderRoutes:R.spiderRoutes,
     nests:R.nests,trees:sbx.trees,lake:sbx.lake,lakeSpawns:sbx.lakeSpawns,forest:sbx.forest,spiderDens:sbx.spiderDens,
-    spiderNests:sbx.nests,webs:sbx.webs,solidWebs:sbx.solidWebs,bridges:sbx.bridges,webPaths:sbx.webPaths,bushes:sbx.bushes,bigBushes:sbx.bigBushes,queens:sbx.queens,webWalls:sbx.webWalls,cocoons:sbx.cocoons,eggSacs:sbx.eggSacs,bones:sbx.bones,ruins:sbx.ruins,silkBridges:sbx.silkBridges,tunnelIns:sbx.tunnelIns,tunnelOuts:sbx.tunnelOuts,sewers:sbx.sewers,graves:sbx.graves,graveyards:sbx.graveyards,crypts:sbx.crypts,houses:sbx.houses,pyramids:sbx.pyramids,pumpkins:sbx.pumpkins,jacks:sbx.jacks,barns:sbx.barns,thornPaths:sbx.thornPaths,corns:sbx.corns,wells:sbx.wells,candles:sbx.candles,openGraves:sbx.openGraves,shroomPaths:sbx.shroomPaths,shroomHouses:sbx.shroomHouses,corpses:sbx.corpses,glowPools:sbx.glowPools,puffballs:sbx.puffballs,myceliums:sbx.myceliums,
+    spiderNests:sbx.nests,webs:sbx.webs,solidWebs:sbx.solidWebs,bridges:sbx.bridges,webPaths:sbx.webPaths,bushes:sbx.bushes,bigBushes:sbx.bigBushes,queens:sbx.queens,webWalls:sbx.webWalls,cocoons:sbx.cocoons,eggSacs:sbx.eggSacs,bones:sbx.bones,ruins:sbx.ruins,silkBridges:sbx.silkBridges,tunnelIns:sbx.tunnelIns,tunnelOuts:sbx.tunnelOuts,sewers:sbx.sewers,graves:sbx.graves,graveyards:sbx.graveyards,crypts:sbx.crypts,houses:sbx.houses,pyramids:sbx.pyramids,pumpkins:sbx.pumpkins,jacks:sbx.jacks,barns:sbx.barns,thornPaths:sbx.thornPaths,sandPaths:sbx.sandPaths.length?sbx.sandPaths:undefined,oldPaths:sbx.oldPaths.length?sbx.oldPaths:undefined,corns:sbx.corns,wells:sbx.wells,candles:sbx.candles,openGraves:sbx.openGraves,shroomPaths:sbx.shroomPaths,shroomHouses:sbx.shroomHouses,corpses:sbx.corpses,glowPools:sbx.glowPools,puffballs:sbx.puffballs,myceliums:sbx.myceliums,
     seas:sbx.seas.length?sbx.seas:undefined,lavas:sbx.lavas.length?sbx.lavas:undefined,lavaSpawns:sbx.lavaSpawns.length?sbx.lavaSpawns:undefined,magmaCracks:sbx.magmaCracks.length?sbx.magmaCracks:undefined,crabNests:sbx.crabNests.length?sbx.crabNests:undefined,beachBalls:sbx.beachBalls.length?sbx.beachBalls:undefined,biomes:sbx.biomes.length?sbx.biomes:undefined,road:sbx.path,spawns:sbx.spawns,bases:sbx.bases,waveScript:sbx.waveScript||undefined,night:sbx.night==null?undefined:sbx.night});
 }
 function sbxRender(){
@@ -7614,7 +7784,7 @@ function sbxDraw(){
   const keepBiomes=biomeTiles;
   const cv=document.getElementById('sbxCanvas');
   const saved={ctx,CELL,COLS,ROWS,CW,CH,paths,path,pathSet,pathCells,lake,grove,trees,sewers,lab,theme,themeB,splitEdge,
-    terrainCache,forestPathIdx,forestIdxs,denPoints,nestPts,webs,bridges,webPaths,bigBushes,queens,webWalls,cocoons,eggSacs,boneHeaps,ruins,silkBridges,tunnels,piers,lakeExitPts,lakeSpawnPts,frameCount,extraBases,hiddenPaths,graves,graveyards,crypts,houses,pyramids,pumpkins,jacks,barns,thornPaths,corns,wells,candles,openGraves,shroomPaths,shroomHouses,corpses,glowPools,puffballs,myceliums,crabNests,beachBalls,lavaSpawnPts,lavaExitPts,magmaCracks,lavaPools};
+    terrainCache,forestPathIdx,forestIdxs,denPoints,nestPts,webs,bridges,webPaths,bigBushes,queens,webWalls,cocoons,eggSacs,boneHeaps,ruins,silkBridges,tunnels,piers,lakeExitPts,lakeSpawnPts,frameCount,extraBases,hiddenPaths,graves,graveyards,crypts,houses,pyramids,pumpkins,jacks,barns,thornPaths,sandPaths,oldPaths,corns,wells,candles,openGraves,shroomPaths,shroomHouses,corpses,glowPools,puffballs,myceliums,crabNests,beachBalls,lavaSpawnPts,lavaExitPts,magmaCracks,lavaPools};
   try{
     const S=40, pt=([r,c])=>({x:c*S+S/2,y:r*S+S/2});
     ctx=cv.getContext('2d'); ctx.setTransform(2,0,0,2,0,0);
@@ -7627,7 +7797,7 @@ function sbxDraw(){
     eggSacs=sbx.eggSacs.map(([r,c])=>({row:r,col:c})); boneHeaps=sbx.bones.map(([r,c,v])=>({row:r,col:c,v}));
     graves=sbx.graves.map(([r,c])=>({row:r,col:c})); graveyards=sbx.graveyards.map(([r,c,d])=>({row:r,col:c,dir:d}));
     crypts=sbx.crypts.map(([r,c,d])=>({row:r,col:c,dir:d||'r'})); houses=sbx.houses.map(([r,c])=>({row:r,col:c})); pyramids=sbx.pyramids.map(([r,c])=>({row:r,col:c,open:0}));
-    pumpkins=sbx.pumpkins.map(([r,c,v])=>({row:r,col:c,v:v||0})); jacks=sbx.jacks.map(([r,c])=>({row:r,col:c})); barns=sbx.barns.map(([r,c,d])=>({row:r,col:c,dir:d||'r'})); thornPaths=sbx.thornPaths.map(([r,c])=>({row:r,col:c}));
+    pumpkins=sbx.pumpkins.map(([r,c,v])=>({row:r,col:c,v:v||0})); jacks=sbx.jacks.map(([r,c])=>({row:r,col:c})); barns=sbx.barns.map(([r,c,d])=>({row:r,col:c,dir:d||'r'})); thornPaths=sbx.thornPaths.map(([r,c])=>({row:r,col:c})); sandPaths=sbx.sandPaths.map(([r,c])=>({row:r,col:c})); oldPaths=sbx.oldPaths.map(([r,c])=>({row:r,col:c}));
     corns=sbx.corns.map(([r,c])=>({row:r,col:c,rustle:0})); wells=sbx.wells.map(([r,c])=>({row:r,col:c,routes:[],splash:0})); candles=sbx.candles.map(([r,c])=>({row:r,col:c})); openGraves=sbx.openGraves.map(([r,c])=>({row:r,col:c,rise:0}));
     shroomPaths=sbx.shroomPaths.map(([r,c])=>({row:r,col:c})); shroomHouses=sbx.shroomHouses.map(([r,c])=>({row:r,col:c})); corpses=sbx.corpses.map(([r,c,v])=>({row:r,col:c,v:v||0}));
     glowPools=sbx.glowPools.map(([r,c])=>({row:r,col:c,routes:[],splash:0})); puffballs=sbx.puffballs.map(([r,c])=>({row:r,col:c,regrow:0})); myceliums=sbx.myceliums.map(([r,c])=>({row:r,col:c}));
@@ -7653,7 +7823,7 @@ function sbxDraw(){
     ctx.clearRect(0,0,CW,CH);
     ctx.drawImage(sbxTerrain,0,0,CW,CH);
     piers=lake.length?computePiers():[];
-    drawRoadLayer(); drawWebPaths(); drawThornPaths(sbxFrame); drawMagmaCracks(sbxFrame,false); drawShroomPaths(sbxFrame,false); drawMyceliums(sbxFrame,false); drawLake(); drawSea(); drawLava(); drawPiers(); drawBridges(); drawSilkBridges(); drawTunnels(); drawGrove(); drawWebs(); drawWebWalls(); drawNests(); drawTrees(); drawSewersAndLab();
+    drawRoadLayer(); drawWebPaths(); drawThornPaths(sbxFrame); drawDesertPaths(); drawMagmaCracks(sbxFrame,false); drawShroomPaths(sbxFrame,false); drawMyceliums(sbxFrame,false); drawLake(); drawSea(); drawLava(); drawPiers(); drawBridges(); drawSilkBridges(); drawTunnels(); drawGrove(); drawWebs(); drawWebWalls(); drawNests(); drawTrees(); drawSewersAndLab();
     sbx.bushes.forEach(([r,c])=>drawBushAt(c*S+S/2,r*S+S/2));
     bigBushes.forEach(b=>drawBigBush(b.col*S,b.row*S));
     cocoons.forEach(k=>drawCocoon(k.col*S+S/2,k.row*S+S/2,k.row*31+k.col,sbxFrame));
@@ -7711,7 +7881,7 @@ function sbxDraw(){
   } finally {
     biomeTiles=keepBiomes;
     ({ctx,CELL,COLS,ROWS,CW,CH,paths,path,pathSet,pathCells,lake,grove,trees,sewers,lab,theme,themeB,splitEdge,
-      terrainCache,forestPathIdx,forestIdxs,denPoints,nestPts,webs,bridges,webPaths,bigBushes,queens,webWalls,cocoons,eggSacs,boneHeaps,ruins,silkBridges,tunnels,piers,lakeExitPts,lakeSpawnPts,frameCount,extraBases,hiddenPaths,graves,graveyards,crypts,houses,pyramids,pumpkins,jacks,barns,thornPaths,corns,wells,candles,openGraves,shroomPaths,shroomHouses,corpses,glowPools,puffballs,myceliums,crabNests,beachBalls,lavaSpawnPts,lavaExitPts,magmaCracks,lavaPools}=saved);
+      terrainCache,forestPathIdx,forestIdxs,denPoints,nestPts,webs,bridges,webPaths,bigBushes,queens,webWalls,cocoons,eggSacs,boneHeaps,ruins,silkBridges,tunnels,piers,lakeExitPts,lakeSpawnPts,frameCount,extraBases,hiddenPaths,graves,graveyards,crypts,houses,pyramids,pumpkins,jacks,barns,thornPaths,sandPaths,oldPaths,corns,wells,candles,openGraves,shroomPaths,shroomHouses,corpses,glowPools,puffballs,myceliums,crabNests,beachBalls,lavaSpawnPts,lavaExitPts,magmaCracks,lavaPools}=saved);
   }
 }
 // night or bright: by default the grass decides (Glowshroom Valley grass is night), the switch overrides it and is kept in the level code
@@ -7755,7 +7925,7 @@ function sbxSetOrient(o){
   const C=SBX_SIZES[o];
   const keep=arr=>arr.filter(([r,c])=>r<C.ROWS&&c<C.COLS);
   sbx.orient=o; sbx.COLS=C.COLS; sbx.ROWS=C.ROWS;
-  ['path','spawns','bases','trees','lake','lakeSpawns','forest','sewers','spiderDens','nests','webs','solidWebs','bridges','webPaths','bushes','webWalls','cocoons','eggSacs','bones','ruins','silkBridges','tunnelIns','tunnelOuts','graves','pumpkins','jacks','thornPaths','corns','wells','candles','openGraves','biomes','shroomPaths','corpses','glowPools','puffballs','myceliums','seas','lavas','lavaSpawns','magmaCracks','crabNests','beachBalls'].forEach(k=>sbx[k]=keep(sbx[k]));
+  ['path','spawns','bases','trees','lake','lakeSpawns','forest','sewers','spiderDens','nests','webs','solidWebs','bridges','webPaths','bushes','webWalls','cocoons','eggSacs','bones','ruins','silkBridges','tunnelIns','tunnelOuts','graves','pumpkins','jacks','thornPaths','sandPaths','oldPaths','corns','wells','candles','openGraves','biomes','shroomPaths','corpses','glowPools','puffballs','myceliums','seas','lavas','lavaSpawns','magmaCracks','crabNests','beachBalls'].forEach(k=>sbx[k]=keep(sbx[k]));
   sbx.shroomHouses=sbx.shroomHouses.filter(([r,c])=>r+2<=C.ROWS&&c+2<=C.COLS);
   sbx.graveyards=sbx.graveyards.filter(([r,c])=>r+2<=C.ROWS&&c+2<=C.COLS); sbx.houses=sbx.houses.filter(([r,c])=>r+2<=C.ROWS&&c+2<=C.COLS); sbx.pyramids=sbx.pyramids.filter(([r,c])=>r+2<=C.ROWS&&c+2<=C.COLS); sbx.barns=sbx.barns.filter(([r,c,d])=>d==='d'?r+3<=C.ROWS&&c+2<=C.COLS:r+2<=C.ROWS&&c+3<=C.COLS); sbx.crypts=sbx.crypts.filter(([r,c,d])=>d==='d'?r+2<=C.ROWS&&c<C.COLS:r<C.ROWS&&c+2<=C.COLS);
   sbx.bigBushes=sbx.bigBushes.filter(([r,c])=>r+2<=C.ROWS&&c+2<=C.COLS); sbx.queens=sbx.queens.filter(([r,c])=>r+4<=C.ROWS&&c+3<=C.COLS);
@@ -7785,7 +7955,7 @@ function sbxParse(d){
     const n=sbxFix({orient:d.orient,COLS:d.COLS,ROWS:d.ROWS,ground:d.ground,night:typeof d.night==='boolean'?d.night:null,path:d.road||[],spawns:d.spawns||[],bases:d.bases||[],base:d.base,
       trees:d.trees||[],lake:d.lake||[],lakeSpawns:d.lakeSpawns||[],forest:d.forest||[],spiderDen:d.spiderDen||null,spiderDens:d.spiderDens||[],
       nests:d.spiderNests||[],webs:d.webs||[],solidWebs:d.solidWebs||[],bridges:d.bridges||[],webPaths:d.webPaths||[],bushes:d.bushes||[],bigBushes:d.bigBushes||[],queens:d.queens||[],webWalls:d.webWalls||[],cocoons:d.cocoons||[],eggSacs:d.eggSacs||[],bones:d.bones||[],ruins:d.ruins||[],silkBridges:d.silkBridges||[],
-      tunnelIns:d.tunnelIns||[],tunnelOuts:d.tunnelOuts||[],sewers:d.sewers||[],graves:d.graves||[],graveyards:d.graveyards||[],crypts:d.crypts||[],houses:d.houses||[],pyramids:d.pyramids||[],pumpkins:d.pumpkins||[],jacks:d.jacks||[],barns:d.barns||[],thornPaths:d.thornPaths||[],corns:d.corns||[],wells:d.wells||[],candles:d.candles||[],openGraves:d.openGraves||[],shroomPaths:d.shroomPaths||[],shroomHouses:d.shroomHouses||[],corpses:d.corpses||[],glowPools:d.glowPools||[],puffballs:d.puffballs||[],biomes:(d.biomes||[]).filter(b=>Array.isArray(b)&&biomeById(b[2])),myceliums:d.myceliums||[],seas:d.seas||[],lavas:d.lavas||[],lavaSpawns:d.lavaSpawns||[],magmaCracks:d.magmaCracks||[],crabNests:d.crabNests||[],beachBalls:d.beachBalls||[]});
+      tunnelIns:d.tunnelIns||[],tunnelOuts:d.tunnelOuts||[],sewers:d.sewers||[],graves:d.graves||[],graveyards:d.graveyards||[],crypts:d.crypts||[],houses:d.houses||[],pyramids:d.pyramids||[],pumpkins:d.pumpkins||[],jacks:d.jacks||[],barns:d.barns||[],thornPaths:d.thornPaths||[],sandPaths:d.sandPaths||[],oldPaths:d.oldPaths||[],corns:d.corns||[],wells:d.wells||[],candles:d.candles||[],openGraves:d.openGraves||[],shroomPaths:d.shroomPaths||[],shroomHouses:d.shroomHouses||[],corpses:d.corpses||[],glowPools:d.glowPools||[],puffballs:d.puffballs||[],biomes:(d.biomes||[]).filter(b=>Array.isArray(b)&&biomeById(b[2])),myceliums:d.myceliums||[],seas:d.seas||[],lavas:d.lavas||[],lavaSpawns:d.lavaSpawns||[],magmaCracks:d.magmaCracks||[],crabNests:d.crabNests||[],beachBalls:d.beachBalls||[]});
     if(!n.path.length&&Array.isArray(d.paths)){        // older code: rebuild the road from its waypoints
       d.paths.forEach(wp=>{ for(let i=0;i<wp.length-1;i++){ const [r1,c1]=wp[i],[r2,c2]=wp[i+1], m=Math.abs(r2-r1)+Math.abs(c2-c1);
         for(let k=0;k<=m;k++){ const p=[r1+Math.sign(r2-r1)*k,c1+Math.sign(c2-c1)*k]; if(!sHas(n.path,p[0],p[1]))n.path.push(p);} } });
@@ -7817,7 +7987,7 @@ function sbxLayout(R){
   const L={COLS:sbx.COLS,ROWS:sbx.ROWS,paths:flat,routeGroups:groups,
     lake:sbx.lake,keepLake:true,sewers:sbx.sewers,treesAt:sbx.trees,grove:sbx.forest,extraRoad:sbx.path.concat(sbx.bridges,sbx.silkBridges),bases:sbx.bases,
     bridges:sbx.bridges,webPaths:sbx.webPaths,bushes:sbx.bushes,bigBushes:sbx.bigBushes,queens:sbx.queens,webWalls:sbx.webWalls,cocoons:sbx.cocoons,
-    eggSacs:R.eggs,bones:sbx.bones,ruins:sbx.ruins,silkBridges:sbx.silkBridges,graves:sbx.graves,graveyards:sbx.graveyards,crypts:sbx.crypts,houses:sbx.houses,pyramids:sbx.pyramids,pumpkins:sbx.pumpkins,jacks:sbx.jacks,barns:sbx.barns,thornPaths:sbx.thornPaths,
+    eggSacs:R.eggs,bones:sbx.bones,ruins:sbx.ruins,silkBridges:sbx.silkBridges,graves:sbx.graves,graveyards:sbx.graveyards,crypts:sbx.crypts,houses:sbx.houses,pyramids:sbx.pyramids,pumpkins:sbx.pumpkins,jacks:sbx.jacks,barns:sbx.barns,thornPaths:sbx.thornPaths,sandPaths:sbx.sandPaths,oldPaths:sbx.oldPaths,
     corns:sbx.corns,wells:R.wells||[],candles:sbx.candles,openGraves:sbx.openGraves,shroomPaths:sbx.shroomPaths,shroomHouses:sbx.shroomHouses,corpses:sbx.corpses,glowPools:R.glowPools||[],puffballs:sbx.puffballs,myceliums:sbx.myceliums,biomes:sbx.biomes,seas:sbx.seas,lavas:sbx.lavas,lavaSpawns:sbx.lavaSpawns,lavaExits:(R.lavaExits||[]).map(e=>({exit:e.exit,routes:e.routes})),magmaCracks:sbx.magmaCracks,crabNests:R.crabNests||[],beachBalls:sbx.beachBalls,
     tunnels:sbx.tunnelIns.map((tin,i)=>({in:tin,out:sbx.tunnelOuts[i]})).filter(t=>t.out),
     lakeSpawns:sbx.lakeSpawns,lakeExits:R.lakeExits.map(e=>({exit:e.exit,routes:e.routes}))};
@@ -8089,7 +8259,7 @@ function startGame(){
   crypts=(L.crypts||[]).map(([r,c,d])=>({row:r,col:c,dir:d||'r',cd:120+Math.floor(Math.random()*180)}));
   pyramids=(L.pyramids||[]).map(([r,c])=>({row:r,col:c,open:0})); pyramidWave=0;
   houses=(L.houses||[]).map(([r,c])=>({row:r,col:c,broken:false,crack:0,breakWave:0})); houseWave=0; jackWave=0; knivesFx=[]; roadGraves=[];
-  pumpkins=(L.pumpkins||[]).map(([r,c,v])=>({row:r,col:c,v:v||0})); barns=(L.barns||[]).map(([r,c,d])=>({row:r,col:c,dir:d||'r'})); thornPaths=(L.thornPaths||[]).map(([r,c])=>({row:r,col:c}));
+  pumpkins=(L.pumpkins||[]).map(([r,c,v])=>({row:r,col:c,v:v||0})); barns=(L.barns||[]).map(([r,c,d])=>({row:r,col:c,dir:d||'r'})); thornPaths=(L.thornPaths||[]).map(([r,c])=>({row:r,col:c})); sandPaths=(L.sandPaths||[]).map(([r,c])=>({row:r,col:c})); oldPaths=(L.oldPaths||[]).map(([r,c])=>({row:r,col:c}));
   jacks=(L.jacks||[]).map(([r,c])=>({row:r,col:c,risen:false,rise:0,wait:0,breakWave:0}));
   corns=(L.corns||[]).map(([r,c])=>({row:r,col:c,rustle:0})); candles=(L.candles||[]).map(([r,c])=>({row:r,col:c}));
   funglingWave=0; sporeLobs=[]; sporePuffs=[]; slimeBalls=[]; huskThrows=[]; riderHeads=[]; titanRocks=[]; titanShards=0; loyaltyShards=[];
@@ -8174,7 +8344,7 @@ function startGame(){
   gold=lv.startGold+goldBoost; lives=lv.lives; wave=0;
   towers=[]; enemies=[]; projectiles=[]; selectedType=null; preview=null;
   waveActive=false; waveSpawnDone=true; gameOver=false; nextWaveIn=0; waveInfo={};
-  meteors=[]; allies=[]; poison=[]; bolts=[]; chaosT=0; fireDrops=[]; worms=[]; wormEats=0; powerCd={}; armed=null; arrowTarget=null; bushes=[]; cars=[]; carShots=[]; rockets=[]; sparks=[]; motes=[]; fx=[]; shake=0; hurtFlash=0; guards=[]; lakeNext=0; thiefKills=0; timeFx=0; labUsed=0;
+  meteors=[]; allies=[]; poison=[]; bolts=[]; chaosT=0; fireDrops=[]; worms=[]; wormEats=0; tumbleRolls=[]; breezeT=0; breezeFx=0; powerCd={}; armed=null; arrowTarget=null; bushes=[]; cars=[]; carShots=[]; rockets=[]; sparks=[]; motes=[]; fx=[]; shake=0; hurtFlash=0; guards=[]; lakeNext=0; thiefKills=0; timeFx=0; labUsed=0;
   bushes=(L.bushes||[]).map(([r,c])=>({row:r,col:c}));
   if(!bushes.length&&lvDef&&(lvDef.bushes||(lvDef.waves||[]).some(w=>w.some(g=>ENEMIES[g.type]&&ENEMIES[g.type].steals))))placeBushes();
   paused=false; selectedTower=null;
@@ -8339,7 +8509,7 @@ canvas.addEventListener('click',e=>{
     const box=document.getElementById('towerInfo');
     selectedTower=null;
     box.innerHTML='<span>'+(tr.kind?TREE_KINDS[treeKindHere(tr.kind,tr.row,tr.col)].name:(tr.rotten?'Rotten tree':'Old tree'))+' · blocks building</span>'+
-      '<button class="actBtn" onclick="chopTree('+row+','+col+')">Clear '+TREE_COST+'g</button>'+
+      '<button class="actBtn" onclick="chopTree('+row+','+col+')">Clear '+treeCost(tr)+'g</button>'+
       '<button id="closeInfo" onclick="hideTowerInfo()">✕</button>';
     box.classList.add('show');
     return;
@@ -9521,6 +9691,7 @@ function burstHouse(h,myWave,at){
     for(let i=0;i<n;i++)setTimeout(()=>{ if(gameOver)return; const e=spawnDead('zombiegrunt',x,y); e.waveNo=myWave; if(wi)wi.spawned++; },300+i*380); },at);
 }
 let graves=[], graveyards=[], crypts=[], houses=[], houseWave=0, bonesWave=0, knivesFx=[], roadGraves=[]; const GRAVEDIGGER_MAX=3, ROAD_GRAVE_HP=500;
+let sandPaths=[], oldPaths=[], tumbleRolls=[], breezeT=0, breezeFx=0, breezeDir=1;
 let pumpkins=[], jacks=[], barns=[], thornPaths=[], jackWave=0, barnWave=0, barnWaves=[]; const JACK_RISE=70, THORN_DPS=6, BARN_OPEN=200;
 // the barn doors swing open: 10-15 chickens stampede out, then one farmer, all counting towards that wave
 function openBarn(b,myWave,at){
@@ -12202,7 +12373,7 @@ function draw(){
 
   drawRoadLayer();
   if(selectedType&&!gameOver)drawBuildGrid();
-  drawWebPaths(); drawThornPaths(frameCount); drawMagmaCracks(frameCount,false); drawShroomPaths(frameCount,false); drawMyceliums(frameCount,false);
+  drawWebPaths(); drawThornPaths(frameCount); drawDesertPaths(); drawMagmaCracks(frameCount,false); drawShroomPaths(frameCount,false); drawMyceliums(frameCount,false);
   drawLake(); drawSea(); drawLava(); drawLavaPools();
   drawPiers();
   drawBridges();
@@ -12213,6 +12384,7 @@ function draw(){
   drawWebWalls();
   drawNests();
   drawTrees();
+  drawBreeze();
   bigBushes.forEach(b=>drawBigBush(b.col*CELL,b.row*CELL));
   cocoons.forEach(k=>drawCocoon(k.col*CELL+CELL/2,k.row*CELL+CELL/2,k.row*31+k.col,frameCount));
   boneHeaps.forEach(k=>drawBones(k.col*CELL+CELL/2,k.row*CELL+CELL/2,k.row*17+k.col,k.v));
