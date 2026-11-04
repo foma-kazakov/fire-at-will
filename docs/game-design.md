@@ -206,6 +206,12 @@ You start with 2 power slots, which can be raised to 3 with gems.
 | Headless Rider | 2300 | Pumpkin Farm boss; throws his head across up to 4 towers (4 s stun each), drops 2 pumpkin bombers every 12 s |
 | Tumor Mother | 3000 | Dark Forest boss; births tumorlings and Tumors, leaps to another road, spits slime that stuns a tower for 7 s |
 
+### Encyclopedia discovery (4 Nov 2026, foma)
+- An enemy's stats show in the Encyclopedia only after you meet it in a level. Until then its card is a dark silhouette named "???", and tapping it says to meet it in a level first. Met enemies are saved in progress as `seenEnemies`.
+- The first time a new enemy walks onto the road, a pulsing round "!" button appears at the top left of the battlefield (with a count if several are waiting). Tapping it pauses the battle and opens that enemy's stats window; closing it resumes. Ignoring it is fine, the enemy is discovered anyway.
+- Old saves: enemies from the waves of levels already beaten count as met (done once, flag `seenSeeded`). Enemies that only come from sewers, lakes, houses and so on are found the next time they appear.
+- DLC levels show the button but don't save the discovery (DLC never touches progress). The Testing app saves it in its own progress; the Enemy tester never shows the button.
+
 ### Achievements
 - **Make it Rain:** click the gray cloud on the main menu.
 - **First shot, then what?:** destroy your first enemy.
@@ -219,7 +225,8 @@ You start with 2 power slots, which can be raised to 3 with gems.
 - **Ready to sell!** (4 Nov 2026, foma): clear every obstacle on a level, meaning every tree, decor piece (fence, scarecrow, brazier, rock) and webbed ruin. It unlocks the moment the last one goes, even before the level is won. Spider webs don't count, since enemies keep spinning new ones and solid webs can't be cut.
 - **Close** (4 Nov 2026, foma): win a level with exactly 1 heart left.
 - **Arachnophobia** (4 Nov 2026, foma): defeat the Spider Queen. No reward.
-- These three give no reward. Like every achievement they only count in the main campaign: DLC levels and everything in the Testing app (where the sandbox lives) never unlock them or add to the tree count.
+- **Dear diary** (4 Nov 2026, foma): open 3 new-enemy windows (the "!" button, see Encyclopedia discovery below) during battles. Count saved as `diaryOpens`.
+- These five give no reward. Like every achievement they only count in the main campaign: DLC levels and everything in the Testing app (where the sandbox lives) never unlock them or add to the tree count.
 - Achievement toasts queue up, so several unlocked at once (or with a level's unit reward) each show in turn.
 
 ### Redeem codes (Settings → code box)
