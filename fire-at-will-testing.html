@@ -439,7 +439,7 @@
   .pbtn::after{content:"";position:absolute;left:0;top:0;bottom:0;width:calc(var(--cdp,0) * 100%);background:rgba(10,12,8,.45);pointer-events:none;transition:width .25s linear;}
   .pbtn[data-p=fireRain]{background-color:#b5482c}.pbtn[data-p=heavyForce]{background-color:#56603f}.pbtn[data-p=backup]{background-color:#4a6d39}
   .pbtn[data-p=iceAge]{background-color:#3c7fae}.pbtn[data-p=poisonLake]{background-color:#5e7f2b}.pbtn[data-p=lightning]{background-color:#6a58b8}
-  .pbtn[data-p=arrowRain]{background-color:#8a6a3a}.pbtn[data-p=thriceLoyalty]{background-color:#8e2a1e}
+  .pbtn[data-p=arrowRain]{background-color:#8a6a3a}.pbtn[data-p=thriceLoyalty]{background-color:#8e2a1e}.pbtn[data-p=sandWorm]{background-color:#a7773a}
   .pbtn.used{opacity:.75;}
   .pbtn.arming{background-color:var(--rust)!important;box-shadow:0 3px 0 var(--ink),0 0 0 3px rgba(255,214,110,.6);}
   #canvasHolder{position:relative;}
@@ -1781,12 +1781,13 @@ const TOWER_TYPES={
     desc:'Lobs bombs that damage every enemy in a small blast radius.'},
 };
 let unlocked={gun:true,cannon:true,sniper:true,farm:false,artillery:false,mender:false,police:false,turret:false,factory:false,rocket:false,grenade:false,timemachine:false,workshop:false,firework:false,scorchwood:false,triple:false,footmen:false,pumpkinfarm:false};
-let achievements={rain:false,firstShot:false,snipe:false,bombardment:false,policeman:false,smellsfire:false,smarttarget:false,woodcutter:false,readytosell:false,close:false,arachnophobia:false,deardiary:false};
+let achievements={rain:false,firstShot:false,snipe:false,bombardment:false,policeman:false,smellsfire:false,smarttarget:false,woodcutter:false,readytosell:false,close:false,arachnophobia:false,deardiary:false,hungry:false};
 let treesCut=0, diaryOpens=0;   // trees cut across the whole game (Woodcutter); new-enemy windows opened in battle (Dear diary)
 let seenEnemies={};   // enemies met in a level: only these show their stats in the Encyclopedia
 const WOODCUTTER_GOAL=50;
 let thiefKills=0;  // resets every level
-let powers={arrowRain:false,fireRain:false,heavyForce:false,backup:false,iceAge:false,poisonLake:false,lightning:false,thriceLoyalty:false};
+let wormEats=0;    // enemies the Sand Worm ate this level (Hungry)
+let powers={arrowRain:false,fireRain:false,heavyForce:false,backup:false,iceAge:false,poisonLake:false,lightning:false,thriceLoyalty:false,sandWorm:false};
 let gems=0;
 let completed={};   // declared before loadProgress() runs, so saved level progress loads
 let progressFlags={};   // one-time fixes already applied to this save
@@ -1819,6 +1820,8 @@ const POWERS={
     desc:'Poisons random path tiles for 15 seconds, slowing enemies and damaging them over time.'},
   lightning:{name:'Lightning',how:'achievement',ach:'stormcaller',cd:20,
     desc:'Strikes one enemy of your choice for 250 damage.'},
+  sandWorm:{name:'Sand Worm',how:'level',cd:150,hint:'🔒 Comes after a Deserts level (coming soon)',
+    desc:'A massive worm bursts out of the sand and dives in and out along a whole road. Its mouth eats every enemy it touches; its body burns 3 health a second off anyone it brushes.'},
   thriceLoyalty:{name:'Thrice Loyalty',how:'level',cd:90,
     desc:'Summons chaos for 15 seconds: lightning strikes enemies all over the map, poison puddles spread on the road, and a rain of fire sets every enemy burning.'},
 };
@@ -1908,6 +1911,7 @@ const ACH={
   close:{title:'Close',desc:'Complete a level with only 1 heart left.',reward:'No reward — just bragging rights.'},
   arachnophobia:{title:'Arachnophobia',desc:'Defeat the Spider Queen.',reward:'No reward — just bragging rights.'},
   deardiary:{title:'Dear diary',desc:'Open 3 new enemy windows during battles.',reward:'No reward — just bragging rights.'},
+  hungry:{title:'Hungry',desc:'Eat 20 enemies with the Sand Worm in one level.',reward:'No reward — just bragging rights.'},
 };
 // trees, ruins and decor you can clear for gold: clearing the last one on a level earns "Ready to sell!"
 function checkReadyToSell(){ if(!testMode&&!trees.length&&!ruins.length&&!achievements.readytosell)unlockAchievement('readytosell'); }
@@ -2049,7 +2053,7 @@ function renderPowers(){
     let foot;
     if(own) foot=`<p style="opacity:.75">${on?'★ Equipped — tap to remove':'Tap to equip'}</p>`;
     else if(p.how==='buy') foot=`<p style="opacity:.75">💎 ${p.cost} — ${gems>=p.cost?'tap to buy':'not enough gems'}</p>`;
-    else if(p.how==='level') foot=`<p style="opacity:.75">🔒 Beat the last level of the Ashen Wastes</p>`;
+    else if(p.how==='level') foot=`<p style="opacity:.75">${p.hint||'🔒 Beat the last level of the Ashen Wastes'}</p>`;
     else foot=`<p style="opacity:.75">🔒 Unlocked by an achievement</p>`;
     d.innerHTML=`<h3>${own?(on?'★':'☆'):'🔒'} ${p.name}</h3><p>${p.desc}</p>`+foot;
     if(own||p.how==='buy'){ d.style.cursor='pointer'; d.onclick=()=>powerCardClick(key); }
@@ -2197,6 +2201,9 @@ const ENCY=[
  {type:'abomination',role:'Spore Thrower',
   skills:['400 health of pale flesh with glowshrooms growing all over it.','When one of your units is within 2 tiles in front of it, it stops and throws small glowshrooms.','Each glowshroom poisons the unit it hits for 5 seconds.'],
   weak:['Slow, and it stands still while it throws — easy to focus.','Towers never get thrown at: keep units behind it.','Ice Age and Lightning.']},
+ {type:'bandit',role:'Desert Raider',
+  skills:['A grunt of the dunes, only tougher: 150 health.','A little faster than a grunt, too.','Wrapped head to toe against the sand, a black mask over the face.'],
+  weak:['Nothing special to fear: steady damage does it.','Gunners and Turrets on the long straight roads.','Cannons break up packs of them.']},
  {type:'crab',role:'Sand Digger',
   skills:['A red beach crab scuttling sideways: 75 health.','On sand it digs in and runs a few tiles underground, where towers cannot see or shoot it, then pops up further down the road.','Crawls out of crab nests.'],
   weak:['Shoot it while it is above ground: towers by the nest catch it as it comes out.','Low health — Gunners and splash damage finish it fast.','It cannot dig on grass or a road with no sand around it.']},
@@ -2482,6 +2489,8 @@ function drawEnemyIcon(cv,type,infected){
     drawAshenShape(g,type,rad,col,0,20,0,1);
   } else if(type==='crab'){
     drawCrabShape(g,rad,col,0);
+  } else if(type==='bandit'){
+    drawBanditShape(g,rad,col,0);
   } else if(SHROOMS.includes(type)){
     drawShroomEnemy(g,type,rad,col,0,0,false);
   } else if(UNDEAD.includes(type)){
@@ -2684,6 +2693,7 @@ const ENEMIES={
   abomination:{name:'Glowshroom Abomination',hp:400,speed:0.45,reward:28,r:14,col:'#e4e0ee',lobs:true,region:'glowshroom'},
   puffer:{name:'Puffball',hp:70,speed:0.85,reward:8,r:10,col:'#d3dbef',popsBlind:true,region:'glowshroom'},
   flatcap:{name:'Flatcap Golem',hp:300,speed:0.75,reward:30,r:13,col:'#d6dbe8',burrows:true,region:'glowshroom'},
+  bandit:{name:'Bandit',hp:150,speed:1.1,reward:14,r:10,col:'#8a6a45',region:'desert'},
   crab:{name:'Crab',hp:75,speed:1.1,reward:7,r:9,col:'#e0603a',sandDigs:true,region:'beach'},
   zombiegrunt:{name:'Zombie Grunt',hp:100,speed:1.0,reward:11,r:10,col:null,bites:true,looksInfected:true,region:'halloween'},
   grassmer:{name:'Grassmer',hp:2600,speed:0.55,reward:90,r:20,col:'#3f7d3a',boss:true,region:'fields'},
@@ -6210,6 +6220,7 @@ function activatePower(key){
     setMsg('Fire Rain incoming!');
   }
   if(key==='thriceLoyalty')startChaos();
+  if(key==='sandWorm')startWorm();
   if(key==='iceAge'){
     enemies.forEach(e=>e.frozen=300);
     setMsg('Ice Age! Enemies frozen for 5 seconds.');
@@ -6264,6 +6275,7 @@ function moveAllyBack(a){
 }
 function updatePowers(){
   updateChaos();
+  updateWorms();
   // meteors
   for(let i=meteors.length-1;i>=0;i--){
     const m=meteors[i];
@@ -6370,6 +6382,92 @@ function updatePowers(){
   }
   bolts.forEach(b=>b.life--);
   bolts=bolts.filter(b=>b.life>0);
+}
+/* ---------- Sand Worm: a giant worm dives in and out of the sand along a whole road ---------- */
+// It comes up at your base and swims up the road against the enemies to the spawn. The humps stay in the same places
+// while the body slides through them, like a worm really going in and out of the ground.
+// Its mouth eats any enemy it reaches (bosses only take a bite), its body burns 3 health a second off anyone it brushes.
+let worms=[]; const WORM_SEGS=70, WORM_GAP=0.1, WORM_ARC=3.6, WORM_LIFT=1.5, WORM_BITE=250;
+function wormLine(P){ const cum=[0]; for(let i=1;i<P.length;i++)cum.push(cum[i-1]+(P[i].jump?0:Math.hypot(P[i].x-P[i-1].x,P[i].y-P[i-1].y))); return cum; }
+// a point on the road d pixels from its base end, plus the direction the worm is heading there
+function wormAt(w,d){ const P=w.P, cum=w.cum, L=w.len, u=L-d;
+  let i=1; while(i<P.length-1&&cum[i]<u)i++;
+  const a=P[i-1], b=P[i], sl=(cum[i]-cum[i-1])||1, f=Math.max(0,Math.min(1,(u-cum[i-1])/sl));
+  return {x:a.x+(b.x-a.x)*f, y:a.y+(b.y-a.y)*f, ang:Math.atan2(a.y-b.y,a.x-b.x)}; }
+function wormH(d){ return Math.sin(d/(CELL*WORM_ARC)*Math.PI*2); }    // above 0 = out of the sand
+function startWorm(){
+  const P=pickRoute(visibleRoutes()).P; if(!P||P.length<2)return;
+  const cum=wormLine(P);
+  worms.push({P,cum,len:cum[cum.length-1],d:0,speed:CELL*0.085,hurtT:0});
+  shake=Math.max(shake,10); setMsg('The Sand Worm rises!');
+}
+function updateWorms(){
+  for(let wi=worms.length-1;wi>=0;wi--){ const w=worms[wi];
+    w.d+=w.speed; w.hurtT++;
+    const bodyLen=WORM_SEGS*WORM_GAP*CELL;
+    if(w.d-bodyLen>w.len){ worms.splice(wi,1); continue; }
+    // the mouth: whenever the head is out of the sand or just breaking it, it eats whatever it reaches
+    if(w.d<=w.len&&wormH(w.d)>-0.3){ const h=wormAt(w,w.d);
+      enemies.forEach(e=>{ if(e.hp<=0||e.down>0||e.wormBit>0)return;
+        if(Math.hypot(e.x-h.x,e.y-h.y)>CELL*0.7+(e.r||10)*0.5)return;
+        if(e.boss){ hurt(e,WORM_BITE,'area'); e.wormBit=90; shake=Math.max(shake,5); return; }
+        e.hp=0; e.eaten=true; e.reborn=null; e.wormBit=1; playDeath();
+        for(let k=0;k<6;k++)sparks.push({x:e.x,y:e.y,vx:(Math.random()-0.5)*3,vy:-Math.random()*2.4,life:14,col:'#d9b97a'});
+        if(!testMode){ wormEats++; if(wormEats>=20&&!achievements.hungry)unlockAchievement('hungry'); }
+      }); }
+    // the body: 3 damage a second to anyone a hump out of the sand passes over
+    if(w.hurtT%20===0){ const hit=new Set();
+      for(let k=1;k<WORM_SEGS;k+=3){ const d=w.d-k*WORM_GAP*CELL; if(d<0||d>w.len||wormH(d)<=0.05)continue;
+        const p=wormAt(w,d);
+        enemies.forEach(e=>{ if(!hit.has(e)&&e.hp>0&&Math.hypot(e.x-p.x,e.y-p.y)<CELL*0.55)hit.add(e); }); }
+      hit.forEach(e=>hurt(e,1,'area')); }
+    // sand thrown up where the worm breaks the surface
+    if(frameCount%3===0)for(let k=0;k<WORM_SEGS;k+=2){ const d=w.d-k*WORM_GAP*CELL; if(d<0||d>w.len)continue;
+      if(Math.abs(wormH(d))<0.18){ const p=wormAt(w,d);
+        sparks.push({x:p.x+(Math.random()-0.5)*CELL*0.5,y:p.y,vx:(Math.random()-0.5)*2.4,vy:-1-Math.random()*2.2,life:16,col:Math.random()<0.5?'#d9b97a':'#b8945a'}); } }
+  }
+  enemies.forEach(e=>{ if(e.wormBit>0)e.wormBit--; });
+}
+function drawWorms(){
+  worms.forEach(w=>{
+    const segs=[];
+    for(let k=WORM_SEGS-1;k>=0;k--){ const d=w.d-k*WORM_GAP*CELL; if(d<0||d>w.len)continue;
+      const p=wormAt(w,d), h=wormH(d); segs.push({k,d,p,h}); }
+    // a ridge of churned sand along the road where it swims underground, and a ring of sand at every hole
+    segs.forEach(s=>{ if(s.h>0.05||s.k%3)return; ctx.fillStyle='rgba(120,88,48,'+(0.18+0.22*Math.min(1,-s.h*2)).toFixed(3)+')';
+      ctx.beginPath();ctx.ellipse(s.p.x,s.p.y,CELL*0.34,CELL*0.22,s.p.ang,0,Math.PI*2);ctx.fill(); });
+    const Lz=CELL*WORM_ARC;
+    for(let n=0;n*Lz*0.5<=w.len;n++){ const d=n*Lz*0.5; if(d>w.d||d<w.d-WORM_SEGS*WORM_GAP*CELL-CELL)continue;
+      const p=wormAt(w,d); ctx.fillStyle='#8a6a3c';
+      ctx.beginPath();ctx.ellipse(p.x,p.y+2,CELL*0.72,CELL*0.36,0,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#d9bd82'; ctx.beginPath();ctx.ellipse(p.x,p.y,CELL*0.64,CELL*0.3,0,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#3b2a18'; ctx.beginPath();ctx.ellipse(p.x,p.y,CELL*0.44,CELL*0.18,0,0,Math.PI*2);ctx.fill(); }
+    // shadows of the humps, then the body tail first so the head is drawn on top
+    segs.forEach(s=>{ if(s.h<=0)return; ctx.fillStyle='rgba(0,0,0,'+(0.22*s.h).toFixed(3)+')';
+      ctx.beginPath();ctx.ellipse(s.p.x,s.p.y+3,CELL*0.5,CELL*0.2,0,0,Math.PI*2);ctx.fill(); });
+    const ink='#22261c', head=segs.length&&segs[segs.length-1].k===0?segs[segs.length-1]:null;
+    // the body: dark outline circles first, then the fill, so the overlapping circles read as one ridged tube
+    const body=segs.filter(s=>s.h>0&&s.k>0).map(s=>({s,r:CELL*(0.56-0.26*s.k/WORM_SEGS),y:s.p.y-s.h*CELL*WORM_LIFT}));
+    ctx.fillStyle=ink; body.forEach(b=>{ ctx.beginPath();ctx.arc(b.s.p.x,b.y,b.r+2,0,Math.PI*2);ctx.fill(); });
+    body.forEach(b=>{ ctx.fillStyle='#c39558'; ctx.beginPath();ctx.arc(b.s.p.x,b.y,b.r,0,Math.PI*2);ctx.fill(); });
+    body.forEach(b=>{ ctx.fillStyle='rgba(255,236,190,.22)'; ctx.beginPath();ctx.arc(b.s.p.x-b.r*0.2,b.y-b.r*0.35,b.r*0.45,0,Math.PI*2);ctx.fill(); });
+    ctx.strokeStyle='rgba(74,48,20,.7)'; ctx.lineWidth=1.8;                                   // ridged rings
+    body.forEach(b=>{ if(b.s.k%3)return; ctx.beginPath();ctx.arc(b.s.p.x,b.y,b.r*0.92,Math.PI*0.1,Math.PI*0.9);ctx.stroke(); });
+    if(head&&head.h>-0.3){ const h=Math.max(0,head.h), r=CELL*0.68, x=head.p.x, y=head.p.y-h*CELL*WORM_LIFT;
+      const dir=Math.cos(head.p.ang)>=0?1:-1, open=0.55+0.45*Math.sin(frameCount*0.25);
+      ctx.save(); ctx.translate(x,y);
+      ctx.strokeStyle=ink; ctx.lineWidth=2.4; ctx.fillStyle='#a57a40';
+      ctx.beginPath();ctx.arc(0,0,r,0,Math.PI*2);ctx.fill();ctx.stroke();
+      ctx.fillStyle='#4a1e1a'; ctx.beginPath();ctx.arc(dir*r*0.12,r*0.08,r*0.66,0,Math.PI*2);ctx.fill();ctx.stroke();   // the gaping round maw
+      ctx.fillStyle='#f1e6c8';                                                             // a ring of teeth pointing in
+      for(let i=0;i<12;i++){ const a=i/12*Math.PI*2, cx=dir*r*0.12+Math.cos(a)*r*0.62, cy=r*0.08+Math.sin(a)*r*0.62;
+        ctx.beginPath();ctx.moveTo(cx+Math.cos(a+1.6)*2.2,cy+Math.sin(a+1.6)*2.2);ctx.lineTo(cx-Math.cos(a)*r*0.2,cy-Math.sin(a)*r*0.2);ctx.lineTo(cx+Math.cos(a-1.6)*2.2,cy+Math.sin(a-1.6)*2.2);ctx.closePath();ctx.fill(); }
+      ctx.fillStyle='#1a0c0a'; ctx.beginPath();ctx.arc(dir*r*0.12,r*0.08,r*0.26,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#3a2a1a'; ctx.strokeStyle=ink; ctx.lineWidth=2;                   // two hooked mandibles, snapping
+      [-1,1].forEach(sd=>{ ctx.save(); ctx.translate(dir*r*0.7,sd*r*0.45); ctx.rotate(sd*(0.35+0.4*open)); ctx.scale(dir,sd);
+        ctx.beginPath();ctx.moveTo(-2,-3);ctx.quadraticCurveTo(r*0.9,-r*0.35,r*0.75,r*0.35);ctx.quadraticCurveTo(r*0.45,0,-2,3);ctx.closePath();ctx.fill();ctx.stroke(); ctx.restore(); });
+      ctx.restore(); }
+  });
 }
 /* ---------- Thrice Loyalty: 15 seconds of chaos ---------- */
 // lightning strikes enemies all over the map, poison puddles spread on the road, and a rain of real fire sets every enemy burning
@@ -6853,6 +6951,7 @@ Object.values(BLOCK_INFO).concat([GRASS_INFO]).forEach(b=>['size','where','does'
 Object.assign(I18N.ru,{"Description":"Описание","Beach":"Пляж","Sand":"Песок","Sea":"Море","Shore":"Берег","Crab nest":"Крабье гнездо","Beach ball":"Пляжный мяч","Rock":"Камень","Crab":"Краб","Sand Digger":"Песчаный копатель","A crab nest has no road to a Base nearby.":"У крабьего гнезда нет дороги к базе рядом.","Crabs scuttle out of the nest!":"Из гнезда выбегают крабы!","The beach ball explodes — 4 towers are stunned!":"Пляжный мяч взорвался — 4 башни оглушены!","Bridges go across a lake or into the sea.":"Мосты ставятся через озеро или в море.","A red beach crab scuttling sideways: 75 health.":"Красный пляжный краб бегает боком: 75 здоровья.","On sand it digs in and runs a few tiles underground, where towers cannot see or shoot it, then pops up further down the road.":"На песке он зарывается и пробегает несколько клеток под землёй, где башни его не видят и не стреляют, а потом вылезает дальше по дороге.","Crawls out of crab nests.":"Вылезает из крабьих гнёзд.","Shoot it while it is above ground: towers by the nest catch it as it comes out.":"Стреляйте, пока он на поверхности: башни у гнезда ловят его на выходе.","Low health — Gunners and splash damage finish it fast.":"Мало здоровья — Пулемётчики и урон по площади быстро его добивают.","It cannot dig on grass or a road with no sand around it.":"На траве и на дороге без песка вокруг он зарыться не может.","Size":"Размер","Where":"Где ставить","What it does":"Что делает","Grass":"Трава",
   "Tap any block on the map, or a tool button, to read about it.":"Нажмите на любой блок на карте или на кнопку инструмента, чтобы прочитать о нём.",
   "No description for this block yet.":"Для этого блока пока нет описания."});
+Object.assign(I18N.ru,{"Bandit":"Бандит","Desert Raider":"Пустынный налётчик","A grunt of the dunes, only tougher: 150 health.":"Пехотинец дюн, только крепче: 150 здоровья.","A little faster than a grunt, too.":"И чуть быстрее пехотинца.","Wrapped head to toe against the sand, a black mask over the face.":"Закутан с головы до ног от песка, на лице чёрная маска.","Nothing special to fear: steady damage does it.":"Ничего особенного: хватит ровного урона.","Gunners and Turrets on the long straight roads.":"Стрелки и Турели на длинных прямых дорогах.","Cannons break up packs of them.":"Пушки разбивают их толпы.","Sand Worm":"Песчаный червь","A massive worm bursts out of the sand and dives in and out along a whole road. Its mouth eats every enemy it touches; its body burns 3 health a second off anyone it brushes.":"Огромный червь вырывается из песка и ныряет туда-обратно вдоль всей дороги. Его пасть съедает каждого врага, которого коснётся, а тело отнимает 3 здоровья в секунду у всех, кого задевает.","🔒 Comes after a Deserts level (coming soon)":"🔒 Появится после уровня Пустынь (скоро)","The Sand Worm rises!":"Песчаный червь поднимается!","Hungry":"Голодный","Eat 20 enemies with the Sand Worm in one level.":"Съешьте 20 врагов Песчаным червём за один уровень."});
 let sbxDescOn=false;
 function sbxToggleDesc(){ sbxDescOn=!sbxDescOn; sbxPainting=false; sbxShowInfo(null); }
 // what a player would see on top of this tile
@@ -8075,7 +8174,7 @@ function startGame(){
   gold=lv.startGold+goldBoost; lives=lv.lives; wave=0;
   towers=[]; enemies=[]; projectiles=[]; selectedType=null; preview=null;
   waveActive=false; waveSpawnDone=true; gameOver=false; nextWaveIn=0; waveInfo={};
-  meteors=[]; allies=[]; poison=[]; bolts=[]; chaosT=0; fireDrops=[]; powerCd={}; armed=null; arrowTarget=null; bushes=[]; cars=[]; carShots=[]; rockets=[]; sparks=[]; motes=[]; fx=[]; shake=0; hurtFlash=0; guards=[]; lakeNext=0; thiefKills=0; timeFx=0; labUsed=0;
+  meteors=[]; allies=[]; poison=[]; bolts=[]; chaosT=0; fireDrops=[]; worms=[]; wormEats=0; powerCd={}; armed=null; arrowTarget=null; bushes=[]; cars=[]; carShots=[]; rockets=[]; sparks=[]; motes=[]; fx=[]; shake=0; hurtFlash=0; guards=[]; lakeNext=0; thiefKills=0; timeFx=0; labUsed=0;
   bushes=(L.bushes||[]).map(([r,c])=>({row:r,col:c}));
   if(!bushes.length&&lvDef&&(lvDef.bushes||(lvDef.waves||[]).some(w=>w.some(g=>ENEMIES[g.type]&&ENEMIES[g.type].steals))))placeBushes();
   paused=false; selectedTower=null;
@@ -11511,6 +11610,48 @@ function paintRoad(){
   ctx.restore();
 }
 // arms that swing with the stride, and an eye so they look where they walk
+// the bandit (foma's sketch): dusty long coat, red sash, bandolier, a sand-coloured head wrap and a black face mask,
+// a curved knife in the front hand. g is the canvas; step swings the legs and arms
+function drawBanditShape(g,rad,col,step){
+  g.save(); g.strokeStyle='#22261c'; g.lineWidth=2;
+  g.fillStyle='#3b2a1c';                                                   // boots
+  g.fillRect(-4.6,rad*0.8,4.2,rad*0.42+step*0.5); g.fillRect(0.4,rad*0.8,4.2,rad*0.42-step*0.5);
+  g.fillStyle=col;                                                         // long coat, flaring at the hem
+  g.beginPath();g.moveTo(-rad*0.58,-rad*0.5);g.lineTo(rad*0.58,-rad*0.5);g.lineTo(rad*0.7,rad*0.95);g.lineTo(-rad*0.7,rad*0.95);g.closePath();g.fill();g.stroke();
+  g.strokeStyle='rgba(0,0,0,.3)'; g.lineWidth=1.2;
+  g.beginPath();g.moveTo(0,rad*0.3);g.lineTo(0,rad*0.95);g.stroke();
+  g.strokeStyle='#22261c'; g.lineWidth=2;
+  g.fillStyle='#a8322a'; g.beginPath();g.rect(-rad*0.62,rad*0.14,rad*1.24,rad*0.24);g.fill();g.stroke();   // red sash
+  g.fillStyle='#a8322a'; g.beginPath();g.moveTo(-rad*0.3,rad*0.38);g.lineTo(-rad*0.42,rad*0.75);g.lineTo(-rad*0.16,rad*0.4);g.closePath();g.fill();
+  g.strokeStyle='#4a3420'; g.lineWidth=2.6;                               // bandolier across the chest
+  g.beginPath();g.moveTo(-rad*0.5,-rad*0.45);g.lineTo(rad*0.5,rad*0.12);g.stroke();
+  g.fillStyle='#d9b45a'; for(let i=1;i<4;i++){ const x=-rad*0.5+i*rad*0.25, y=-rad*0.45+i*rad*0.14; g.fillRect(x-0.8,y-1.6,1.6,2.4); }
+  g.strokeStyle='#22261c'; g.lineWidth=2;
+  g.fillStyle='#d8c39a';                                                   // head wrap
+  g.beginPath();g.arc(0,-rad*0.95,rad*0.48,0,Math.PI*2);g.fill();g.stroke();
+  g.strokeStyle='rgba(120,96,60,.7)'; g.lineWidth=1.1;
+  g.beginPath();g.arc(0,-rad*0.95,rad*0.36,Math.PI*1.1,Math.PI*1.9);g.stroke();
+  g.beginPath();g.arc(0,-rad*0.88,rad*0.4,Math.PI*1.15,Math.PI*1.85);g.stroke();
+  g.strokeStyle='#22261c'; g.lineWidth=2;
+  g.fillStyle='#d8c39a'; g.beginPath();g.moveTo(-rad*0.4,-rad*1.1);g.quadraticCurveTo(-rad*0.95,-rad*1.0,-rad*1.0,-rad*0.55+step*0.3);   // loose tail of the wrap
+  g.lineTo(-rad*0.75,-rad*0.6);g.quadraticCurveTo(-rad*0.7,-rad*0.9,-rad*0.35,-rad*0.86);g.closePath();g.fill();g.stroke();
+  g.fillStyle='#e0b48a'; g.beginPath();g.rect(-rad*0.36,-rad*1.08,rad*0.72,rad*0.2);g.fill();   // the strip of face left bare
+  g.fillStyle='#1c1a1a';                                                   // black face mask over nose and mouth
+  g.beginPath();g.moveTo(-rad*0.47,-rad*0.88);g.lineTo(rad*0.47,-rad*0.88);g.quadraticCurveTo(rad*0.4,-rad*0.5,0,-rad*0.45);g.quadraticCurveTo(-rad*0.4,-rad*0.5,-rad*0.47,-rad*0.88);g.closePath();g.fill();
+  g.fillStyle='#fff3d6'; g.beginPath();g.ellipse(-rad*0.15,-rad*0.98,1.5,1.1,0,0,Math.PI*2);g.ellipse(rad*0.2,-rad*0.98,1.5,1.1,0,0,Math.PI*2);g.fill();   // narrowed eyes
+  g.fillStyle='#1c1f16'; g.beginPath();g.arc(-rad*0.12,-rad*0.98,0.8,0,Math.PI*2);g.arc(rad*0.23,-rad*0.98,0.8,0,Math.PI*2);g.fill();
+  g.strokeStyle='#3a2a1c'; g.lineWidth=1.3;                               // scowling brows
+  g.beginPath();g.moveTo(-rad*0.3,-rad*1.12);g.lineTo(-rad*0.05,-rad*1.05);g.moveTo(rad*0.36,-rad*1.12);g.lineTo(rad*0.1,-rad*1.05);g.stroke();
+  g.strokeStyle='#22261c'; g.lineWidth=1.6;                               // arms
+  g.fillStyle=col; g.beginPath();g.ellipse(-rad*0.66,rad*0.1-step*0.5,2.6,3.8,0,0,Math.PI*2);g.fill();g.stroke();
+  g.beginPath();g.ellipse(rad*0.66,rad*0.05+step*0.5,2.6,3.8,0,0,Math.PI*2);g.fill();g.stroke();
+  g.fillStyle='#e0b48a'; g.beginPath();g.arc(-rad*0.68,rad*0.38-step*0.5,2,0,Math.PI*2);g.fill();g.stroke();
+  const hx=rad*0.7, hy=rad*0.34+step*0.5;
+  g.fillStyle='#4a3420'; g.fillRect(hx-1,hy-3,2.2,3.4);                   // a curved knife in the front hand
+  g.fillStyle='#d6d9dc'; g.beginPath();g.moveTo(hx-1.2,hy-2.8);g.quadraticCurveTo(hx+5,hy-6,hx+3,hy-11);g.quadraticCurveTo(hx+2,hy-6,hx+1.2,hy-2.8);g.closePath();g.fill();g.stroke();
+  g.fillStyle='#e0b48a'; g.beginPath();g.arc(hx,hy,2,0,Math.PI*2);g.fill();g.stroke();
+  g.restore();
+}
 function soldierBits(rad,step,skin,sleeve){
   ctx.save(); ctx.lineWidth=1.6;
   ctx.fillStyle=sleeve; ctx.strokeStyle='#22261c';
@@ -11850,15 +11991,46 @@ function drawTowerBody(t){
       if(t.flash>0){ ctx.fillStyle='rgba(250,176,48,.8)';
         ctx.beginPath();ctx.arc(0,-14,5+t.flash/2,0,Math.PI*2);ctx.fill(); }
     } else if(t.factory){
-      ctx.fillStyle='#9c9384';
-      ctx.beginPath();ctx.rect(-15,-6,30,18);ctx.fill();ctx.stroke();
-      ctx.fillStyle='#7d7466';
-      ctx.beginPath();ctx.moveTo(-15,-6);ctx.lineTo(-8,-14);ctx.lineTo(2,-6);ctx.closePath();ctx.fill();ctx.stroke();
-      ctx.beginPath();ctx.moveTo(2,-6);ctx.lineTo(9,-14);ctx.lineTo(15,-6);ctx.closePath();ctx.fill();ctx.stroke();
-      ctx.fillStyle='#5d564c'; ctx.fillRect(8,-20,6,14);
-      ctx.fillStyle='rgba(220,220,220,.55)';
-      ctx.beginPath();ctx.arc(11,-24-((frameCount/6)%8),4,0,Math.PI*2);ctx.fill();
-      ctx.fillStyle=t.color; ctx.fillRect(-11,2,8,10);
+      // the new factory (foma's sketch): a long dark brick works with a row of lit windows, a door on the right
+      // and a tall chimney on the left puffing big clouds of smoke
+      const thin=0.7/Math.max(k,0.35), lw0=ctx.lineWidth;
+      ctx.fillStyle='rgba(0,0,0,.22)'; ctx.beginPath();ctx.ellipse(1,13,17,3.2,0,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#8a5240'; ctx.beginPath();ctx.rect(-16,-5,32,18);ctx.fill();ctx.stroke();          // brick walls
+      ctx.lineWidth=thin; ctx.strokeStyle='rgba(50,22,14,.35)';
+      [-1,3,7,11].forEach((y,i)=>{ ctx.beginPath();ctx.moveTo(-16,y);ctx.lineTo(16,y);ctx.stroke();
+        for(let x=-14+(i%2)*3;x<16;x+=6){ ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x,y+4);ctx.stroke(); } });
+      ctx.lineWidth=lw0; ctx.strokeStyle=ink;
+      ctx.fillStyle='#3e2c26'; ctx.beginPath();ctx.rect(-17,-8,34,3.4);ctx.fill();ctx.stroke();       // flat roof with a parapet
+      ctx.fillStyle='#55463c'; ctx.beginPath();ctx.rect(-2,-12,13,4);ctx.fill();ctx.stroke();          // a raised roof light
+      ctx.fillStyle='rgba(255,214,120,.8)'; ctx.fillRect(0,-11,9,2);
+      const glow=0.8+0.2*Math.sin(frameCount*0.09+t.x*0.21);
+      ctx.lineWidth=thin; ctx.strokeStyle='#3a2418';
+      [-13,-6.5,0].forEach(x=>{ ctx.fillStyle='rgba(255,'+(196+30*glow|0)+',100,1)';   // lit windows, two panes each
+        ctx.beginPath();ctx.rect(x,-3,5.4,6.4);ctx.fill();ctx.stroke();
+        ctx.beginPath();ctx.moveTo(x+2.7,-3);ctx.lineTo(x+2.7,3.4);ctx.stroke(); });
+      ctx.lineWidth=lw0; ctx.strokeStyle=ink;
+      ctx.fillStyle='#2f2420'; ctx.beginPath();ctx.rect(7,2,6,11);ctx.fill();ctx.stroke();            // the door
+      ctx.fillStyle=t.color; ctx.beginPath();ctx.rect(8,3,4,9.5);ctx.fill();
+      ctx.lineWidth=thin; ctx.beginPath();ctx.moveTo(10,3);ctx.lineTo(10,12.5);ctx.stroke(); ctx.lineWidth=lw0;
+      ctx.fillStyle='#2b2420'; ctx.beginPath();ctx.arc(11.2,8,0.8,0,Math.PI*2);ctx.fill();
+      ctx.save(); ctx.translate(10,-1.6); ctx.rotate(frameCount*0.03);                                // a turning cog over the door
+      ctx.fillStyle='#b9a47a'; ctx.beginPath();
+      for(let i=0;i<16;i++){ const a=i/16*Math.PI*2, r=i%2?2.1:2.9; i?ctx.lineTo(Math.cos(a)*r,Math.sin(a)*r):ctx.moveTo(Math.cos(a)*r,Math.sin(a)*r); }
+      ctx.closePath();ctx.fill();ctx.lineWidth=thin;ctx.stroke();
+      ctx.fillStyle='#3e2c26'; ctx.beginPath();ctx.arc(0,0,0.8,0,Math.PI*2);ctx.fill(); ctx.restore(); ctx.lineWidth=lw0;
+      ctx.fillStyle='#7a4636'; ctx.beginPath();ctx.rect(-14,-24,6,17);ctx.fill();ctx.stroke();          // the tall chimney
+      ctx.fillStyle='#3a2c26'; ctx.beginPath();ctx.rect(-15,-26,8,3);ctx.fill();ctx.stroke();
+      ctx.lineWidth=thin; ctx.strokeStyle='rgba(30,14,10,.5)';
+      [-19,-15,-11].forEach(y=>{ ctx.beginPath();ctx.moveTo(-14,y);ctx.lineTo(-8,y);ctx.stroke(); });
+      ctx.fillStyle='rgba(20,14,12,.55)'; ctx.fillRect(-14,-23,6,2.4);
+      ctx.lineWidth=lw0; ctx.strokeStyle=ink;
+      for(let i=0;i<4;i++){                                                                         // billowing smoke
+        const ph=((frameCount/90)+i/4)%1, r=3+ph*6, a=0.85*(1-ph)+0.1;
+        const sx=-11+ph*10+Math.sin(ph*6+i)*2, sy=-28-ph*15;
+        ctx.fillStyle='rgba(150,146,140,'+a.toFixed(3)+')';
+        ctx.beginPath();ctx.arc(sx,sy,r,0,Math.PI*2);ctx.arc(sx+r*0.8,sy+r*0.3,r*0.72,0,Math.PI*2);ctx.arc(sx-r*0.7,sy+r*0.35,r*0.6,0,Math.PI*2);ctx.fill();
+        ctx.fillStyle='rgba(215,212,205,'+(a*0.7).toFixed(3)+')';
+        ctx.beginPath();ctx.arc(sx-r*0.25,sy-r*0.3,r*0.5,0,Math.PI*2);ctx.fill(); }
     } else if(t.type==='pumpkinfarm'){
       // pumpkin farm: a tilled patch of pumpkins with a calm farmer slowly hoeing between the rows
       ctx.fillStyle='#8a6234';
@@ -12248,6 +12420,8 @@ function draw(){
       ctx.fillStyle='#1c1f16'; ctx.beginPath();ctx.arc(rad*0.42,-rad*0.95,1.15,0,Math.PI*2);ctx.fill();
       ctx.save(); ctx.lineWidth=1.6; ctx.fillStyle='#e7b98a';
       ctx.beginPath();ctx.arc(-rad*0.5,rad*0.1-step*0.6,2,0,Math.PI*2);ctx.fill();ctx.stroke(); ctx.restore();
+    } else if(e.type==='bandit'){
+      drawBanditShape(ctx,rad,base,step);
     } else if(e.shoots){
       ctx.fillStyle='#2b3038';
       ctx.fillRect(-4.6,rad*0.8,4.2,rad*0.42+step*0.5);
@@ -12413,6 +12587,7 @@ function draw(){
   ctx.globalAlpha=1;
   drawFx();
   drawAmbience();
+  drawWorms();
   drawChaos();
   if(hurtFlash>0){
     const hg=ctx.createRadialGradient(CW/2,CH/2,Math.min(CW,CH)*0.3,CW/2,CH/2,Math.max(CW,CH)*0.72);
