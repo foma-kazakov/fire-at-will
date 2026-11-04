@@ -211,6 +211,11 @@ You start with 2 power slots, which can be raised to 3 with gems.
 - **Smells Fire:** have more than 10 Gunners built in one level.
 - **Smart Target:** damage more than 6 enemies with a single artillery shell.
 - **Two "???" achievements** whose conditions aren't decided yet; they will unlock Ice Age and Lightning.
+- **Woodcutter** (4 Nov 2026, foma): cut 50 trees across the whole game. The count is saved in progress as `treesCut` and shown on the locked card (`Trees cut: n/50`). Fences, scarecrows, braziers and Beach rocks don't count; ruins don't either.
+- **Ready to sell!** (4 Nov 2026, foma): clear every obstacle on a level, meaning every tree, decor piece (fence, scarecrow, brazier, rock) and webbed ruin. It unlocks the moment the last one goes, even before the level is won. Spider webs don't count, since enemies keep spinning new ones and solid webs can't be cut.
+- **Close** (4 Nov 2026, foma): win a level with exactly 1 heart left.
+- These three give no reward. Like every achievement they only count in the main campaign: DLC levels and everything in the Testing app (where the sandbox lives) never unlock them or add to the tree count.
+- Achievement toasts queue up, so several unlocked at once (or with a level's unit reward) each show in turn.
 
 ### Redeem codes (Settings → code box)
 | Code | Effect |
