@@ -126,13 +126,15 @@ A tower defense game. You place towers on grass tiles beside the road, and enemi
 | 12 | The Mire Crossing | 14 | 700 | Dark Forest boss: 4 spawns, lake spawn, the Drowned from wave 3, the Tumor Mother in the last wave. Unlocks Triple Gunner |
 | B1 | Twin Dens | 12 | 560 | Bonus; 19×12; 2 spider dens, ruins |
 | B2 | The Silk Warren | 14 | 1000 | Bonus; 25×16; 5 dens, 2 spider nests, egg sacs, 2 bases |
-| B3 | The Queen's Lair | 15 | 900 | Bonus; 31×20; spider queen (decoration for now), lakes with lake spawns, silk bridge |
+| B3 | The Queen's Lair | 15 | 900 | Bonus; 31×20; the Spider Queen climbs out of her lair in the last wave (boss), lakes with lake spawns, silk bridge |
 
 **Tumor Mother (24 Oct 2026, designed by foma; first of the boss update):** the Dark Forest boss, arriving about a third of the way into the final wave of The Mire Crossing. A huge heaving mound of flesh with pustules, a cluster of eyes and tumorlings budding off its back. foma set 3000 HP, slow, spawns tumors, jumps to the opposite road, spits slime that stuns a tower for 7 s. Claude's picks (`MOTHER` in the code, `updateTumorMother`): speed 0.3 (slower than a Tumor), reward 120; every 8 s it stops and births 3 tumorlings, every third birth one full Tumor instead; every 12–20 s it leaps (about a second in the air) to the road furthest from it, landing at the same distance from the base, so the jump never gains or loses ground; every 6 s it spits a slime ball at the nearest tower within 4 tiles (not Farms or Menders), which drips with slime while stunned. Immune to poison, can't be infected or swallowed by Scorchwood.
 
 **Zombie Husk (24 Oct 2026, designed by foma; second boss):** the Graveyard boss, about a third of the way into the final wave of The Last Vigil (Graveyard 3). Half rotting zombie, half bare skeleton, with a glowing hole in its ribs. foma set 1500 HP, pulls an enemy of the location out of its ribs and throws it to a random place, bursts into many enemies on death that must be killed before the level is won. Claude's picks (`HUSK` in the code, `updateZombieHusk`, `huskBurst`): speed 0.55, reward 100; every 9 s (first after 6 s) it stops for 2/3 s, reaches into its ribs and throws a random Graveyard enemy (zombie, skeleton, zombie grunt, skeleton knight or gravedigger) onto a random road spot, never in the last 30% of a road before the base; on death 10 of the dead spill out (4 zombies, 2 zombie grunts, 3 skeletons, 1 skeleton knight). The level can't be won while a thrown enemy is still in the air.
 
 **Headless Rider (25 Oct 2026, designed by foma; third boss):** the Pumpkin Farm boss, last wave of Headless Hollow. A headless rider in a tattered cloak on a black horse, holding his burning pumpkin head. foma set 2300 HP, throws his head which jumps across several towers stunning them and comes back, sometimes drops explosive rolling pumpkins. Claude's picks (`RIDER` in the code, `updateHeadlessRider`, `riderDown`): speed 0.7, reward 110; every 8 s (first after 4 s) the head hops onto up to 4 towers (nearest within 3.6 tiles, then nearest not yet hit from there), each stunned 4 s, then flies back; every 12 s (first after ~7 s) he drops 2 Pumpkin bombers on the road. Menders free stunned towers as usual.
+
+**Spider Queen (4 Nov 2026, designed by foma; fifth boss):** the boss of The Queen's Lair (Dark Forest bonus B3), about a third of the way into the final wave. The queen who sat in her lair as decoration gets up: she climbs (2.5 s) from the lair down onto the road spot nearest her mouth, leaving only her silk mat, then crawls to the base. foma set 2500 HP, slow, instantly kills any unit in her way, sometimes stomps her feet and a swarm of different spiders comes out. Claude's picks (`QUEEN` in the code, `updateSpiderQueen`, `queenUnit`/`queenKill`, `queenDown`, `drawQueenBossShape`): speed 0.32, reward 130; kills footmen, tower guards, Backup soldiers and the Heavy Force tank on contact (not while frozen, like the Magma Titans); every 11 s (first ~5 s after she lands) she stomps for 1.6 s, then 10 spiders burst out of the ground around her: 6 Spiderlings, 3 Spiders, 1 Big Spider. **Spiderling** is new (Claude's stats, only from her stomps so far): 35 HP, speed 2.3, reward 4, no webs. Without a lair queen on the map (Enemy tester, sandbox) she simply walks in from a spawn. Defeating her earns **Arachnophobia**.
 
 **Bosses end the battle (24 Oct 2026, foma):** any boss (anything with `boss:true`: Grassmer, Tumor Mother, Zombie Husk and later ones) that reaches the base sets lives to 0 and the level is lost at once.
 
@@ -197,8 +199,10 @@ You start with 2 power slots, which can be raised to 3 with gems.
 | Drowned | 150 | Slow; poisons your units for 5 seconds |
 | Spider | 75 | Fast; leaves webs that drag down your units |
 | Big Spider | 120 | Leaves webs |
+| Spiderling | 35 | Very fast; comes out of the ground when the Spider Queen stomps |
 | Grassmer | 2600 | Boss; sprouts grunts |
 | Zombie Husk | 1500 | Graveyard boss; throws Graveyard enemies onto the road, bursts into 10 of the dead when it dies |
+| Spider Queen | 2500 | Dark Forest bonus boss (The Queen's Lair); kills any unit in her way, stomps out swarms of 10 spiders every 11 s |
 | Headless Rider | 2300 | Pumpkin Farm boss; throws his head across up to 4 towers (4 s stun each), drops 2 pumpkin bombers every 12 s |
 | Tumor Mother | 3000 | Dark Forest boss; births tumorlings and Tumors, leaps to another road, spits slime that stuns a tower for 7 s |
 
@@ -214,6 +218,7 @@ You start with 2 power slots, which can be raised to 3 with gems.
 - **Woodcutter** (4 Nov 2026, foma): cut 50 trees across the whole game. The count is saved in progress as `treesCut` and shown on the locked card (`Trees cut: n/50`). Fences, scarecrows, braziers and Beach rocks don't count; ruins don't either.
 - **Ready to sell!** (4 Nov 2026, foma): clear every obstacle on a level, meaning every tree, decor piece (fence, scarecrow, brazier, rock) and webbed ruin. It unlocks the moment the last one goes, even before the level is won. Spider webs don't count, since enemies keep spinning new ones and solid webs can't be cut.
 - **Close** (4 Nov 2026, foma): win a level with exactly 1 heart left.
+- **Arachnophobia** (4 Nov 2026, foma): defeat the Spider Queen. No reward.
 - These three give no reward. Like every achievement they only count in the main campaign: DLC levels and everything in the Testing app (where the sandbox lives) never unlock them or add to the tree count.
 - Achievement toasts queue up, so several unlocked at once (or with a level's unit reward) each show in turn.
 
@@ -277,7 +282,7 @@ A separate app with its own play link and desktop builds: `fire-at-will-testing.
   - Jumping spider
   - Venom spitter
   - Wolf spider mother
-  - Spider queen boss that spawns spiderlings from her mouth (she faces the road)
+  - Spider queen boss: built 4 Nov 2026 as the Spider Queen (see above), with stomp swarms instead of spiderlings from her mouth
 - **Big bush:** intended to spawn enemies later; it has no use yet.
 - **The "big spider kingdom" level:** the user is building it in the sandbox.
 - **Remaining regions:** Deserts, Mountains, Jungle, Depths and Kingdom levels aren't built yet.
