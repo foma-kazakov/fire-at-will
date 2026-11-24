@@ -708,7 +708,6 @@
       <b style="font-family:'Bungee','Russo One',sans-serif">Sandbox</b>
       <div class="sbxRow">
         <button class="toolBtn" id="sbxSizeC" onclick="sbxSetOrient('computer')">Computer 19×12</button>
-        <button class="toolBtn" id="sbxSizeP" onclick="sbxSetOrient('phone')">Phone 10×18</button>
         <button class="toolBtn" id="sbxSizeL" onclick="sbxSetOrient('large')">Large 25×16</button>
         <button class="toolBtn" id="sbxSizeH" onclick="sbxSetOrient('huge')">Huge 31×20</button>
       </div>
@@ -816,14 +815,6 @@
     <div id="mapMsg" style="color:var(--paper);font-size:.8rem;margin-top:6px;min-height:1.1em;text-shadow:1px 1px 0 var(--ink)"></div>
   </div>
 
-  <div id="orientScreen" class="screen"><div class="plate">
-    <h2 class="sub" style="color:var(--ink)" data-i18n="orientQuestion">What are you playing on?</h2>
-    <div class="row">
-      <button class="menuBtn small" onclick="chooseOrient('computer')">🖥 <span data-i18n="computerLabel">Computer</span><br><small data-i18n="computerDesc">Horizontal front line</small></button>
-      <button class="menuBtn small" onclick="chooseOrient('phone')">📱 <span data-i18n="phoneLabel">Phone</span><br><small data-i18n="phoneDesc">Vertical front line</small></button>
-    </div>
-    <button class="backBtn" style="color:var(--ink);border-color:var(--ink)" onclick="goTo('menuScreen')" data-i18n="back">Back</button>
-  </div></div>
 
 
   <div id="unitsScreen" class="screen"><div class="plate">
@@ -1852,7 +1843,6 @@ function loadProgress(){
     if(d.progressFlags)progressFlags=d.progressFlags;
     if(d.suspended)suspended=d.suspended;
     if(typeof d.goldBoost==='number')pendingBoost=d.goldBoost;
-    if(d.chosenOrient)pendingOrient=d.chosenOrient;
     if(d.deviceChosen)pendingDevice=true;
     if(d.vol)savedVol=d.vol;
     if(d.lang)savedLang=d.lang;
@@ -3766,8 +3756,7 @@ function buildMap(){
   buildStyleBar();
   // portrait phones get the same world transposed into a tall continent
   const host=document.getElementById('mapScroll');
-  const portrait=host?(host.clientHeight>host.clientWidth*1.05)
-                     :(window.innerHeight>window.innerWidth);
+  const portrait=false;   // PC only
   const HALLOWEEN_ISLE=halloweenOn(), ISLE_OFF=HALLOWEEN_ISLE?650:0;   // the main island slides right to make room
   const SHROOM_ISLE=shroomedOn(), SHROOM_OFF=SHROOM_ISLE?360:0;         // the Glowshroom Valley adds sea to the east (south on phones)
   const tr=pt=>portrait?[pt[1],pt[0]+ISLE_OFF]:[pt[0]+ISLE_OFF,pt[1]];
@@ -4067,8 +4056,8 @@ const LAYOUTS={
 let chosenOrient='computer';
 if(pendingOrient)chosenOrient=pendingOrient;   // saved choices, applied once these are declared
 if(pendingDevice)deviceChosen=true;
-function chooseOrient(o){ initAudio(); chosenOrient=o; deviceChosen=true; saveProgress(); openMap(); }
-function openMap(){ initAudio(); if(!deviceChosen){ goTo('orientScreen'); return; } goTo('mapScreen'); buildMap(); }
+function chooseOrient(o){ initAudio(); chosenOrient='computer'; deviceChosen=true; openMap(); }   // PC only: the phone layout is gone
+function openMap(){ initAudio(); chosenOrient='computer'; goTo('mapScreen'); buildMap(); }
 
 /* ---------- game state ---------- */
 const canvas=document.getElementById('c');
@@ -8011,7 +8000,7 @@ function sbxRender(){
     document.querySelectorAll('.sbxBiome').forEach(c=>c.classList.toggle('on',c.dataset.biome===sbxBiome)); }
   document.querySelectorAll('.sbxTab').forEach(c=>c.classList.toggle('on',c.dataset.tab===sbxTab));
   document.getElementById('sandboxScreen').classList.toggle('big',sbx.COLS>19||sbx.ROWS>18);
-  [['C','computer'],['P','phone'],['L','large'],['H','huge']].forEach(([id,o])=>document.getElementById('sbxSize'+id).classList.toggle('on',sbx.orient===o));
+  [['C','computer'],['L','large'],['H','huge']].forEach(([id,o])=>document.getElementById('sbxSize'+id).classList.toggle('on',sbx.orient===o));
   { const nb=document.getElementById('sbxNightBtn'); if(nb){ const n=sbxIsNight(); nb.classList.toggle('on',n); nb.textContent=n?'Lighting: Night':'Lighting: Bright'; } }
   const rb=document.getElementById('sbxRoutesBtn'); if(rb){ rb.classList.toggle('on',sbxShowRoutes); rb.textContent=sbxShowRoutes?'Routes: shown':'Routes: hidden'; }
   const pc=PATH_COLORS[sbx.pathIdx], gc=GRASS_COLORS[sbx.grassIdx];
