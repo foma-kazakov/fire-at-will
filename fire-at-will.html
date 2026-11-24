@@ -598,6 +598,13 @@
       radial-gradient(1.5px 1.5px at 56% 10%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 72% 22%,#fff 50%,transparent 51%),
       radial-gradient(1.5px 1.5px at 88% 8%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 4% 30%,#fff 50%,transparent 51%),
       radial-gradient(1px 1px at 44% 26%,#fff 50%,transparent 51%),radial-gradient(1.5px 1.5px at 64% 4%,#fff 50%,transparent 51%);}
+  /* ART PASS 5: richer UI chrome */
+  #hud{background:linear-gradient(180deg,#3b4330 0%,#242a1d 48%,#151810 100%);border-color:#c9b27a;
+    box-shadow:0 5px 0 rgba(0,0,0,.4),0 10px 22px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,244,200,.35),inset 0 -2px 6px rgba(0,0,0,.4);}
+  .tbtn{background:linear-gradient(180deg,#f3e8c4 0%,#e0cf9e 45%,#b9a574 100%);
+    box-shadow:0 3px 0 var(--ink),0 8px 14px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.7);}
+  .tbtn:hover{filter:brightness(1.06);}
+  #c{box-shadow:0 8px 0 rgba(0,0,0,.32),0 22px 44px rgba(0,0,0,.45),0 0 0 2px rgba(201,178,122,.55),inset 0 0 40px rgba(0,0,0,.25)!important;}
 </style>
 </head>
 <body>
@@ -12903,6 +12910,9 @@ function draw(){
     const dir=Math.cos(face)>=0?1:-1;
     const base=e.flash>0?'#ffb199':(e.poisoned>0?'#8fb84f':(e.col||(theme?theme.enemy:'#c1442d')));
     const lift=e.leap?Math.sin(e.leap.f/e.leap.max*Math.PI)*CELL*1.1:0;   // the Tumor Mother in mid-leap
+    if(e.boss){ const R=rad*2.6, pu=0.75+0.25*Math.sin(frameCount*0.07), bg=ctx.createRadialGradient(e.x,e.y+rad*0.6,rad*0.3,e.x,e.y+rad*0.6,R);   // a dark menacing aura pooling under every boss
+      bg.addColorStop(0,'rgba(20,0,10,'+(0.55*pu).toFixed(3)+')'); bg.addColorStop(0.6,'rgba(120,20,20,'+(0.18*pu).toFixed(3)+')'); bg.addColorStop(1,'rgba(120,20,20,0)');
+      ctx.fillStyle=bg; ctx.beginPath(); ctx.arc(e.x,e.y+rad*0.6,R,0,Math.PI*2); ctx.fill(); }
     shadeOn(e.x,e.y+bob,rad*1.5); ctx.save(); ctx.translate(e.x,e.y+bob);
     if(e.sink>0){ const q=1-e.sink/(e.sinkMax||QS_SINK); ctx.beginPath(); ctx.rect(-80,-120,160,120+rad*0.55); ctx.clip(); ctx.translate(0,q*rad*2.6); }   // sinking into the quicksand
     ctx.fillStyle='rgba(0,0,0,.2)';
