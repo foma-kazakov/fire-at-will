@@ -4082,6 +4082,17 @@ function biomeList(){ return REGIONS.concat(halloweenOn()?ISLE_REGIONS:[],shroom
 function themeAt(r,c){ return biomeTiles.get(r+','+c)||((splitEdge&&c>=splitEdge[r]&&themeB)?themeB:theme); }
 function groundAt(r,c){ const th=themeAt(r,c); return th?th.ground:'#3e5230'; }
 const RS=2;   // render scale: crisp on high-density screens
+// ART PASS 2: one light for everything. While SHADE is set, every opaque flat fill on the main canvas is lit from the top-left
+// (pale rim on the lit side, deeper tone on the far side) so towers and enemies read as round volumes instead of flat cut-outs.
+let SHADE=null;
+(function(){ const f0=CanvasRenderingContext2D.prototype.fill, cl0=CanvasRenderingContext2D.prototype.clip;
+  ctx.fill=function(...a){ f0.apply(this,a);
+    const S=SHADE; if(!S)return; const fs=this.fillStyle; if(typeof fs!=='string'||fs.charCodeAt(0)!==35)return;
+    this.save(); cl0.apply(this,a); this.setTransform(RS,0,0,RS,0,0); this.fillStyle=S.g; this.fillRect(S.x-S.r*2,S.y-S.r*2,S.r*4,S.r*4); this.restore(); }; })();
+function shadeOn(x,y,r){ const g=ctx.createLinearGradient(x-r*0.8,y-r*0.9,x+r*0.8,y+r*0.9);
+  g.addColorStop(0,'rgba(255,248,215,.26)'); g.addColorStop(0.42,'rgba(255,248,215,0)'); g.addColorStop(0.62,'rgba(10,8,20,0)'); g.addColorStop(1,'rgba(10,8,20,.34)');
+  SHADE={g,x,y,r}; }
+function shadeOff(){ SHADE=null; }
 let gold,lives,wave,selectedType=null,waveActive=false,gameOver=false,started=false;
 let towers=[],enemies=[],projectiles=[],preview=null,frameCount=0,hoverTower=null;
 let diffCfg;
@@ -4368,12 +4379,12 @@ function drawTrees(){
   trees.forEach(t=>{
     const x=t.col*CELL+CELL/2, y=t.row*CELL+CELL/2;
     const sw=Math.sin(frameCount*0.018+t.sway)*1.6;
-    ctx.save(); ctx.translate(x,y);
+    shadeOn(x,y-6,24); ctx.save(); ctx.translate(x,y);
     if(t.kind==='fence'){ const f=(r,c)=>trees.some(q=>q.kind==='fence'&&q.row===r&&q.col===c);
       drawFence(ctx,f(t.row,t.col-1),f(t.row,t.col+1),f(t.row-1,t.col),f(t.row+1,t.col)); }
     else drawTreeSprite(ctx,treeKindHere(t.kind||(t.rotten?'rotten':'oak'),t.row,t.col),sw);
     ctx.restore();
-  });
+  }); shadeOff();
 }
 // three trees for the Fields, three for the Dark Forest
 const TREE_KINDS={
@@ -12325,6 +12336,9 @@ function hHook(g){
     Object.defineProperty(g,k,{configurable:true,get(){ return d.get.call(this); },set(v){ d.set.call(this,hPaint&&typeof v==='string'?hCol(v):v); }}); });
 }
 function drawTowerSprite(t){
+  shadeOn(t.x,t.y,20*(t.spawnT||1)); try{ drawTowerSprite0(t); } finally { shadeOff(); }
+}
+function drawTowerSprite0(t){
   if(!HSTYLE){ drawTowerBody(t); return; }
   hHook(ctx); hPaint=true;
   try{ drawTowerBody(t); } finally { hPaint=false; }
@@ -12420,7 +12434,7 @@ function drawTowerBody(t){
     // footprint pad grounds the tower on its tile
     ctx.save();
     ctx.globalAlpha=0.30; ctx.fillStyle='#1b2016';
-    ctx.beginPath();ctx.ellipse(t.x,t.y+11*k,17*k,7*k,0,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.ellipse(t.x+3*k,t.y+11.5*k,18*k,7*k,0.12,0,Math.PI*2);ctx.fill();
     ctx.globalAlpha=0.16; ctx.fillStyle='#ffffff';
     ctx.beginPath();ctx.ellipse(t.x,t.y+9.5*k,15*k,5.5*k,0,0,Math.PI*2);ctx.fill();
     ctx.restore();
@@ -12904,7 +12918,7 @@ function draw(){
     ctx.fillStyle='rgba(255,236,170,.45)'; ctx.beginPath();ctx.arc(px,py+arc,p.boom?6:5,0,Math.PI*2);ctx.fill();
     ctx.fillStyle=p.boom?'#3a352a':(HSTYLE?'#c8ff7a':'#fff6dc'); ctx.beginPath();ctx.arc(px,py+arc,p.boom?3.6:2.4,0,Math.PI*2);ctx.fill();
   });
-  enemies.forEach((e,idx)=>{
+  enemies.forEach((e,idx)=>{ shadeOff();
     if(e.inCorn)return;                            // out of sight in the corn
     if(e.sandUnder>0){ drawSandMound(e,idx); return; }   // a crab under the sand: only a moving ridge shows
     const rad=e.r||10;
@@ -12915,7 +12929,7 @@ function draw(){
     const dir=Math.cos(face)>=0?1:-1;
     const base=e.flash>0?'#ffb199':(e.poisoned>0?'#8fb84f':(e.col||(theme?theme.enemy:'#c1442d')));
     const lift=e.leap?Math.sin(e.leap.f/e.leap.max*Math.PI)*CELL*1.1:0;   // the Tumor Mother in mid-leap
-    ctx.save(); ctx.translate(e.x,e.y+bob);
+    shadeOn(e.x,e.y+bob,rad*1.5); ctx.save(); ctx.translate(e.x,e.y+bob);
     if(e.sink>0){ const q=1-e.sink/(e.sinkMax||QS_SINK); ctx.beginPath(); ctx.rect(-80,-120,160,120+rad*0.55); ctx.clip(); ctx.translate(0,q*rad*2.6); }   // sinking into the quicksand
     ctx.fillStyle='rgba(0,0,0,.2)';
     ctx.beginPath();ctx.ellipse(0,rad*0.85,rad*0.85,rad*0.32,0,0,Math.PI*2);ctx.fill();
@@ -13149,7 +13163,7 @@ function draw(){
       if(frac>0){ ctx.beginPath();ctx.roundRect(e.x-bw/2,by,Math.max(2,bw*frac),bh,2);ctx.fill();
         ctx.fillStyle='rgba(255,255,255,.28)'; ctx.fillRect(e.x-bw/2+1,by+0.6,Math.max(0,bw*frac-2),bh*0.35); }
     }
-  });
+  }); shadeOff();
   // units running over a dug-in flatcap golem are drawn on top of it
   allies.forEach(a=>{ if(!(a.delay>0)&&enemies.some(e=>e.under>0&&Math.hypot(e.x-a.x,e.y-a.y)<CELL*1.2))drawAlly(a); });
   drawCorn(frameCount);
