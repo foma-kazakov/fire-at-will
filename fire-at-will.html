@@ -4068,6 +4068,9 @@ let SHADE=null;
   ctx.fill=function(...a){ f0.apply(this,a);
     const S=SHADE; if(!S)return; const fs=this.fillStyle; if(typeof fs!=='string'||fs.charCodeAt(0)!==35)return;
     this.save(); cl0.apply(this,a); this.setTransform(RS,0,0,RS,0,0); this.fillStyle=S.g; this.fillRect(S.x-S.r*2,S.y-S.r*2,S.r*4,S.r*4); this.restore(); }; })();
+(function(){ const s0=CanvasRenderingContext2D.prototype.stroke;   // softer outlines while a lit sprite is drawn: thinner, a touch translucent, so edges melt into the shading
+  ctx.stroke=function(...a){ if(!SHADE||this.strokeStyle!=='#22261c'){ s0.apply(this,a); return; }
+    const lw=this.lineWidth; this.strokeStyle='rgba(22,24,16,.68)'; this.lineWidth=lw*0.82; s0.apply(this,a); this.strokeStyle='#22261c'; this.lineWidth=lw; }; })();
 function shadeOn(x,y,r){ const g=ctx.createLinearGradient(x-r*0.8,y-r*0.9,x+r*0.8,y+r*0.9);
   g.addColorStop(0,'rgba(255,244,200,.5)'); g.addColorStop(0.3,'rgba(255,244,200,.12)'); g.addColorStop(0.5,'rgba(10,8,20,0)'); g.addColorStop(0.7,'rgba(10,8,20,.2)'); g.addColorStop(1,'rgba(6,4,24,.6)');
   SHADE={g,x,y,r}; }
@@ -13174,6 +13177,12 @@ function draw(){
 // motes, fireflies, drifting cloud shadows, sunlight and a soft vignette
 function drawAmbience(){
   const dark=groundIsDark(), reg=theme&&groundRegion(theme.ground);
+  if(!dark&&!reg&&!(theme&&theme.ground==='#1B2B52')){   // slow shafts of sunlight slanting in from the top-left
+    ctx.save(); ctx.globalCompositeOperation='lighter';
+    for(let k=0;k<4;k++){ const x0=CW*(0.12+k*0.26)+Math.sin(frameCount*0.004+k*2)*CW*0.03, w=CELL*(2.2+k%2), al=0.05+0.035*Math.sin(frameCount*0.011+k*1.7);
+      const g=ctx.createLinearGradient(x0,0,x0+CH*0.55,CH); g.addColorStop(0,'rgba(255,240,180,'+al.toFixed(3)+')'); g.addColorStop(1,'rgba(255,240,180,0)');
+      ctx.fillStyle=g; for(let j=0;j<3;j++){ const ex=w*(0.6+j*0.9)*0.5; ctx.globalAlpha=0.45; ctx.beginPath(); ctx.moveTo(x0-ex,0); ctx.lineTo(x0+w+ex,0); ctx.lineTo(x0+w+ex+CH*0.55,CH); ctx.lineTo(x0-ex+CH*0.55,CH); ctx.closePath(); ctx.fill(); } ctx.globalAlpha=1; }
+    ctx.restore(); }
   motes.forEach((m,i)=>{
     const fade=Math.min(1,m.life/120);
     if(reg==='graveyard'){             // low mist drifting between the graves
