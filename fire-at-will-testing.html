@@ -9601,6 +9601,7 @@ function buildTerrain(){
     }
   }
   ctx.restore();
+  polishTerrain(ctx,hashAt,shade);
   if(HSTYLE){                                      // Halloween style: a purple dusk over the ground, with little pumpkins and candles about
     ctx.save();
     ctx.globalCompositeOperation='multiply'; ctx.fillStyle='rgba(150,110,190,.55)'; ctx.fillRect(0,0,CW,CH);
@@ -9625,6 +9626,107 @@ function buildTerrain(){
     }
     ctx.restore();
   }
+}
+
+
+// ART PASS 1: soft lighting on the painted ground. Everything here is painted once into the terrain cache.
+// Layers: drifting tint noise, dense layered grass, a sunken road with soft inner shadow and a worn lighter middle,
+// pebbles with real highlights and shadows, a shaded rim on the grass beside the road, sunlight from the top-left and a vignette.
+function polishTerrain(ctx,hashAt,shade){
+  const seaSet=new Set(lake.filter(l=>l.sea||l.lava).map(l=>l.row+','+l.col));
+  const nightMap=(theme&&theme.ground==='#1B2B52');
+  // 1) soft colour drift: two octaves of blurred random greys laid on in soft-light, so big calm blotches of light and shade roll across the ground
+  const octave=(cells,alpha,seed)=>{
+    const nc=document.createElement('canvas'); nc.width=Math.max(3,Math.ceil(COLS*cells)+2); nc.height=Math.max(3,Math.ceil(ROWS*cells)+2);
+    const g=nc.getContext('2d'), id=g.createImageData(nc.width,nc.height);
+    for(let i=0;i<nc.width*nc.height;i++){ const x=i%nc.width, y=(i/nc.width)|0, v=60+hashAt(x*1.7+seed,y*2.3+seed*0.7)*140; id.data[i*4]=id.data[i*4+1]=id.data[i*4+2]=v; id.data[i*4+3]=255; }
+    g.putImageData(id,0,0);
+    ctx.save(); ctx.globalCompositeOperation='soft-light'; ctx.globalAlpha=alpha; ctx.imageSmoothingEnabled=true; ctx.imageSmoothingQuality='high';
+    ctx.drawImage(nc,-CELL*0.5,-CELL*0.5,(nc.width)/cells*CELL,(nc.height)/cells*CELL); ctx.restore(); };
+  octave(0.5,0.3,3.1); octave(1.5,0.2,9.7); octave(4,0.07,17.3);
+  // 2) layered grass: short dark under-blades, taller mid blades, pale sun-caught tips, and the odd clover/leaf fleck
+  ctx.save(); ctx.lineCap='round';
+  for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
+    if(pathSet.has(r+','+c)||seaSet.has(r+','+c))continue;
+    const th=themeAt(r,c), base=(th&&th.ground)?th.ground:'#3e5230';
+    if(farmGround(base)>=0||groundRegion(base)==='beach')continue;
+    const gn=(parseInt(base.slice(1),16)>>8&255)>(parseInt(base.slice(1),16)>>16&255)*1.05;
+    for(let k=0;k<9;k++){
+      const n1=hashAt(r*3.7+k*1.9,c*5.1+k), n2=hashAt(c*4.3+k*2.7,r*1.9+k*0.5), n3=hashAt(k*2.9+r*0.3,c*3.3+k);
+      const x=c*CELL+n1*CELL, y=r*CELL+n2*CELL, h=3.5+n3*5, lean=(n1-0.5)*3.5;
+      ctx.lineWidth=1.1+n3*0.5;
+      ctx.globalAlpha=0.2; ctx.strokeStyle=shade(base,-30);
+      ctx.beginPath(); ctx.moveTo(x,y); ctx.quadraticCurveTo(x+lean*0.4,y-h*0.55,x+lean,y-h); ctx.stroke();
+      ctx.globalAlpha=0.22; ctx.strokeStyle=shade(base,n3>0.5?30:14);
+      ctx.beginPath(); ctx.moveTo(x+1,y); ctx.quadraticCurveTo(x+1+lean*0.4,y-h*0.5,x+1+lean*1.1,y-h*0.9); ctx.stroke();
+    }
+    if(gn&&hashAt(r*8.1,c*2.7)>0.8){                 // a clover patch
+      const x=c*CELL+6+hashAt(c*1.3,r*6.1)*(CELL-12), y=r*CELL+6+hashAt(r*2.1,c*3.9)*(CELL-12);
+      ctx.globalAlpha=0.5; ctx.fillStyle=shade(base,-18);
+      for(let q=0;q<3;q++){ const a=q/3*Math.PI*2+hashAt(c,r)*3; ctx.beginPath(); ctx.arc(x+Math.cos(a)*1.8,y+Math.sin(a)*1.8,1.5,0,Math.PI*2); ctx.fill(); }
+    }
+  }
+  ctx.restore();
+  // 3) the road sits a little below the field: soft shadow falls from the grass onto its edges, and the worn middle is a touch lighter
+  if(pathCells.length){
+    const ER=CELL*1.4, bigPath=()=>{ const p=new Path2D(); pathCells.forEach(pc=>p.rect(pc.col*CELL,pc.row*CELL,CELL,CELL)); return p; };
+    const road=bigPath(), frame=new Path2D(); frame.rect(-ER*2,-ER*2,CW+ER*4,CH+ER*4); frame.addPath(road);
+    // inner shadow (clip to the road, shadow of everything outside it)
+    ctx.save(); ctx.clip(road);
+    ctx.shadowColor=nightMap?'rgba(0,0,12,.85)':'rgba(20,12,0,.5)'; ctx.shadowBlur=CELL*0.42*RS; ctx.shadowOffsetX=CELL*0.05*RS; ctx.shadowOffsetY=CELL*0.12*RS;
+    ctx.fillStyle='#000'; ctx.fill(frame,'evenodd'); ctx.restore();
+    // a worn, paler middle: blur the road shape and keep only that glow inside the road
+    { const m=document.createElement('canvas'); m.width=CW*RS; m.height=CH*RS; const mg=m.getContext('2d'); mg.setTransform(RS,0,0,RS,0,0);
+      mg.fillStyle='#fff'; mg.fill(road); const b=document.createElement('canvas'); b.width=m.width; b.height=m.height; const bg=b.getContext('2d');
+      bg.filter='blur('+Math.round(CELL*0.32*RS)+'px)'; bg.drawImage(m,0,0); bg.filter='none';
+      bg.globalCompositeOperation='destination-in'; bg.drawImage(m,0,0);   // keep it inside the road
+      ctx.save(); ctx.globalCompositeOperation='soft-light'; ctx.globalAlpha=0.4; ctx.drawImage(b,0,0,CW,CH); ctx.restore(); }
+    // outer shade on the grass beside the road (a faint dark rim where the bank drops away)
+    ctx.save(); ctx.clip(frame,'evenodd');
+    ctx.shadowColor='rgba(15,25,5,.5)'; ctx.shadowBlur=CELL*0.28*RS; ctx.shadowOffsetY=CELL*0.06*RS;
+    ctx.fillStyle='#000'; ctx.fill(road); ctx.restore();
+    // pebbles and fine dirt crumbs on the road, each with a pale lit edge and a dark shadow
+    ctx.save();
+    pathCells.forEach(pc=>{
+      const th=themeAt(pc.row,pc.col), base=(th&&th.pathCol)?th.pathCol:'#8a7551';
+      for(let k=0;k<5;k++){
+        const n1=hashAt(pc.row*6.1+k*2.3,pc.col*3.7+k), n2=hashAt(pc.col*5.3+k*1.7,pc.row*2.1+k*3), n3=hashAt(k*4.1+pc.row*0.9,pc.col*2.3);
+        if(n3<0.28)continue;
+        const x=pc.col*CELL+4+n1*(CELL-8), y=pc.row*CELL+4+n2*(CELL-8), w=1.3+n3*2.4, h=w*0.7, a=n2*3;
+        ctx.globalAlpha=0.35; ctx.fillStyle='#000'; ctx.beginPath(); ctx.ellipse(x+0.8,y+1,w,h,a,0,Math.PI*2); ctx.fill();
+        ctx.globalAlpha=0.95; ctx.fillStyle=shade(base,n3>0.6?-4:10); ctx.beginPath(); ctx.ellipse(x,y,w,h,a,0,Math.PI*2); ctx.fill();
+        ctx.globalAlpha=0.5; ctx.fillStyle=shade(base,48); ctx.beginPath(); ctx.ellipse(x-w*0.25,y-h*0.35,w*0.55,h*0.4,a,0,Math.PI*2); ctx.fill();
+      }
+    });
+    ctx.restore();
+    // grass blades leaning over the road edge
+    ctx.save(); ctx.lineCap='round';
+    pathCells.forEach(pc=>{
+      const nb=[[-1,0,0,-1],[1,0,0,1],[0,-1,-1,0],[0,1,1,0]];
+      nb.forEach(([dr,dc,ox,oy],i)=>{
+        if(pathSet.has((pc.row+dr)+','+(pc.col+dc)))return;
+        const gc=themeAt(pc.row+dr,pc.col+dc), gb=(gc&&gc.ground)?gc.ground:'#3e5230';
+        if(farmGround(gb)>=0)return;
+        for(let k=0;k<3;k++){
+          const t=hashAt(pc.row*3.3+i*5+k,pc.col*2.9+k*1.7), x0=pc.col*CELL+(dc>0?CELL:0)+(dr?t*CELL:0), y0=pc.row*CELL+(dr>0?CELL:0)+(dc?t*CELL:0);
+          const L=2.5+hashAt(k*3.1+pc.row,pc.col*1.9+i)*3.5;
+          ctx.globalAlpha=0.55; ctx.lineWidth=1.2; ctx.strokeStyle=shade(gb,-30);
+          ctx.beginPath(); ctx.moveTo(x0,y0); ctx.quadraticCurveTo(x0+dc*L*0.5,y0+dr*L*0.5-1,x0+dc*L+ (dr?1.2:0),y0+dr*L-(dc?1.5:0)); ctx.stroke();
+        }
+      });
+    });
+    ctx.restore();
+  }
+  // 4) sunlight from the top-left and a soft vignette so the board feels lit and framed (night maps get only the vignette)
+  ctx.save();
+  if(!nightMap){
+    const sg=ctx.createLinearGradient(0,0,CW,CH); sg.addColorStop(0,'rgba(255,236,170,.12)'); sg.addColorStop(0.5,'rgba(255,240,190,0)'); sg.addColorStop(1,'rgba(10,20,40,.08)');
+    ctx.fillStyle=sg; ctx.fillRect(0,0,CW,CH);
+  }
+  const vg=ctx.createRadialGradient(CW/2,CH/2,Math.min(CW,CH)*0.38,CW/2,CH/2,Math.hypot(CW,CH)*0.58);
+  vg.addColorStop(0,'rgba(0,0,0,0)'); vg.addColorStop(1,nightMap?'rgba(0,0,10,.34)':'rgba(8,14,2,.22)');
+  ctx.fillStyle=vg; ctx.fillRect(0,0,CW,CH);
+  ctx.restore();
 }
 
 // one small ground detail in a DLC location (painted once into the terrain)
