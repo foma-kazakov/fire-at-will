@@ -2737,9 +2737,7 @@ const LEVEL_DEFS={
        computer:{COLS:19,ROWS:12,paths:[
          [[0,1],[4,1],[4,5],[8,5],[8,9],[11,9]],
          [[0,17],[4,17],[4,13],[8,13],[8,9],[11,9]]]},
-       phone:{COLS:10,ROWS:18,paths:[
-         [[0,1],[10,1],[10,4],[17,4]],
-         [[0,8],[10,8],[10,4],[17,4]]]}},
+       },
      waves:[
       [W('grunt',10,560)],[W('grunt',10,520),W('runner',4,380)],
       [W('grunt',12,480),W('gunner',2,800)],
@@ -2752,8 +2750,7 @@ const LEVEL_DEFS={
      layout:{
        computer:{COLS:19,ROWS:12,paths:[[[1,0],[1,4],[5,4],[5,8],[2,8],[2,12],[8,12],[8,7],[11,7],[11,16],[6,16],[6,18]]],
          sewers:[[3,2],[9,10]]},
-       phone:{COLS:10,ROWS:18,paths:[[[0,2],[4,2],[4,6],[1,6],[1,9],[7,9],[7,4],[12,4],[12,8],[16,8],[16,3],[17,3]]],
-         sewers:[[2,4],[9,7]]}},
+       },
      sewerWave:5,
      waves:[
       [W('grunt',10,540)],[W('grunt',10,500),W('runner',5,360)],
@@ -2769,8 +2766,7 @@ const LEVEL_DEFS={
      layout:{
        computer:{COLS:19,ROWS:12,paths:[[[1,0],[1,5],[6,5],[6,9],[2,9],[2,13],[9,13],[9,18]]],
          lake:[[4,10],[4,11],[5,10],[5,11],[3,11]]},
-       phone:{COLS:10,ROWS:18,paths:[[[0,2],[5,2],[5,6],[10,6],[10,2],[15,2],[15,7],[17,7]]],
-         lake:[[7,4],[8,4],[8,5],[7,5],[9,4]]}},
+       },
      waves:[
       [W('grunt',12,520)],
       [W('grunt',12,480),W('runner',6,350)],
@@ -2785,8 +2781,7 @@ const LEVEL_DEFS={
      layout:{
        computer:{COLS:20,ROWS:13,paths:[[[2,0],[2,4],[6,4],[6,8],[1,8],[1,12],[8,12],[8,6],[11,6],[11,17],[5,17],[5,19]]],
          sewers:[[4,2],[9,9]]},
-       phone:{COLS:10,ROWS:19,paths:[[[0,2],[3,2],[3,7],[7,7],[7,3],[11,3],[11,8],[15,8],[15,2],[18,2]]],
-         sewers:[[2,5],[12,6]]}},
+       },
      waves:[
       [W('grunt',12,520)],
       [W('grunt',12,490),W('runner',6,350)],
@@ -2811,11 +2806,7 @@ const LEVEL_DEFS={
          forestPath:[[10,3],[10,8],[7,8],[7,16],[10,16],[10,18]],
          grove:[[8,0],[9,0],[9,1],[10,0],[10,1],[10,2],[11,0],[11,1],[11,2],[11,3],[11,4]],
          sewers:[[2,3]]},
-       phone:{COLS:10,ROWS:18,
-         paths:[[[0,1],[3,1],[3,8],[6,8],[6,1],[9,1],[9,8],[12,8],[12,1],[15,1],[15,6],[17,6]]],
-         forestPath:[[14,8],[14,4],[12,4],[12,1],[15,1],[15,6],[17,6]],
-         grove:[[13,9],[14,9],[15,9],[16,9],[17,9],[15,8],[16,8],[17,8],[17,7]],
-         sewers:[[1,3]]}},
+       },
      waves:[
       [W('grunt',12,520)],
       [W('grunt',12,490),W('runner',6,350)],
@@ -2832,7 +2823,7 @@ const LEVEL_DEFS={
   11:{name:'The Mire Crossing',reward:'triple',startGold:700,lives:20,sewerWave:4,lakeWave:6,
      layout:{
        computer:{COLS:19,ROWS:12,paths:[[[0,11],[1,11],[1,14],[5,14],[5,10],[8,10],[8,9],[11,9]],[[0,7],[1,7],[1,4],[5,4],[5,8],[8,8],[8,9],[11,9]],[[1,0],[1,4],[5,4],[5,8],[8,8],[8,9],[11,9]],[[1,18],[1,14],[5,14],[5,10],[8,10],[8,9],[11,9]]],routeGroups:[[0],[1],[2],[3]],lake:[[7,16],[8,16],[8,17],[9,17],[10,17],[10,18],[9,18],[8,18],[9,16],[6,17],[7,17]],keepLake:true,sewers:[[2,17],[3,3],[4,11]],treesAt:[[6,5,'rotten'],[8,11,'gnarled'],[3,13,'gnarled'],[2,5,'rotten'],[6,12,'rotten'],[2,16,'rotten'],[10,8,'pine'],[4,8,'rotten'],[0,8,'gnarled'],[1,10,'rotten'],[2,2,'pine'],[5,0,'gnarled'],[9,5,'rotten'],[10,0,'gnarled'],[7,1,'pine'],[0,15,'gnarled']],extraRoad:[[1,0],[1,1],[1,2],[1,3],[1,4],[2,4],[3,4],[4,4],[1,18],[1,17],[1,16],[1,15],[1,14],[2,14],[3,14],[4,14],[1,5],[1,6],[1,7],[0,7],[1,13],[1,12],[1,11],[0,11],[5,4],[5,5],[5,6],[5,7],[5,8],[5,14],[5,13],[5,12],[5,11],[5,10],[6,10],[7,10],[8,10],[6,8],[7,8],[8,8],[8,9],[9,9],[10,9],[11,9],[5,15],[5,16],[6,16]],bases:[[11,9]],lakeSpawns:[[9,17]],lakeExits:[{exit:[6,17],routes:[[[6,17],[6,16],[5,16],[5,10],[8,10],[8,9],[11,9]]]}]},
-       phone:{COLS:12,ROWS:19,paths:[[[11,0],[11,1],[14,1],[14,5],[10,5],[10,8],[9,8],[9,11]],[[7,0],[7,1],[4,1],[4,5],[8,5],[8,8],[9,8],[9,11]],[[0,1],[4,1],[4,5],[8,5],[8,8],[9,8],[9,11]],[[18,1],[14,1],[14,5],[10,5],[10,8],[9,8],[9,11]]],routeGroups:[[0],[1],[2],[3]],lake:[[16,7],[16,8],[17,8],[17,9],[17,10],[18,10],[18,9],[18,8],[16,9],[17,6],[17,7]],keepLake:true,sewers:[[17,2],[3,3],[11,4]],treesAt:[[5,6,'rotten'],[11,8,'gnarled'],[13,3,'gnarled'],[5,2,'rotten'],[12,6,'rotten'],[16,2,'rotten'],[8,10,'pine'],[8,4,'rotten'],[8,0,'gnarled'],[10,1,'rotten'],[2,2,'pine'],[0,5,'gnarled'],[5,9,'rotten'],[0,10,'gnarled'],[1,7,'pine'],[15,0,'gnarled']],extraRoad:[[0,1],[1,1],[2,1],[3,1],[4,1],[4,2],[4,3],[4,4],[18,1],[17,1],[16,1],[15,1],[14,1],[14,2],[14,3],[14,4],[5,1],[6,1],[7,1],[7,0],[13,1],[12,1],[11,1],[11,0],[4,5],[5,5],[6,5],[7,5],[8,5],[14,5],[13,5],[12,5],[11,5],[10,5],[10,6],[10,7],[10,8],[8,6],[8,7],[8,8],[9,8],[9,9],[9,10],[9,11],[15,5],[16,5],[16,6]],bases:[[9,11]],lakeSpawns:[[17,9]],lakeExits:[{exit:[17,6],routes:[[[17,6],[16,6],[16,5],[10,5],[10,8],[9,8],[9,11]]]}]}},
+       },
      waves:[
       [W('grunt',16,500)],
       [W('grunt',14,470),W('runner',8,340)],
@@ -2904,10 +2895,7 @@ const LEVEL_DEFS={
          [[0,2],[4,2],[4,6],[1,6],[1,10],[7,10],[7,18]],
          [[11,0],[11,5],[9,5],[9,10],[7,10],[7,18]]],
          sewers:[[2,8],[10,7],[3,14]], lab:[6,11]},
-       phone:{COLS:10,ROWS:18,paths:[
-         [[0,1],[4,1],[4,5],[1,5],[1,8],[11,8],[11,4],[17,4]],
-         [[0,8],[3,8],[3,6],[7,6],[7,8],[11,8],[11,4],[17,4]]],
-         sewers:[[6,2],[9,5],[14,6]], lab:[10,9]}},
+       },
      sewerWave:3,
      waves:[
       [W('grunt',12,520)],[W('grunt',12,490),W('runner',6,350)],
@@ -4046,12 +4034,7 @@ const LAYOUTS={
     {CELL:40,COLS:15,ROWS:10,wp:[[0,2],[5,2],[5,6],[2,6],[2,10],[7,10],[7,13],[9,13]]},
     {CELL:40,COLS:15,ROWS:10,wp:[[4,0],[4,5],[8,5],[8,9],[3,9],[3,12],[6,12],[6,14]]},
   ],
-  phone:[
-    {CELL:40,COLS:8,ROWS:14,wp:[[0,1],[5,1],[5,6],[9,6],[9,1],[13,1]]},
-    {CELL:40,COLS:8,ROWS:14,wp:[[0,6],[4,6],[4,2],[8,2],[8,6],[13,6]]},
-    {CELL:40,COLS:8,ROWS:14,wp:[[0,3],[3,3],[3,7],[7,7],[7,1],[11,1],[11,5],[13,5]]},
-    {CELL:40,COLS:8,ROWS:14,wp:[[0,0],[6,0],[6,4],[2,4],[2,7],[10,7],[10,2],[13,2]]},
-  ],
+  
 };
 let chosenOrient='computer';
 if(pendingOrient)chosenOrient=pendingOrient;   // saved choices, applied once these are declared
@@ -4079,7 +4062,7 @@ let SHADE=null;
     const S=SHADE; if(!S)return; const fs=this.fillStyle; if(typeof fs!=='string'||fs.charCodeAt(0)!==35)return;
     this.save(); cl0.apply(this,a); this.setTransform(RS,0,0,RS,0,0); this.fillStyle=S.g; this.fillRect(S.x-S.r*2,S.y-S.r*2,S.r*4,S.r*4); this.restore(); }; })();
 function shadeOn(x,y,r){ const g=ctx.createLinearGradient(x-r*0.8,y-r*0.9,x+r*0.8,y+r*0.9);
-  g.addColorStop(0,'rgba(255,248,215,.26)'); g.addColorStop(0.42,'rgba(255,248,215,0)'); g.addColorStop(0.62,'rgba(10,8,20,0)'); g.addColorStop(1,'rgba(10,8,20,.34)');
+  g.addColorStop(0,'rgba(255,244,200,.5)'); g.addColorStop(0.3,'rgba(255,244,200,.12)'); g.addColorStop(0.5,'rgba(10,8,20,0)'); g.addColorStop(0.7,'rgba(10,8,20,.2)'); g.addColorStop(1,'rgba(6,4,24,.6)');
   SHADE={g,x,y,r}; }
 function shadeOff(){ SHADE=null; }
 let gold,lives,wave,selectedType=null,waveActive=false,gameOver=false,started=false;
@@ -4368,6 +4351,7 @@ function drawTrees(){
   trees.forEach(t=>{
     const x=t.col*CELL+CELL/2, y=t.row*CELL+CELL/2;
     const sw=Math.sin(frameCount*0.018+t.sway)*1.6;
+    ctx.save(); ctx.fillStyle='rgba(8,16,4,.3)'; ctx.beginPath(); ctx.ellipse(x+9,y+12,17,6.5,0.2,0,Math.PI*2); ctx.fill(); ctx.restore();   // cast shadow
     shadeOn(x,y-6,24); ctx.save(); ctx.translate(x,y);
     if(t.kind==='fence'){ const f=(r,c)=>trees.some(q=>q.kind==='fence'&&q.row===r&&q.col===c);
       drawFence(ctx,f(t.row,t.col-1),f(t.row,t.col+1),f(t.row-1,t.col),f(t.row+1,t.col)); }
@@ -7090,7 +7074,7 @@ function playTestLevel(){
 // ---- enemy tester ----
 const TESTER_DEF={name:'Enemy Tester',startGold:0,lives:999,waves:[[]],
   layout:{computer:{COLS:19,ROWS:12,paths:[[[2,0],[2,15],[6,15],[6,3],[9,3],[9,18]]]},
-          phone:{COLS:10,ROWS:18,paths:[[[0,2],[4,2],[4,7],[9,7],[9,2],[14,2],[14,7],[17,7]]]}}};
+          }};
 function openEnemyTester(){
   configureTestSlot(TESTER_DEF,REGIONS[0]);
   testMode='enemy'; currentLevel=TEST_SLOT; testFilter='all';
@@ -9643,7 +9627,7 @@ function polishTerrain(ctx,hashAt,shade){
     g.putImageData(id,0,0);
     ctx.save(); ctx.globalCompositeOperation='soft-light'; ctx.globalAlpha=alpha; ctx.imageSmoothingEnabled=true; ctx.imageSmoothingQuality='high';
     ctx.drawImage(nc,-CELL*0.5,-CELL*0.5,(nc.width)/cells*CELL,(nc.height)/cells*CELL); ctx.restore(); };
-  octave(0.5,0.3,3.1); octave(1.5,0.2,9.7); octave(4,0.07,17.3);
+  octave(0.5,0.5,3.1); octave(1.5,0.34,9.7); octave(4,0.12,17.3);
   // 2) layered grass: short dark under-blades, taller mid blades, pale sun-caught tips, and the odd clover/leaf fleck
   ctx.save(); ctx.lineCap='round';
   for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
@@ -9720,11 +9704,11 @@ function polishTerrain(ctx,hashAt,shade){
   // 4) sunlight from the top-left and a soft vignette so the board feels lit and framed (night maps get only the vignette)
   ctx.save();
   if(!nightMap){
-    const sg=ctx.createLinearGradient(0,0,CW,CH); sg.addColorStop(0,'rgba(255,236,170,.12)'); sg.addColorStop(0.5,'rgba(255,240,190,0)'); sg.addColorStop(1,'rgba(10,20,40,.08)');
+    const sg=ctx.createLinearGradient(0,0,CW,CH); sg.addColorStop(0,'rgba(255,226,140,.22)'); sg.addColorStop(0.5,'rgba(255,240,190,0)'); sg.addColorStop(1,'rgba(10,20,50,.16)');
     ctx.fillStyle=sg; ctx.fillRect(0,0,CW,CH);
   }
   const vg=ctx.createRadialGradient(CW/2,CH/2,Math.min(CW,CH)*0.38,CW/2,CH/2,Math.hypot(CW,CH)*0.58);
-  vg.addColorStop(0,'rgba(0,0,0,0)'); vg.addColorStop(1,nightMap?'rgba(0,0,10,.34)':'rgba(8,14,2,.22)');
+  vg.addColorStop(0,'rgba(0,0,0,0)'); vg.addColorStop(1,nightMap?'rgba(0,0,10,.34)':'rgba(6,12,2,.4)');
   ctx.fillStyle=vg; ctx.fillRect(0,0,CW,CH);
   ctx.restore();
 }
